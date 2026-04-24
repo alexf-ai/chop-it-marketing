@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
 import { Instrument_Serif, JetBrains_Mono } from 'next/font/google';
-import { GeistSans } from 'geist/font/sans';
 import './styles/globals.css';
 
-// Font pairing per the design: Instrument Serif (display) / Geist (UI+body) / JetBrains Mono (meta + numerals).
-// Geist ships via the `geist` package (self-hosted by Next) — next/font/google doesn't list it.
+// Hybrid type system: Instrument Serif for display headings, JetBrains Mono for meta/numerals,
+// system-ui stack for body copy so we match the PWA visually (PWA is system-font-only under CSP).
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
   weight: '400',
@@ -46,7 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en-GB"
-      className={`${instrumentSerif.variable} ${GeistSans.variable} ${jetbrainsMono.variable}`}
+      className={`${instrumentSerif.variable} ${jetbrainsMono.variable}`}
     >
       <body>{children}</body>
     </html>
