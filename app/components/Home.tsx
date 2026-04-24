@@ -1,12 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 
 import Nav from './Nav';
 import Hero from './Hero';
 import WhatItDoes from './WhatItDoes';
 import ScoreExplainer from './ScoreExplainer';
-import FeaturedRecipes from './FeaturedRecipes';
 import HowItWorks from './HowItWorks';
 import Voices from './Voices';
 import FinalCTA from './FinalCTA';
@@ -22,7 +21,9 @@ const TWEAK_DEFAULTS: TweakState = {
   showTeam: true,
 };
 
-export default function Home() {
+type HomeProps = { featuredRecipes: ReactNode };
+
+export default function Home({ featuredRecipes }: HomeProps) {
   const [state, setState] = useState<TweakState>(TWEAK_DEFAULTS);
   const [tweaksOn, setTweaksOn] = useState(false);
 
@@ -65,9 +66,7 @@ export default function Home() {
           accent={accent}
         />
       </div>
-      <div id="recipes">
-        <FeaturedRecipes />
-      </div>
+      <div id="recipes">{featuredRecipes}</div>
       <div id="how">
         <HowItWorks />
       </div>
