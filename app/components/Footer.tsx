@@ -1,9 +1,20 @@
+import Image from 'next/image';
+
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-grid">
         <div className="footer-brand">
-          <div className="wordmark">Chop&nbsp;It.</div>
+          <div className="wordmark">
+            <Image
+              src="/logo.webp"
+              alt=""
+              width={40}
+              height={40}
+              className="wordmark-logo wordmark-logo-lg"
+            />
+            Chop&nbsp;It.
+          </div>
           <div className="footer-tag">Weekly shop, sorted in minutes.</div>
         </div>
         <div className="footer-col">
