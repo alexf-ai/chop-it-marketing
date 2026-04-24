@@ -835,4 +835,30 @@ button { font-family: inherit; }
   .nav-links { display: none; }
   .score-x-band-row { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr; }
+
+  /* Phone mock is a fixed 360px at desktop; constrain it on mobile so it
+     doesn't blow past the 20px side padding on a 375px-wide viewport. */
+  .phone { width: 100%; max-width: 320px; }
+  /* The step-01 thumbs use -12px side margins to bleed into the card edge;
+     at mobile the card itself has less breathing room, so keep the gutter. */
+  .how-visual-browse { margin: 0; padding: 0 0 24px; }
+  .how-step { padding: 28px 20px 0; }
+
+  /* Grid children default to min-width: auto (== min-content), which lets a
+     fixed-width child like the score ring push the grid track wider than the
+     viewport. Force grid tracks to behave. */
+  .hero-grid > *, .score-x-grid > * { min-width: 0; }
+
+  /* Score ring is inline-styled to 260–380px; override at mobile so it fits. */
+  .ring-wrap {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+  }
+  .ring-wrap svg { width: 100%; height: auto; }
+  .ring-wrap[style*="380"] .ring-score,
+  .ring-wrap[style*="260"] .ring-score { font-size: 72px; }
+  .score-x-ring-wrap { padding: 24px 12px; }
 }
