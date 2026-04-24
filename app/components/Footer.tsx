@@ -21,7 +21,9 @@ export default function Footer() {
           <a href="#">Team</a>
           <a href="#">Press</a>
           <a href="#">Careers</a>
-          <a href="#">Contact</a>
+          <a href="mailto:secretary@chop-it.com">Contact</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/terms">Terms</a>
         </div>
         <div className="footer-col">
           <div className="footer-col-h mono">SOCIAL</div>
