@@ -1,6 +1,55 @@
 import DishPlaceholder from './DishPlaceholder';
 
-const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+type RingSpec = { color: string; radius: number; pct: number };
+
+const RINGS: RingSpec[] = [
+  { color: '#E8547A', radius: 68, pct: 0.42 }, // Protein (outer)
+  { color: '#F5A623', radius: 52, pct: 0.66 }, // Fibre (middle)
+  { color: '#6DC56E', radius: 36, pct: 0.82 }, // Plants (inner)
+];
+
+function DiversityRings() {
+  const size = 180;
+  const center = size / 2;
+  const strokeWidth = 10;
+  return (
+    <svg
+      className="how-score-rings"
+      viewBox={`0 0 ${size} ${size}`}
+      width={size}
+      height={size}
+      aria-hidden="true"
+    >
+      {RINGS.map(({ color, radius, pct }) => {
+        const circumference = 2 * Math.PI * radius;
+        const dash = circumference * pct;
+        return (
+          <g key={radius} transform={`rotate(-90 ${center} ${center})`}>
+            <circle
+              cx={center}
+              cy={center}
+              r={radius}
+              fill="none"
+              stroke={color}
+              strokeOpacity={0.15}
+              strokeWidth={strokeWidth}
+            />
+            <circle
+              cx={center}
+              cy={center}
+              r={radius}
+              fill="none"
+              stroke={color}
+              strokeWidth={strokeWidth}
+              strokeLinecap="round"
+              strokeDasharray={`${dash} ${circumference}`}
+            />
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
 
 type ShopItem = { n: string; q: string; got?: boolean; pantry?: boolean };
 
@@ -45,18 +94,26 @@ export default function HowItWorks() {
         {/* Step 02 */}
         <div className="how-step">
           <div className="how-num mono">02</div>
-          <div className="how-title">Plan your week</div>
+          <div className="how-title">Track your diversity</div>
           <div className="how-body">
-            Drop recipes into your week. Portions scale. The score tracks how the week is shaping up as you go.
+            See your weekly diversity score — protein, fibre and plants rated
+            out of 100. Aim high. Eat well.
           </div>
-          <div className="how-visual how-visual-plan">
-            <div className="how-plan-grid">
-              {DAYS.map((d, i) => (
-                <div key={d} className={`how-plan-day ${i < 5 ? 'filled' : ''}`}>
-                  <div className="mono how-plan-d">{d}</div>
-                  {i < 5 && <div className="how-plan-chip" />}
-                </div>
-              ))}
+          <div className="how-visual how-visual-score">
+            <DiversityRings />
+            <div className="how-score-legend">
+              <div className="how-score-legend-item">
+                <span className="how-score-dot" style={{ background: '#E8547A' }} />
+                <span>Protein</span>
+              </div>
+              <div className="how-score-legend-item">
+                <span className="how-score-dot" style={{ background: '#F5A623' }} />
+                <span>Fibre</span>
+              </div>
+              <div className="how-score-legend-item">
+                <span className="how-score-dot" style={{ background: '#6DC56E' }} />
+                <span>Plants</span>
+              </div>
             </div>
           </div>
         </div>
