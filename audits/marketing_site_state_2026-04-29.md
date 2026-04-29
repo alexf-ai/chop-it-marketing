@@ -253,9 +253,9 @@ the codebase. **Informational only — no fixes proposed here.**
 | `/recipes/[slug]` detail pages | ✅ | ❌ | Does not exist. Recipe cards in `FeaturedRecipes.tsx:66` link to `href="#"` — placeholder anchor. There is no recipe detail route, no slug field is being read (the `recipes_published` table has no `slug` column either, per the schema dump). |
 | `/sitemap.xml` | ✅, dynamically generated | Partial | `app/sitemap.ts` exists and emits exactly three URLs: `/`, `/privacy`, `/terms`. **Recipes are not included** — there's no enumeration of recipe slugs (consistent with the lack of `/recipes/[slug]`). |
 | `/robots.txt` | ✅ | ✅ | `app/robots.ts` allows `*` and points at the sitemap. |
-| OG / Twitter / metadata | ✅ via `next-seo` (per spec) | Partial | Uses Next.js native metadata API (`app/layout.tsx:22-42`), not `next-seo`. Has `title`, `description`, `openGraph`, `twitter`. **No `og:image` URL set** (the OG card will fall back to whatever Twitter/Facebook pick; likely no preview image). **No JSON-LD structured data** anywhere. **No per-page metadata** beyond root. |
-| `/privacy` | ✅ | ✅ | `app/privacy/page.tsx` exists. |
-| `/terms` | ✅ | ✅ | `app/terms/page.tsx` exists. |
+| OG / Twitter / metadata | ✅ via `next-seo` (per spec) | Partial | Uses Next.js native metadata API (`app/layout.tsx:22-42`), not `next-seo`. Root has `title`, `description`, `openGraph`, `twitter`. `/privacy` and `/terms` each export their own `metadata` block (title, description, canonical) — see `app/privacy/page.tsx:5-9` and `app/terms/page.tsx:5-9`. **No `og:image` URL set** anywhere (the OG card will fall back to whatever Twitter/Facebook pick; likely no preview image). **No JSON-LD structured data** anywhere. **No `openGraph`/`twitter` per-page** on `/privacy` and `/terms` (only on root). |
+| `/privacy` | ✅ | ✅ | `app/privacy/page.tsx` exists with its own `metadata` (title, description, canonical). |
+| `/terms` | ✅ | ✅ | `app/terms/page.tsx` exists with its own `metadata` (title, description, canonical). |
 | Tweaks panel / edit-mode protocol | (internal) | ✅ | `Home.tsx:39-53` and `Tweaks.tsx` — postMessage protocol wired for Claude Design's edit overlay. Not a spec item per se but worth noting it's there. |
 | Footer social links | ✅ real URLs | Partial | `Footer.tsx:41-43` — TikTok / Instagram / X all `href="#"`. Placeholders. |
 | App Store / Play Store buttons | (out of scope per brief) | n/a | The "Get the app" / "Try the web app" CTAs all `href="#"`, which matches the brief's "post-Apple-account-resolution" note. |
