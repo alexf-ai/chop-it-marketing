@@ -30,37 +30,23 @@ const FALLBACKS: { label: string; tone: 'warm' | 'herb' | 'berry' | 'amber' | 's
 async function getThumbRecipes(): Promise<LiveRecipe[] | null> {
   if (!supabase || !supabaseConfigured) return null;
 
-  // Skip the top 6 (those are in FeaturedRecipes above) and take the next 12 so
-  // step-01 thumbs can be horizontally scrolled.
+  // Skip the top 6 (those are in FeaturedRecipes above) and take the next 30
+  // so the strip can split into two non-overlapping rows.
   const { data, error } = await supabase
     .from('recipes_published')
     .select('id, title, image_url')
     .eq('season', 'summer')
     .not('image_url', 'is', null)
     .order('display_priority', { ascending: false })
-    .range(6, 17);
+    .range(6, 35);
 
-  if (error || !data || data.length < 3) return null;
+  if (error || !data || data.length < 6) return null;
   return data as LiveRecipe[];
 }
 
-export default async function BrowseStepThumbs() {
-  const recipes = await getThumbRecipes();
-
-  if (!recipes) {
-    return (
-      <>
-        {FALLBACKS.map((f) => (
-          <div key={f.label} className="how-thumb">
-            <DishPlaceholder label={f.label} tone={f.tone} aspect="1 / 1" />
-          </div>
-        ))}
-      </>
-    );
-  }
-
+function renderRow(recipes: LiveRecipe[], rowKey: string) {
   return (
-    <>
+    <div className="how-visual-browse" key={rowKey}>
       {recipes.map((r) => (
         <Link key={r.id} href={`/recipes/${r.id}`} className="how-thumb" aria-label={r.title}>
           <div className="how-thumb-image">
@@ -74,6 +60,40 @@ export default async function BrowseStepThumbs() {
           </div>
         </Link>
       ))}
-    </>
+    </div>
+  );
+}
+
+export default async function BrowseStepThumbs() {
+  const recipes = await getThumbRecipes();
+
+  if (!recipes) {
+    const mid = Math.ceil(FALLBACKS.length / 2);
+    return (
+      <div className="how-visual-browse-stack">
+        <div className="how-visual-browse">
+          {FALLBACKS.slice(0, mid).map((f) => (
+            <div key={f.label} className="how-thumb">
+              <DishPlaceholder label={f.label} tone={f.tone} aspect="1 / 1" />
+            </div>
+          ))}
+        </div>
+        <div className="how-visual-browse">
+          {FALLBACKS.slice(mid).map((f) => (
+            <div key={f.label} className="how-thumb">
+              <DishPlaceholder label={f.label} tone={f.tone} aspect="1 / 1" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const mid = Math.ceil(recipes.length / 2);
+  return (
+    <div className="how-visual-browse-stack">
+      {renderRow(recipes.slice(0, mid), 'row-1')}
+      {renderRow(recipes.slice(mid), 'row-2')}
+    </div>
   );
 }

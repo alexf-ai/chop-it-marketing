@@ -1,6 +1,7 @@
 import BrowseStepThumbs from './components/BrowseStepThumbs';
 import FeaturedRecipes from './components/FeaturedRecipes';
 import Home from './components/Home';
+import PantryShowcase from './components/PantryShowcase';
 import type { PhoneMeal } from './components/PhoneMock';
 import { supabase, supabaseConfigured } from './lib/supabase';
 
@@ -37,6 +38,7 @@ export default async function Page() {
     <Home
       featuredRecipes={<FeaturedRecipes />}
       browseThumbs={<BrowseStepThumbs />}
+      pantryShowcase={<PantryShowcase />}
       phoneMeals={phoneMeals}
     />
   );

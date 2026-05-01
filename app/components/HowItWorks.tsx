@@ -2,57 +2,6 @@ import type { ReactNode } from 'react';
 
 import DishPlaceholder from './DishPlaceholder';
 
-type RingSpec = { color: string; radius: number; pct: number };
-
-const RINGS: RingSpec[] = [
-  { color: '#E8547A', radius: 68, pct: 0.42 }, // Protein (outer)
-  { color: '#F5A623', radius: 52, pct: 0.66 }, // Fibre (middle)
-  { color: '#6DC56E', radius: 36, pct: 0.82 }, // Plants (inner)
-];
-
-function DiversityRings() {
-  const size = 180;
-  const center = size / 2;
-  const strokeWidth = 10;
-  return (
-    <svg
-      className="how-score-rings"
-      viewBox={`0 0 ${size} ${size}`}
-      width={size}
-      height={size}
-      aria-hidden="true"
-    >
-      {RINGS.map(({ color, radius, pct }) => {
-        const circumference = 2 * Math.PI * radius;
-        const dash = circumference * pct;
-        return (
-          <g key={radius} transform={`rotate(-90 ${center} ${center})`}>
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              fill="none"
-              stroke={color}
-              strokeOpacity={0.15}
-              strokeWidth={strokeWidth}
-            />
-            <circle
-              cx={center}
-              cy={center}
-              r={radius}
-              fill="none"
-              stroke={color}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              strokeDasharray={`${dash} ${circumference}`}
-            />
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
-
 type ShopItem = { n: string; q: string; got?: boolean; pantry?: boolean };
 
 const SHOP: ShopItem[] = [
@@ -63,11 +12,11 @@ const SHOP: ShopItem[] = [
   { n: 'Lemons', q: '3', got: false },
 ];
 
-type HowItWorksProps = { browseThumbs?: ReactNode };
+type HowItWorksProps = { browseThumbs?: ReactNode; pantryShowcase?: ReactNode };
 
-export default function HowItWorks({ browseThumbs }: HowItWorksProps = {}) {
+export default function HowItWorks({ browseThumbs, pantryShowcase }: HowItWorksProps = {}) {
   const fallbackThumbs = (
-    <>
+    <div className="how-visual-browse">
       <div className="how-thumb">
         <DishPlaceholder label="Harissa butter beans" tone="amber" aspect="1 / 1" />
       </div>
@@ -77,7 +26,7 @@ export default function HowItWorks({ browseThumbs }: HowItWorksProps = {}) {
       <div className="how-thumb">
         <DishPlaceholder label="Cod & lentils" tone="smoke" aspect="1 / 1" />
       </div>
-    </>
+    </div>
   );
 
   return (
@@ -96,33 +45,20 @@ export default function HowItWorks({ browseThumbs }: HowItWorksProps = {}) {
           <div className="how-body">
             Pull from our library. Snap a cookbook. Or ask for fifty BBQ ideas and pick your favourites.
           </div>
-          <div className="how-visual how-visual-browse">{browseThumbs ?? fallbackThumbs}</div>
+          <div className="how-visual">{browseThumbs ?? fallbackThumbs}</div>
         </div>
 
         {/* Step 02 */}
-        <div className="how-step">
+        <div className="how-step how-step-pantry">
           <div className="how-num mono">02</div>
-          <div className="how-title">Track your diversity</div>
+          <div className="how-title">What&rsquo;s in your kitchen, what&rsquo;s for dinner</div>
           <div className="how-body">
-            See your weekly diversity score — protein, fibre and plants rated
-            out of 100. Aim high. Eat well.
+            Tell Chop It what you have. We&rsquo;ll tell you what to cook with it tonight, this week, or
+            before it goes off.
           </div>
-          <div className="how-visual how-visual-score">
-            <DiversityRings />
-            <div className="how-score-legend">
-              <div className="how-score-legend-item">
-                <span className="how-score-dot" style={{ background: '#E8547A' }} />
-                <span>Protein</span>
-              </div>
-              <div className="how-score-legend-item">
-                <span className="how-score-dot" style={{ background: '#F5A623' }} />
-                <span>Fibre</span>
-              </div>
-              <div className="how-score-legend-item">
-                <span className="how-score-dot" style={{ background: '#6DC56E' }} />
-                <span>Plants</span>
-              </div>
-            </div>
+          <div className="how-visual how-visual-pantry">{pantryShowcase}</div>
+          <div className="how-pantry-hint mono">
+            Tap any ingredient in the app to see what you can cook with it tonight.
           </div>
         </div>
 
