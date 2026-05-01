@@ -470,11 +470,18 @@ button { font-family: inherit; }
   display: flex; gap: 10px;
   margin: 0 -12px -1px -12px;
   padding: 0 28px 24px 28px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.how-visual-browse::-webkit-scrollbar { display: none; }
 .how-visual-browse .how-thumb {
-  flex: 1;
+  flex: 0 0 120px;
   border-radius: 12px;
   overflow: hidden;
+  scroll-snap-align: start;
 }
 .how-visual-browse .dish-ph { border-radius: 12px; }
 .how-visual-browse .dish-ph-label { display: none; }

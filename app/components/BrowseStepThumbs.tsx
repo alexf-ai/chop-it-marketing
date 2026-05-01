@@ -15,19 +15,29 @@ const FALLBACKS: { label: string; tone: 'warm' | 'herb' | 'berry' | 'amber' | 's
   { label: 'Harissa butter beans', tone: 'amber' },
   { label: 'Miso aubergine', tone: 'herb' },
   { label: 'Cod & lentils', tone: 'smoke' },
+  { label: 'Lemon orzo', tone: 'warm' },
+  { label: 'Black bean tacos', tone: 'berry' },
+  { label: 'Crispy gnocchi', tone: 'amber' },
+  { label: 'Charred greens', tone: 'herb' },
+  { label: 'Salmon traybake', tone: 'smoke' },
+  { label: 'Roast chickpeas', tone: 'amber' },
+  { label: 'Tahini bowl', tone: 'warm' },
+  { label: 'Pickled veg', tone: 'berry' },
+  { label: 'Herby falafel', tone: 'herb' },
 ];
 
 async function getThumbRecipes(): Promise<LiveRecipe[] | null> {
   if (!supabase || !supabaseConfigured) return null;
 
-  // Skip the top 6 (those are in FeaturedRecipes above) and take the next 3.
+  // Skip the top 6 (those are in FeaturedRecipes above) and take the next 12 so
+  // step-01 thumbs can be horizontally scrolled.
   const { data, error } = await supabase
     .from('recipes_published')
     .select('id, title, image_url')
     .eq('season', 'summer')
     .not('image_url', 'is', null)
     .order('display_priority', { ascending: false })
-    .range(6, 8);
+    .range(6, 17);
 
   if (error || !data || data.length < 3) return null;
   return data as LiveRecipe[];
