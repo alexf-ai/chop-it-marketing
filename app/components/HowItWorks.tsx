@@ -16,7 +16,7 @@ type HowItWorksProps = { browseThumbs?: ReactNode; pantryShowcase?: ReactNode };
 
 export default function HowItWorks({ browseThumbs, pantryShowcase }: HowItWorksProps = {}) {
   const fallbackThumbs = (
-    <>
+    <div className="how-visual-browse">
       <div className="how-thumb">
         <DishPlaceholder label="Harissa butter beans" tone="amber" aspect="1 / 1" />
       </div>
@@ -26,7 +26,7 @@ export default function HowItWorks({ browseThumbs, pantryShowcase }: HowItWorksP
       <div className="how-thumb">
         <DishPlaceholder label="Cod & lentils" tone="smoke" aspect="1 / 1" />
       </div>
-    </>
+    </div>
   );
 
   return (
@@ -45,7 +45,7 @@ export default function HowItWorks({ browseThumbs, pantryShowcase }: HowItWorksP
           <div className="how-body">
             Pull from our library. Snap a cookbook. Or ask for fifty BBQ ideas and pick your favourites.
           </div>
-          <div className="how-visual how-visual-browse">{browseThumbs ?? fallbackThumbs}</div>
+          <div className="how-visual">{browseThumbs ?? fallbackThumbs}</div>
         </div>
 
         {/* Step 02 */}

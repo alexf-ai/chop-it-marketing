@@ -468,16 +468,24 @@ button { font-family: inherit; }
 .how-body { font-size: 15px; color: var(--text-2); line-height: 1.5; margin-bottom: 32px; max-width: 38ch; }
 
 .how-visual { margin-top: auto; }
+.how-visual-browse-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 -12px -1px -12px;
+}
+.how-visual-browse-stack > .how-visual-browse { margin: 0; }
 .how-visual-browse {
   display: flex; gap: 10px;
   margin: 0 -12px -1px -12px;
-  padding: 0 28px 24px 28px;
+  padding: 0 28px 4px 28px;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
+.how-visual-browse-stack > .how-visual-browse:last-child { padding-bottom: 24px; }
 .how-visual-browse::-webkit-scrollbar { display: none; }
 .how-visual-browse .how-thumb {
   flex: 0 0 120px;
