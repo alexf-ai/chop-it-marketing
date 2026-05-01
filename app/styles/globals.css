@@ -478,6 +478,8 @@ button { font-family: inherit; }
 }
 .how-visual-browse .dish-ph { border-radius: 12px; }
 .how-visual-browse .dish-ph-label { display: none; }
+.how-thumb-image { aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; }
+.how-thumb-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
 .how-visual-score {
   display: flex;

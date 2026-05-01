@@ -21,9 +21,9 @@ const TWEAK_DEFAULTS: TweakState = {
   showTeam: true,
 };
 
-type HomeProps = { featuredRecipes: ReactNode };
+type HomeProps = { featuredRecipes: ReactNode; browseThumbs: ReactNode };
 
-export default function Home({ featuredRecipes }: HomeProps) {
+export default function Home({ featuredRecipes, browseThumbs }: HomeProps) {
   const [state, setState] = useState<TweakState>(TWEAK_DEFAULTS);
   const [tweaksOn, setTweaksOn] = useState(false);
 
@@ -68,7 +68,7 @@ export default function Home({ featuredRecipes }: HomeProps) {
       </div>
       <div id="recipes">{featuredRecipes}</div>
       <div id="how">
-        <HowItWorks />
+        <HowItWorks browseThumbs={browseThumbs} />
       </div>
       {state.showTeam && <Voices />}
       <FinalCTA accent={accent} />

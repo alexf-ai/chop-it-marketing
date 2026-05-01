@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import DishPlaceholder from './DishPlaceholder';
 
 type RingSpec = { color: string; radius: number; pct: number };
@@ -61,7 +63,23 @@ const SHOP: ShopItem[] = [
   { n: 'Lemons', q: '3', got: false },
 ];
 
-export default function HowItWorks() {
+type HowItWorksProps = { browseThumbs?: ReactNode };
+
+export default function HowItWorks({ browseThumbs }: HowItWorksProps = {}) {
+  const fallbackThumbs = (
+    <>
+      <div className="how-thumb">
+        <DishPlaceholder label="Harissa butter beans" tone="amber" aspect="1 / 1" />
+      </div>
+      <div className="how-thumb">
+        <DishPlaceholder label="Miso aubergine" tone="herb" aspect="1 / 1" />
+      </div>
+      <div className="how-thumb">
+        <DishPlaceholder label="Cod & lentils" tone="smoke" aspect="1 / 1" />
+      </div>
+    </>
+  );
+
   return (
     <section className="section how">
       <div className="section-head">
@@ -78,17 +96,7 @@ export default function HowItWorks() {
           <div className="how-body">
             Pull from our library. Snap a cookbook. Or ask for fifty BBQ ideas and pick your favourites.
           </div>
-          <div className="how-visual how-visual-browse">
-            <div className="how-thumb">
-              <DishPlaceholder label="Harissa butter beans" tone="amber" aspect="1 / 1" />
-            </div>
-            <div className="how-thumb">
-              <DishPlaceholder label="Miso aubergine" tone="herb" aspect="1 / 1" />
-            </div>
-            <div className="how-thumb">
-              <DishPlaceholder label="Cod & lentils" tone="smoke" aspect="1 / 1" />
-            </div>
-          </div>
+          <div className="how-visual how-visual-browse">{browseThumbs ?? fallbackThumbs}</div>
         </div>
 
         {/* Step 02 */}
