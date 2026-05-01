@@ -287,6 +287,8 @@ button { font-family: inherit; }
 }
 .phone-meal .dish-ph { width: 48px; height: 48px; border-radius: 10px; overflow: hidden; }
 .phone-meal .dish-ph-label { display: none; }
+.phone-meal-image { width: 48px; height: 48px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.phone-meal-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .phone-meal-day { font-size: 9px; color: var(--muted-2); letter-spacing: 0.12em; margin-bottom: 2px; }
 .phone-meal-name { font-size: 12px; line-height: 1.25; }
 .phone-meal-chev { color: var(--muted); font-size: 16px; padding-right: 4px; }

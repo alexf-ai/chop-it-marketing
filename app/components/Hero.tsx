@@ -1,11 +1,12 @@
-import PhoneMock from './PhoneMock';
+import PhoneMock, { type PhoneMeal } from './PhoneMock';
 
 type HeroProps = {
   score: number;
   accent: string;
+  phoneMeals?: PhoneMeal[];
 };
 
-export default function Hero({ score, accent }: HeroProps) {
+export default function Hero({ score, accent, phoneMeals }: HeroProps) {
   return (
     <header className="hero">
       <div className="hero-grid">
@@ -54,7 +55,7 @@ export default function Hero({ score, accent }: HeroProps) {
           </div>
         </div>
         <div className="hero-right">
-          <PhoneMock score={score} />
+          <PhoneMock score={score} meals={phoneMeals} />
         </div>
       </div>
     </header>

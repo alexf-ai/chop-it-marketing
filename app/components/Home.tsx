@@ -7,6 +7,7 @@ import Hero from './Hero';
 import WhatItDoes from './WhatItDoes';
 import ScoreExplainer from './ScoreExplainer';
 import HowItWorks from './HowItWorks';
+import type { PhoneMeal } from './PhoneMock';
 import Voices from './Voices';
 import FinalCTA from './FinalCTA';
 import Footer from './Footer';
@@ -21,9 +22,13 @@ const TWEAK_DEFAULTS: TweakState = {
   showTeam: true,
 };
 
-type HomeProps = { featuredRecipes: ReactNode; browseThumbs: ReactNode };
+type HomeProps = {
+  featuredRecipes: ReactNode;
+  browseThumbs: ReactNode;
+  phoneMeals?: PhoneMeal[];
+};
 
-export default function Home({ featuredRecipes, browseThumbs }: HomeProps) {
+export default function Home({ featuredRecipes, browseThumbs, phoneMeals }: HomeProps) {
   const [state, setState] = useState<TweakState>(TWEAK_DEFAULTS);
   const [tweaksOn, setTweaksOn] = useState(false);
 
@@ -55,7 +60,7 @@ export default function Home({ featuredRecipes, browseThumbs }: HomeProps) {
   return (
     <>
       <Nav accent={accent} />
-      <Hero score={state.score} accent={accent} />
+      <Hero score={state.score} accent={accent} phoneMeals={phoneMeals} />
       <div id="what">
         <WhatItDoes />
       </div>

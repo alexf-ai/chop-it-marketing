@@ -1,19 +1,33 @@
 // A styled iPhone-ish screen mock for the hero. Not a real device frame — a stylized
 // representation of the app chrome showing the This Week view with the Score Ring.
 
+import Image from 'next/image';
+
 import ScoreRing from './ScoreRing';
 import DishPlaceholder from './DishPlaceholder';
 import { bandFor, coachingFor } from '@/app/lib/score';
 
-type Day = { d: string; meal: string; tone: 'warm' | 'herb' | 'berry' | 'amber' | 'smoke' };
+export type PhoneMeal = {
+  d: string;
+  meal: string;
+  tone: 'warm' | 'herb' | 'berry' | 'amber' | 'smoke';
+  imageUrl?: string | null;
+};
 
-const DAYS: Day[] = [
+const FALLBACK_DAYS: PhoneMeal[] = [
   { d: 'Mon', meal: 'Crispy gnocchi, brown butter sage', tone: 'amber' },
   { d: 'Tue', meal: 'Charred broccoli, tahini, butter beans', tone: 'herb' },
   { d: 'Wed', meal: 'Miso-glazed salmon, soba', tone: 'warm' },
 ];
 
-export default function PhoneMock({ score = 74 }: { score?: number }) {
+export default function PhoneMock({
+  score = 74,
+  meals,
+}: {
+  score?: number;
+  meals?: PhoneMeal[];
+}) {
+  const days = meals && meals.length === 3 ? meals : FALLBACK_DAYS;
   return (
     <div className="phone">
       <div className="phone-notch" />
@@ -58,9 +72,15 @@ export default function PhoneMock({ score = 74 }: { score?: number }) {
         </div>
 
         <div className="phone-meals">
-          {DAYS.map((dy, i) => (
+          {days.map((dy, i) => (
             <div key={i} className="phone-meal">
-              <DishPlaceholder label={dy.meal} tone={dy.tone} aspect="1 / 1" />
+              {dy.imageUrl ? (
+                <div className="phone-meal-image">
+                  <Image src={dy.imageUrl} alt={dy.meal} width={96} height={96} sizes="48px" />
+                </div>
+              ) : (
+                <DishPlaceholder label={dy.meal} tone={dy.tone} aspect="1 / 1" />
+              )}
               <div className="phone-meal-body">
                 <div className="phone-meal-day mono">{dy.d}</div>
                 <div className="phone-meal-name">{dy.meal}</div>
