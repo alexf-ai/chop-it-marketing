@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 import DishPlaceholder from './DishPlaceholder';
-import { supabase } from '@/app/lib/supabase';
+import { supabase, supabaseConfigured } from '@/app/lib/supabase';
 
 export const revalidate = 3600;
 
@@ -30,6 +30,13 @@ type LiveRecipe = {
 };
 
 async function getFeaturedRecipes(): Promise<LiveRecipe[] | null> {
+  if (!supabase || !supabaseConfigured) {
+    console.warn(
+      '[FeaturedRecipes] NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY missing in this environment — using placeholders',
+    );
+    return null;
+  }
+
   const { data, error } = await supabase
     .from('recipes_published')
     .select('id, title, image_url, season, display_priority')
