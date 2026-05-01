@@ -1,74 +1,65 @@
-// ScoreRing — three concentric arcs. Outer: Plants (green). Middle: Fibre (amber). Inner: Protein (pink).
-// Each arc fills clockwise from the top. Round linecap. Faint background track at 15% opacity.
+// ScoreRing — minimal neutral ring. Single arc, white at 90%, with a small
+// pink position-indicator dot at the end of the fill. Pink discipline:
+// pink only appears on CTAs and this dot on the homepage.
 
-import { BRAND, bandFor } from '@/app/lib/score';
+import { bandFor } from '@/app/lib/score';
 
-type ArcProps = {
-  radius: number;
-  stroke: number;
-  color: string;
-  progress: number;
-  rotation?: number;
-};
-
-function Arc({ radius, stroke, color, progress, rotation = -90 }: ArcProps) {
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - progress);
-  return (
-    <g transform={`rotate(${rotation} 100 100)`}>
-      <circle cx={100} cy={100} r={radius} fill="none" stroke={color} strokeOpacity={0.15} strokeWidth={stroke} />
-      <circle
-        cx={100}
-        cy={100}
-        r={radius}
-        fill="none"
-        stroke={color}
-        strokeWidth={stroke}
-        strokeLinecap="round"
-        strokeDasharray={circumference}
-        strokeDashoffset={offset}
-        style={{ transition: 'stroke-dashoffset 700ms cubic-bezier(.2,.7,.2,1)' }}
-      />
-    </g>
-  );
-}
+const TRACK_COLOR = '#2a2a2e';
+const FILL_COLOR = 'rgba(255, 255, 255, 0.9)';
+const DOT_COLOR = '#bd4d76';
 
 type ScoreRingProps = {
   score?: number;
-  protein?: number;
-  fibre?: number;
-  plants?: number;
   size?: number;
   showLabel?: boolean;
   compact?: boolean;
 };
 
 export default function ScoreRing({
-  score = 74,
-  protein,
-  fibre,
-  plants,
+  score = 78,
   size = 260,
   showLabel = false,
   compact = false,
 }: ScoreRingProps) {
-  // If individual pillar scores not given, derive a plausible set from the composite.
-  const p = protein ?? Math.min(90, Math.max(20, score + 6));
-  const f = fibre ?? Math.min(90, Math.max(20, score - 10));
-  const pl = plants ?? Math.min(90, Math.max(20, score + 2));
+  // Score is 0-90 in the brand spec; arc fills proportionally over a full circle.
+  const safeScore = Math.max(0, Math.min(90, score));
+  const progress = safeScore / 90;
 
   const stroke = compact ? 10 : 14;
-  const gap = compact ? 4 : 6;
-  const rOuter = 86;
-  const rMid = rOuter - stroke - gap;
-  const rInner = rMid - stroke - gap;
+  const dotR = compact ? 5 : 7;
+  const cx = 100;
+  const cy = 100;
+  const radius = 86;
+  const circumference = 2 * Math.PI * radius;
+  const dashOffset = circumference * (1 - progress);
+
+  // Position the dot at the leading edge of the arc. Arc starts at 12 o'clock
+  // (-90deg) and grows clockwise; angle in radians for trig.
+  const angle = (-90 + progress * 360) * (Math.PI / 180);
+  const dotX = cx + radius * Math.cos(angle);
+  const dotY = cy + radius * Math.sin(angle);
 
   return (
     <div className="ring-wrap" style={{ width: size, height: size }}>
       <svg viewBox="0 0 200 200" width={size} height={size}>
-        <Arc radius={rOuter} stroke={stroke} color={BRAND.plants} progress={pl / 100} />
-        <Arc radius={rMid} stroke={stroke} color={BRAND.fibre} progress={f / 100} />
-        <Arc radius={rInner} stroke={stroke} color={BRAND.protein} progress={p / 100} />
+        <circle cx={cx} cy={cy} r={radius} fill="none" stroke={TRACK_COLOR} strokeWidth={stroke} />
+        <g transform={`rotate(-90 ${cx} ${cy})`}>
+          <circle
+            cx={cx}
+            cy={cy}
+            r={radius}
+            fill="none"
+            stroke={FILL_COLOR}
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={dashOffset}
+            style={{ transition: 'stroke-dashoffset 700ms cubic-bezier(.2,.7,.2,1)' }}
+          />
+        </g>
+        {progress > 0.01 && (
+          <circle cx={dotX} cy={dotY} r={dotR} fill={DOT_COLOR} />
+        )}
       </svg>
       <div className="ring-center">
         <div className="ring-score">{Math.round(score)}</div>

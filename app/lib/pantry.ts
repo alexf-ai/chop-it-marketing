@@ -18,8 +18,26 @@ export type PantryStatus =
   | { kind: 'fresh' }
   | { kind: 'none' };
 
+// Curated allowlist of cleanly-formatted ingredients to surface on the homepage.
+// The guest pantry has heavy duplication (Plain flour 9x, Salt 8x, Olive oil 9x,
+// etc.) and some unrealistic quantities for a marketing display, so we filter
+// down to a representative mix of fresh produce, fridge staples and pantry
+// dry goods. Order here drives display order; first match per name wins.
+const HOMEPAGE_PANTRY_ALLOWLIST: string[] = [
+  'Sourdough',
+  'Tenderstem Broccoli',
+  'Mussels',
+  'Raw King Prawns',
+  'Chorizo',
+  'Flat-leaf Parsley',
+  'Double Cream',
+  'White Wine',
+];
+
 export async function getGuestPantry(): Promise<PantryItem[]> {
   if (!supabase || !supabaseConfigured) return [];
+
+  const allowedLowered = HOMEPAGE_PANTRY_ALLOWLIST.map((n) => n.toLowerCase());
 
   const { data: items, error } = await supabase
     .from('pantry_items')
@@ -32,10 +50,23 @@ export async function getGuestPantry(): Promise<PantryItem[]> {
     return [];
   }
 
+  // Filter the raw seed down to the allowlist — first match per name wins so
+  // duplicates collapse — and reorder to match the curated sequence.
+  const firstByName = new Map<string, (typeof items)[number]>();
+  for (const it of items) {
+    const key = (it.name as string).toLowerCase();
+    if (allowedLowered.includes(key) && !firstByName.has(key)) {
+      firstByName.set(key, it);
+    }
+  }
+  const filtered = HOMEPAGE_PANTRY_ALLOWLIST
+    .map((n) => firstByName.get(n.toLowerCase()))
+    .filter((it): it is (typeof items)[number] => Boolean(it));
+
   // Icons live in a separate table keyed by lower(name). Two-step fetch is fine
-  // — there are only ~360 names and the icon table fits in one round trip.
+  // — only 8 allowlisted names need lookup.
   const lowerNames = Array.from(
-    new Set(items.map((i) => (i.name as string).toLowerCase())),
+    new Set(filtered.map((i) => (i.name as string).toLowerCase())),
   );
 
   const { data: icons } = await supabase
@@ -48,7 +79,7 @@ export async function getGuestPantry(): Promise<PantryItem[]> {
     if (icon.image_url) iconByName.set((icon.name as string).toLowerCase(), icon.image_url as string);
   }
 
-  return items.map((it) => ({
+  return filtered.map((it) => ({
     id: it.id as string,
     name: it.name as string,
     location: (it.location as string | null) ?? null,

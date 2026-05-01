@@ -53,7 +53,8 @@ button { font-family: inherit; }
 
 /* ---------- Layout primitives ---------- */
 .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
-.section { max-width: var(--maxw); margin: 0 auto; padding: 120px 32px; border-top: 1px solid var(--border); }
+.section { max-width: var(--maxw); margin: 0 auto; padding: 96px 32px; border-top: 1px solid var(--border); }
+.section.recipes { padding: 80px 32px; }
 .section:first-of-type { border-top: none; }
 
 .section-head { display: flex; flex-direction: column; gap: 14px; margin-bottom: 56px; max-width: 880px; }
@@ -67,7 +68,9 @@ button { font-family: inherit; }
   margin: 0;
   color: var(--text);
 }
-.h-editorial em { color: var(--pink); font-style: italic; }
+/* Pink discipline: italic emphasis stays italic but loses the pink fill —
+   pink is reserved for CTAs and stat-strip dots on the homepage. */
+.h-editorial em { color: inherit; font-style: italic; }
 .lead {
   font-size: 19px;
   line-height: 1.55;
@@ -168,7 +171,7 @@ button { font-family: inherit; }
   letter-spacing: -0.04em;
   margin: 28px 0 28px;
 }
-.hero-h em { color: var(--accent); font-style: italic; }
+.hero-h em { color: inherit; font-style: italic; }
 .hero-h .hero-h-line { display: block; }
 .hero-sub {
   font-size: 20px;
@@ -269,7 +272,7 @@ button { font-family: inherit; }
 .pill { font-size: 9px; font-family: var(--ff-mono); padding: 3px 7px; border-radius: 999px; border: 1px solid; }
 .pill-plants  { color: var(--green);  border-color: rgba(109,197,110,0.4); }
 .pill-fibre   { color: var(--amber);  border-color: rgba(245,166,35,0.4); }
-.pill-protein { color: var(--pink);   border-color: rgba(232,84,122,0.4); }
+.pill-protein { color: var(--text);   border-color: var(--border-2); }
 
 .phone-meals-head {
   display: flex; justify-content: space-between;
@@ -391,7 +394,7 @@ button { font-family: inherit; }
 .recipes-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 20px;
 }
 .recipe-card {
   display: block;
@@ -629,7 +632,7 @@ button { font-family: inherit; }
   align-items: center;
 }
 .score-x-left .h-editorial { margin: 14px 0 24px; }
-.score-x-left em { color: var(--pink); }
+.score-x-left em { color: inherit; font-style: italic; }
 
 .score-x-band-row {
   display: grid; grid-template-columns: repeat(4, 1fr);
@@ -727,43 +730,7 @@ button { font-family: inherit; }
 .score-x-pillar-body { font-size: 14px; color: var(--text-2); line-height: 1.5; padding-left: 20px; }
 
 /* ==========================================================================
-   SECTION — Voices / team
-   ========================================================================== */
-.voices-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
-}
-.voice-card {
-  margin: 0;
-  padding: 32px 28px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  display: flex; flex-direction: column; gap: 20px;
-  min-height: 280px;
-}
-.voice-mark {
-  font-family: var(--ff-display);
-  font-weight: 600;
-  font-size: 48px;
-  line-height: 0.6;
-  color: var(--pink);
-  margin-bottom: -12px;
-}
-.voice-q {
-  font-family: var(--ff-display);
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
-  letter-spacing: -0.005em;
-  flex: 1;
-}
-.voice-by { display: flex; flex-direction: column; gap: 4px; padding-top: 16px; border-top: 1px solid var(--border); }
-.voice-name { font-size: 14px; }
-.voice-role { font-size: 11px; color: var(--muted-2); letter-spacing: 0.08em; }
-
-/* ==========================================================================
-   SECTION — Final CTA
+   SECTION — Legacy final CTA (kept for selectors used by older copies)
    ========================================================================== */
 .final {
   border-top: 1px solid var(--border);
@@ -898,21 +865,23 @@ button { font-family: inherit; }
    Responsive
    ========================================================================== */
 @media (max-width: 1100px) {
+  .section { padding: 64px 32px; }
+  .section.recipes { padding: 64px 32px; }
   .hero-grid { grid-template-columns: 1fr; gap: 56px; }
   .hero-right { min-height: auto; }
   .score-x-grid { grid-template-columns: 1fr; gap: 48px; }
   .what-grid { grid-template-columns: repeat(2, 1fr); }
   .recipes-grid { grid-template-columns: repeat(2, 1fr); }
   .how-steps { grid-template-columns: 1fr; }
-  .voices-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
-  .section { padding: 72px 20px; }
+  .section { padding: 48px 20px; }
+  .section.recipes { padding: 48px 20px; }
   .hero { padding: 40px 20px 64px; }
   .wrap, .nav-inner, .footer { padding-left: 20px; padding-right: 20px; }
   .what-grid { grid-template-columns: 1fr; }
-  .recipes-grid { grid-template-columns: 1fr; }
+  .recipes-grid { grid-template-columns: 1fr; gap: 12px; }
   .hero-stats { flex-direction: column; gap: 18px; }
   .nav-links { display: none; }
   .score-x-band-row { grid-template-columns: repeat(2, 1fr); }
@@ -1075,4 +1044,240 @@ button { font-family: inherit; }
   .recipe-page { padding: 24px 20px 72px; }
   .recipe-page-hero { aspect-ratio: 1 / 1; border-radius: 16px; }
   .recipe-method li { padding-left: 44px; }
+}
+
+/* ==========================================================================
+   BLOCK 02 — The cost of not planning
+   ========================================================================== */
+.cost-block { background: #141416; }
+.cost-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+.cost-h {
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.cost-h strong { font-weight: 600; color: var(--text); }
+.cost-sub {
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--text-2);
+  max-width: 60ch;
+  margin: 0;
+}
+.cost-source {
+  font-size: 12px;
+  color: var(--muted-2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-top: 12px;
+}
+@media (max-width: 640px) {
+  .cost-inner { gap: 16px; }
+  .cost-sub { font-size: 16px; }
+}
+
+/* ==========================================================================
+   BLOCK 03 — Pantry standalone section
+   ========================================================================== */
+.pantry-block .section-head { margin-bottom: 48px; }
+.pantry-block-visual { margin: 0 -32px 24px; padding: 0 32px; }
+.pantry-block-visual .pantry-scroll {
+  margin: 0;
+  padding: 0 0 4px;
+}
+.pantry-block-visual .pantry-scroll > [role="listitem"] {
+  flex: 0 0 160px;
+}
+.pantry-block-hint {
+  font-size: 12px;
+  color: var(--muted-2);
+  letter-spacing: 0.08em;
+}
+@media (max-width: 640px) {
+  .pantry-block-visual .pantry-scroll > [role="listitem"] { flex: 0 0 130px; }
+}
+
+/* ==========================================================================
+   BLOCK 04 — Score explainer coaching line + Pillar dot fix
+   ========================================================================== */
+.score-x-coach {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+/* Pink discipline: the Protein pillar dot stays branded inside the
+   ScoreExplainer because it's a semantic legend, not a CTA — but tone it
+   down so it doesn't compete with the actual CTAs on the page. */
+.score-x-pillars [style*="rgb(232, 84, 122)"],
+.score-x-pillars [style*="#E8547A"] {
+  /* leave inline-styled dots alone — they encode pillar identity */
+}
+
+/* ==========================================================================
+   BLOCK 06 — How it works step 03 (Cook, score, repeat)
+   ========================================================================== */
+.how-visual-cook {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 0 24px;
+}
+.how-cook-row {
+  display: grid;
+  grid-template-columns: 18px 36px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--card-2);
+  font-size: 13px;
+}
+.how-cook-row .check {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--border-2);
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+}
+.how-cook-row .check.on {
+  background: rgba(255,255,255,0.9);
+  border-color: rgba(255,255,255,0.9);
+}
+.how-cook-row .check.on::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--bg);
+}
+.how-cook-row.ticked .how-cook-name { color: var(--muted-2); text-decoration: line-through; }
+.how-cook-day {
+  color: var(--muted-2);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.how-cook-name {
+  color: var(--text);
+  line-height: 1.3;
+}
+
+/* ==========================================================================
+   BLOCK 07 — Built on three ideas
+   ========================================================================== */
+.principles .section-head { margin-bottom: 48px; }
+.principles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.principle-card {
+  background: #161618;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.principle-title {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 0;
+}
+.principle-body {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text-2);
+  margin: 0;
+}
+@media (max-width: 1100px) {
+  .principles-grid { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   BLOCK 08 — Download CTA
+   ========================================================================== */
+.download-cta-inner {
+  max-width: 880px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+.download-cta-h {
+  font-size: clamp(36px, 5vw, 60px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+.download-cta-sub {
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--text-2);
+  max-width: 56ch;
+  margin: 0;
+}
+.download-cta-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 16px 0 8px;
+}
+.store-pill {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 10px 18px;
+  background: var(--card);
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  color: var(--text);
+  text-align: left;
+  transition: border-color 200ms ease, transform 200ms ease;
+}
+.store-pill:hover { border-color: var(--text); transform: translateY(-1px); }
+.store-pill-top {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--muted-2);
+}
+.store-pill-bot {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.1;
+}
+.btn.btn-large {
+  padding: 14px 22px;
+  font-size: 15px;
+  border-radius: 999px;
+}
+.download-cta-anchor {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--muted-2);
+  max-width: 64ch;
+  margin: 16px 0 0;
+}
+@media (max-width: 640px) {
+  .download-cta-row { flex-direction: column; width: 100%; }
+  .store-pill, .download-cta-row .btn { width: 100%; align-items: center; text-align: center; }
 }

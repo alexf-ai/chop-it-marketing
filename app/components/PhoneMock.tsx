@@ -23,11 +23,17 @@ const FALLBACK_DAYS: PhoneMeal[] = [
 export default function PhoneMock({
   score = 74,
   meals,
+  band,
+  coaching,
 }: {
   score?: number;
   meals?: PhoneMeal[];
+  band?: string;
+  coaching?: string;
 }) {
   const days = meals && meals.length === 3 ? meals : FALLBACK_DAYS;
+  const displayBand = band ?? bandFor(score);
+  const displayCoach = coaching ?? coachingFor(score);
   return (
     <div className="phone">
       <div className="phone-notch" />
@@ -56,8 +62,8 @@ export default function PhoneMock({
           <ScoreRing score={score} size={156} compact />
           <div className="phone-score-side">
             <div className="phone-score-kicker mono">WEEKLY DIVERSITY</div>
-            <div className="phone-score-band">{bandFor(score)}</div>
-            <div className="phone-score-coach">{coachingFor(score)}</div>
+            <div className="phone-score-band">{displayBand}</div>
+            <div className="phone-score-coach">{displayCoach}</div>
             <div className="phone-pillars">
               <span className="pill pill-plants">Plants</span>
               <span className="pill pill-fibre">Fibre</span>

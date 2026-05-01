@@ -1,7 +1,7 @@
 'use client';
 
 import ScoreRing from './ScoreRing';
-import { bandFor } from '@/app/lib/score';
+import { bandFor, coachingFor } from '@/app/lib/score';
 
 type ScoreExplainerProps = {
   score: number;
@@ -83,6 +83,7 @@ export default function ScoreExplainer({ score, setScore, accent }: ScoreExplain
               style={{ accentColor: accent }}
               aria-label="Explore score"
             />
+            <div className="score-x-coach">{coachingFor(score)}</div>
           </div>
 
           <div className="score-x-disclaimer">
