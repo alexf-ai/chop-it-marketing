@@ -58,7 +58,7 @@ export default function HowItWorks({ browseThumbs, pantryShowcase }: HowItWorksP
           </div>
           <div className="how-visual how-visual-pantry">{pantryShowcase}</div>
           <div className="how-pantry-hint mono">
-            Tap any ingredient in the app to see what you can cook with it tonight.
+            Add your whole weekly shop to the pantry in one tap.
           </div>
         </div>
 
