@@ -41,13 +41,30 @@ export const metadata: Metadata = {
   },
 };
 
+const ORGANIZATION_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Chop It',
+  url: 'https://chop-it.com',
+  logo: 'https://chop-it.com/logo.webp',
+  description:
+    'Chop It plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
+  sameAs: ['https://chopit.app'],
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en-GB"
       className={`${instrumentSerif.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

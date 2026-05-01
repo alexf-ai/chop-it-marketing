@@ -25,10 +25,10 @@ export default function Nav({ accent }: NavProps) {
           <a href="#">Feasts</a>
         </div>
         <div className="nav-cta">
-          <a className="btn btn-ghost btn-tiny" href="#">
+          <a className="nav-link-tertiary" href="#">
             Sign in
           </a>
-          <a className="btn btn-primary btn-tiny" style={{ background: accent }} href="#">
+          <a className="btn btn-primary" style={{ background: accent }} href="#">
             Get the app
           </a>
         </div>

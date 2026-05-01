@@ -5,7 +5,6 @@ import { ACCENTS, type AccentKey, bandFor } from '@/app/lib/score';
 export type TweakState = {
   score: number;
   accent: AccentKey;
-  showTeam: boolean;
 };
 
 type TweaksProps = {
@@ -55,19 +54,6 @@ export default function Tweaks({ state, setState, onClose }: TweaksProps) {
             />
           ))}
         </div>
-      </div>
-      <div className="tweak-row">
-        <div className="tweak-label">
-          <span>TEAM QUOTES</span>
-          <span className="val">{state.showTeam ? 'shown' : 'hidden'}</span>
-        </div>
-        <button
-          className="btn btn-ghost btn-tiny"
-          style={{ width: '100%' }}
-          onClick={() => setState({ ...state, showTeam: !state.showTeam })}
-        >
-          {state.showTeam ? 'Hide' : 'Show'}
-        </button>
       </div>
     </aside>
   );

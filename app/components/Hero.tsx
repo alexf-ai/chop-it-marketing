@@ -6,6 +6,9 @@ type HeroProps = {
   phoneMeals?: PhoneMeal[];
 };
 
+const PHONE_DEMO_BAND = 'Good';
+const PHONE_DEMO_COACH = 'Strong on plants this week. Try a fish swap on Thursday for even more variety.';
+
 export default function Hero({ score, accent, phoneMeals }: HeroProps) {
   return (
     <header className="hero">
@@ -16,20 +19,20 @@ export default function Hero({ score, accent, phoneMeals }: HeroProps) {
             <span className="mono">NEW · WEEKLY DIVERSITY SCORE</span>
           </div>
           <h1 className="hero-h">
-            <span className="hero-h-line">Weekly shop,</span>
+            <span className="hero-h-line">Eat better this week,</span>
             <span className="hero-h-line">
-              <em>sorted</em> in minutes.
+              <em>without giving up what you love.</em>
             </span>
           </h1>
           <p className="hero-sub">
-            Chop It plans your week, writes the shop, and quietly coaches you toward more varied,
-            plant-forward eating — without giving up the meals you love.
+            Chop It plans the week, writes the shop, and quietly nudges you toward more variety,
+            more plants, more fibre, less waste. Without giving up the lasagne on Friday.
           </p>
           <div className="hero-cta">
-            <a className="btn btn-primary" style={{ background: accent }} href="#">
+            <a className="btn btn-primary" style={{ background: accent }} href="https://chopit.app">
               Try the web app
             </a>
-            <a className="btn btn-ghost" href="#">
+            <a className="hero-cta-link" href="#how">
               See how it works →
             </a>
           </div>
@@ -55,7 +58,12 @@ export default function Hero({ score, accent, phoneMeals }: HeroProps) {
           </div>
         </div>
         <div className="hero-right">
-          <PhoneMock score={score} meals={phoneMeals} />
+          <PhoneMock
+            score={score}
+            meals={phoneMeals}
+            band={PHONE_DEMO_BAND}
+            coaching={PHONE_DEMO_COACH}
+          />
         </div>
       </div>
     </header>

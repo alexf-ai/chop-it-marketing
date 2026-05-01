@@ -4,22 +4,24 @@ import { useEffect, useState, type ReactNode } from 'react';
 
 import Nav from './Nav';
 import Hero from './Hero';
+import CostBlock from './CostBlock';
 import WhatItDoes from './WhatItDoes';
+import PantrySection from './PantrySection';
 import ScoreExplainer from './ScoreExplainer';
 import HowItWorks from './HowItWorks';
 import type { PhoneMeal } from './PhoneMock';
-import Voices from './Voices';
-import FinalCTA from './FinalCTA';
+import Principles from './Principles';
+import DownloadCTA from './DownloadCTA';
 import Footer from './Footer';
 import Tweaks, { type TweakState } from './Tweaks';
 
 import { ACCENTS } from '@/app/lib/score';
 
-// Edit-mode defaults — mirror the /*EDITMODE-BEGIN*/.../*EDITMODE-END*/ block from the prototype.
+// Edit-mode defaults — score is at 78 (top of "Good" / bottom of "Excellent")
+// so the first impression on the marketing site is a passing demo state.
 const TWEAK_DEFAULTS: TweakState = {
-  score: 32,
+  score: 78,
   accent: 'pink',
-  showTeam: true,
 };
 
 type HomeProps = {
@@ -62,9 +64,11 @@ export default function Home({ featuredRecipes, browseThumbs, pantryShowcase, ph
     <>
       <Nav accent={accent} />
       <Hero score={state.score} accent={accent} phoneMeals={phoneMeals} />
+      <CostBlock />
       <div id="what">
         <WhatItDoes />
       </div>
+      <PantrySection pantryShowcase={pantryShowcase} />
       <div id="score">
         <ScoreExplainer
           score={state.score}
@@ -73,11 +77,9 @@ export default function Home({ featuredRecipes, browseThumbs, pantryShowcase, ph
         />
       </div>
       <div id="recipes">{featuredRecipes}</div>
-      <div id="how">
-        <HowItWorks browseThumbs={browseThumbs} pantryShowcase={pantryShowcase} />
-      </div>
-      {state.showTeam && <Voices />}
-      <FinalCTA accent={accent} />
+      <HowItWorks browseThumbs={browseThumbs} />
+      <Principles />
+      <DownloadCTA accent={accent} />
       <Footer />
       {tweaksOn && <Tweaks state={state} setState={setState} onClose={() => setTweaksOn(false)} />}
     </>
