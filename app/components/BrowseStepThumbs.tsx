@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import DishPlaceholder from './DishPlaceholder';
 import { supabase, supabaseConfigured } from '@/app/lib/supabase';
@@ -61,7 +62,7 @@ export default async function BrowseStepThumbs() {
   return (
     <>
       {recipes.map((r) => (
-        <div key={r.id} className="how-thumb">
+        <Link key={r.id} href={`/recipes/${r.id}`} className="how-thumb" aria-label={r.title}>
           <div className="how-thumb-image">
             <Image
               src={r.image_url as string}
@@ -71,7 +72,7 @@ export default async function BrowseStepThumbs() {
               sizes="(max-width: 640px) 33vw, 160px"
             />
           </div>
-        </div>
+        </Link>
       ))}
     </>
   );

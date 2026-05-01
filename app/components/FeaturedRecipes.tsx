@@ -70,7 +70,7 @@ export default async function FeaturedRecipes() {
       <div className="recipes-grid">
         {recipes
           ? recipes.map((r) => (
-              <a key={r.id} className="recipe-card" href="#">
+              <a key={r.id} className="recipe-card" href={`/recipes/${r.id}`}>
                 <div className="recipe-image">
                   {r.image_url ? (
                     <Image

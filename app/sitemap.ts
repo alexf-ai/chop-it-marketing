@@ -1,7 +1,11 @@
 import type { MetadataRoute } from 'next';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+import { getAllRecipeIds } from './lib/recipes';
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
+  const ids = await getAllRecipeIds();
+
   return [
     {
       url: 'https://chop-it.com',
@@ -9,6 +13,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 1,
     },
+    ...ids.map((id) => ({
+      url: `https://chop-it.com/recipes/${id}`,
+      lastModified: now,
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    })),
     {
       url: 'https://chop-it.com/privacy',
       lastModified: now,
