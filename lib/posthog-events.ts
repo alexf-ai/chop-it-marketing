@@ -39,7 +39,17 @@ export type RecipeViewProps = {
   season: string | null;
   cost_band: string | null;
   has_nutrition: boolean;
+  // Referrer enrichment, computed at mount time by RecipeViewTracker:
+  //  - referrer: raw document.referrer or 'direct'
+  //  - referrer_domain: parsed hostname for funnel grouping ('direct' if none)
+  //  - search_engine_referrer: regex match against common search hosts —
+  //    a cheap organic-vs-other split that doesn't depend on UTM tagging
+  //  - entry_path: window.location.pathname at mount, useful when the recipe
+  //    page was deep-linked vs reached via /recipes hub navigation
   referrer: string;
+  referrer_domain: string;
+  search_engine_referrer: boolean;
+  entry_path: string;
 };
 
 export type NavCtaProps = {
