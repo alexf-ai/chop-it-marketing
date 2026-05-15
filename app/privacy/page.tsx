@@ -3,8 +3,8 @@ import type { Metadata } from 'next';
 import LegalLayout from '../components/LegalLayout';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Chop It',
-  description: 'How Chop It handles your data.',
+  title: 'Privacy Policy | Chop it',
+  description: 'How Chop it handles your data.',
   alternates: { canonical: 'https://chop-it.com/privacy' },
 };
 
@@ -46,6 +46,27 @@ export default function PrivacyPage() {
         time by emailing{' '}
         <a href="mailto:secretary@chop-it.com">secretary@chop-it.com</a>. We
         will confirm and complete the deletion within a reasonable period.
+      </p>
+
+      <h2>Analytics</h2>
+      <p>
+        We use PostHog, a product analytics platform, to understand how
+        visitors interact with chop-it.com. PostHog records:
+      </p>
+      <ul>
+        <li>Pages viewed and time spent</li>
+        <li>Buttons clicked (including app-store links)</li>
+        <li>
+          Anonymised device type, browser, and country (derived from IP)
+        </li>
+        <li>Referrer (where you arrived from)</li>
+      </ul>
+      <p>
+        Data is processed in the EU and retained per PostHog&rsquo;s default
+        retention policy. We do not record keystrokes, form input, or content
+        you paste into the page. You can decline analytics via the cookie
+        banner on first visit, or by enabling &lsquo;Do Not Track&rsquo; in
+        your browser.
       </p>
 
       <h2>Contact</h2>

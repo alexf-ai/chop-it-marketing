@@ -1,5 +1,9 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { trackNavCtaClick } from '@/lib/posthog-events';
 
 type NavProps = { accent: string };
 
@@ -16,7 +20,7 @@ export default function Nav({ accent }: NavProps) {
             className="wordmark-logo"
             priority
           />
-          Chop&nbsp;It
+          Chop&nbsp;it
         </Link>
         <div className="nav-links">
           <a href="#score">Diversity Score</a>
@@ -25,10 +29,19 @@ export default function Nav({ accent }: NavProps) {
           <a href="#">Feasts</a>
         </div>
         <div className="nav-cta">
-          <a className="nav-link-tertiary" href="#">
+          <a
+            className="nav-link-tertiary"
+            href="#"
+            onClick={() => trackNavCtaClick({ destination: 'sign_in', location: 'nav' })}
+          >
             Sign in
           </a>
-          <a className="btn btn-primary" style={{ background: accent }} href="#">
+          <a
+            className="btn btn-primary"
+            style={{ background: accent }}
+            href="#"
+            onClick={() => trackNavCtaClick({ destination: 'get_app', location: 'nav' })}
+          >
             Get the app
           </a>
         </div>

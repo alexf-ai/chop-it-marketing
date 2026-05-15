@@ -6,6 +6,7 @@ import { notFound, permanentRedirect } from 'next/navigation';
 import Footer from '@/app/components/Footer';
 import Nav from '@/app/components/Nav';
 import RecipeCTA from '@/app/components/RecipeCTA';
+import RecipeViewTracker from '@/app/components/RecipeViewTracker';
 import {
   getPublishedRecipeBySlug,
   getPublishedRecipeSlugs,
@@ -100,6 +101,15 @@ export default async function RecipePage({
   return (
     <>
       <Nav accent={ACCENT} />
+      <RecipeViewTracker
+        recipe_id={recipe.id}
+        recipe_slug={recipe.slug}
+        recipe_title={recipe.title}
+        cuisine={recipe.tags_json?.core?.[0] ?? null}
+        season={recipe.season}
+        cost_band={recipe.cost_band}
+        has_nutrition={hasNutrition}
+      />
       <article className="recipe-page">
         <Link href="/recipes" className="recipe-back mono">
           ← All recipes
@@ -231,7 +241,7 @@ export default async function RecipePage({
           </section>
         )}
 
-        <RecipeCTA />
+        <RecipeCTA recipeSlug={recipe.slug} recipeTitle={recipe.title} />
       </article>
 
       <script
