@@ -858,6 +858,9 @@ button { font-family: inherit; }
   color: var(--muted);
   font-style: italic;
 }
+@media (max-width: 640px) {
+  .legal-body h2 { margin: 32px 0 12px; font-size: 22px; }
+}
 
 /* ==========================================================================
    Tweaks panel
@@ -909,13 +912,13 @@ button { font-family: inherit; }
   .footer-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 640px) {
-  .section { padding: 48px 20px; }
-  .section.recipes { padding: 48px 20px; }
+  .section { padding: 32px 20px; }
+  .section.recipes { padding: 32px 20px; }
   .hero { padding: 40px 20px 64px; }
   .wrap, .nav-inner, .footer { padding-left: 20px; padding-right: 20px; }
   .what-grid { grid-template-columns: 1fr; }
-  .recipes-grid { grid-template-columns: 1fr; gap: 12px; }
-  .hero-stats { flex-direction: column; gap: 18px; }
+  .recipes-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .hero-stats { flex-direction: column; gap: 16px; }
   .nav-links { display: none; }
   .score-x-band-row { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr; }
@@ -926,7 +929,6 @@ button { font-family: inherit; }
   /* The step-01 thumbs use -12px side margins to bleed into the card edge;
      at mobile the card itself has less breathing room, so keep the gutter. */
   .how-visual-browse { margin: 0; padding: 0 0 24px; }
-  .how-step { padding: 28px 20px 0; }
 
   /* Grid children default to min-width: auto (== min-content), which lets a
      fixed-width child like the score ring push the grid track wider than the
@@ -945,6 +947,33 @@ button { font-family: inherit; }
   .ring-wrap[style*="380"] .ring-score,
   .ring-wrap[style*="260"] .ring-score { font-size: 72px; }
   .score-x-ring-wrap { padding: 24px 12px; }
+
+  /* Mobile fix pass (audit/mobile-audit.md J-01,J-03,J-04,J-05,J-06,M-01..M-07,M-10) */
+  .recipe-card .recipe-image { aspect-ratio: 1 / 1; }
+  .recipe-name { font-size: 16px; }
+  .recipe-meta { font-size: 12px; }
+
+  .what-card { min-height: auto; padding: 24px; }
+  .how-step { min-height: auto; padding: 24px; }
+
+  .section-head { margin-bottom: 32px; }
+
+  .hero-h {
+    font-size: clamp(40px, 11vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+  }
+  .h-editorial { line-height: 1.08; }
+
+  /* Each stat in <Hero> is an unclassed <div> inside .hero-stats — target
+     the direct children. Keep the value + pink .dot on the same baseline. */
+  .hero-stats > div { display: flex; align-items: baseline; gap: 8px; }
+  .hero-stats .hero-stat-v { display: inline-flex; align-items: baseline; }
+
+  /* Keep the three pillar pills (Plants / Fibre / Protein) on one line at
+     320px phone-mock width. */
+  .phone-pillars { gap: 2px; flex-wrap: nowrap; }
+  .phone-pillars .pill { font-size: 10px; padding: 2px 6px; }
 }
 
 /* ==========================================================================
@@ -1311,6 +1340,15 @@ button { font-family: inherit; }
   margin: 16px 0 0;
 }
 @media (max-width: 640px) {
-  .download-cta-row { flex-direction: column; width: 100%; }
-  .store-pill, .download-cta-row .btn { width: 100%; align-items: center; text-align: center; }
+  /* No wrapper around the two store pills in DownloadCTA.tsx, so use a
+     2-column grid and span the web button across both columns. Keeps App
+     Store + Google Play side-by-side and the web button stacked below. */
+  .download-cta-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+  .download-cta-row .store-pill { width: 100%; align-items: center; text-align: center; }
+  .download-cta-row .btn { grid-column: 1 / -1; width: 100%; }
 }
