@@ -103,6 +103,13 @@ export function buildRecipeJsonLd(recipe: Recipe): RecipeLd {
     '@id': url,
     name: recipe.title,
     description: recipe.hero_description ?? undefined,
+    // TODO(SEO/H3): Google Rich Results prefers 1:1, 4:3, AND 16:9 aspect
+    // variants for full Recipe eligibility. Cloudflare Images supports
+    // named variants but `1x1`/`4x3`/`16x9` aren't provisioned on the
+    // account yet (probed 2026-05-15: all return 403). When the variants
+    // are created in the CF dashboard, swap this to:
+    //   [`${base}/1x1`, `${base}/4x3`, `${base}/16x9`]
+    // where `base` is the imagedelivery.net URL minus the trailing `/full`.
     image: recipe.image_url ? [recipe.image_url] : undefined,
     url,
     dateModified: recipe.updated_at,
@@ -119,6 +126,47 @@ export function buildRecipeJsonLd(recipe: Recipe): RecipeLd {
     nutrition: buildNutrition(recipe),
   }) as RecipeLd;
   return ld;
+}
+
+// schema.org/BreadcrumbList JSON-LD. Built from the same Crumb shape the
+// visible <Breadcrumbs> uses so the two never drift.
+//
+// Position is 1-indexed per spec; the final ListItem's `item` is omitted
+// (it's the current page) — Google accepts both forms; omitting matches
+// the schema.org Rich Results guidance.
+
+export type BreadcrumbCrumbInput = { name: string; href?: string };
+
+type BreadcrumbItem = {
+  '@type': 'ListItem';
+  position: number;
+  name: string;
+  item?: string;
+};
+
+type BreadcrumbLd = {
+  '@context': 'https://schema.org';
+  '@type': 'BreadcrumbList';
+  itemListElement: BreadcrumbItem[];
+};
+
+export function buildBreadcrumbJsonLd(crumbs: BreadcrumbCrumbInput[]): BreadcrumbLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: crumbs.map((c, i): BreadcrumbItem => {
+      const item: BreadcrumbItem = {
+        '@type': 'ListItem',
+        position: i + 1,
+        name: c.name,
+      };
+      // Final crumb (current page): omit `item` per Google guidance.
+      if (c.href && i < crumbs.length - 1) {
+        item.item = c.href.startsWith('http') ? c.href : `${SITE_ORIGIN}${c.href}`;
+      }
+      return item;
+    }),
+  };
 }
 
 export function serializeJsonLd(ld: object): string {
