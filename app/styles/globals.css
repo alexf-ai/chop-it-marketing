@@ -1486,3 +1486,99 @@ button { font-family: inherit; }
      across both columns so it doesn't sit awkwardly half-width. */
   .recipe-cta-row .store-pill:only-child { grid-column: 1 / -1; }
 }
+
+/* ==========================================================================
+   /recipes hub + taxonomy pages
+   ========================================================================== */
+.recipes-hub { padding-top: 48px; padding-bottom: 96px; }
+
+.recipe-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 24px 0 32px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+}
+.recipe-filters .filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.recipe-filters .filter-k {
+  color: var(--muted-2);
+  text-transform: uppercase;
+  margin-right: 6px;
+  font-family: var(--ff-mono);
+}
+.filter-opt {
+  display: inline-block;
+  padding: 6px 12px;
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  color: var(--text-2);
+  text-transform: capitalize;
+  transition: border-color 140ms ease, color 140ms ease, background 140ms ease;
+}
+.filter-opt:hover { border-color: var(--text); color: var(--text); }
+.filter-opt.on {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.recipe-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 48px 0 0;
+  font-size: 13px;
+}
+
+.recipe-grid-empty {
+  text-align: center;
+  padding: 56px 0;
+  font-size: 16px;
+}
+
+/* Bottom row inside each recipe card on the hub — time + cost dot. */
+.recipe-card-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted-2);
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+}
+.cost-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Tag chips on the detail-page header (clickable, route to /recipes/tag/<tag>). */
+.recipe-page .recipe-tags .tag {
+  transition: border-color 140ms ease, color 140ms ease;
+}
+.recipe-page .recipe-tags .tag:hover {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+/* Tablet: 3-col grid (homepage uses 2-col at this width — hub wants denser). */
+@media (min-width: 641px) and (max-width: 1100px) {
+  .recipes-hub .recipes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* Desktop: 4-col on the hub specifically (homepage Featured stays 3-col). */
+@media (min-width: 1101px) {
+  .recipes-hub .recipes-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
