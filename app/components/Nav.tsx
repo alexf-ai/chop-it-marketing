@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { trackNavCtaClick } from '@/lib/posthog-events';
+import { trackCtaClicked, trackNavCtaClick } from '@/lib/posthog-events';
 
 type NavProps = { accent: string };
 
@@ -32,7 +32,14 @@ export default function Nav({ accent }: NavProps) {
           <a
             className="nav-link-tertiary"
             href="#"
-            onClick={() => trackNavCtaClick({ destination: 'sign_in', location: 'nav' })}
+            onClick={() => {
+              trackNavCtaClick({ destination: 'sign_in', location: 'nav' });
+              trackCtaClicked({
+                cta_location: 'header_nav',
+                cta_label: 'Sign in',
+                cta_destination: '#',
+              });
+            }}
           >
             Sign in
           </a>
@@ -40,7 +47,14 @@ export default function Nav({ accent }: NavProps) {
             className="btn btn-primary"
             style={{ background: accent }}
             href="#"
-            onClick={() => trackNavCtaClick({ destination: 'get_app', location: 'nav' })}
+            onClick={() => {
+              trackNavCtaClick({ destination: 'get_app', location: 'nav' });
+              trackCtaClicked({
+                cta_location: 'header_nav',
+                cta_label: 'Get the app',
+                cta_destination: '#',
+              });
+            }}
           >
             Get the app
           </a>

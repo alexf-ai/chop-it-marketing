@@ -23,6 +23,19 @@ const nextConfig = {
       },
     ];
   },
+  // Host normalization: www.chop-it.com → chop-it.com (apex).
+  // 308 (permanent) so search engines collapse the two hostnames into one
+  // and PostHog stops splitting sessions across them. Path is preserved.
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [{ type: 'host', value: 'www.chop-it.com' }],
+        destination: 'https://chop-it.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
   // Required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
 };

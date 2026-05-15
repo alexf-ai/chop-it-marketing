@@ -11,7 +11,11 @@
 // install, not to advertise the browser surface. Other entry points on
 // the homepage already cover the web fallback.
 
-import { trackAppStoreClick, trackPlayStoreClick } from '@/lib/posthog-events';
+import {
+  trackAppStoreClick,
+  trackCtaClicked,
+  trackPlayStoreClick,
+} from '@/lib/posthog-events';
 
 const APP_STORE_URL = process.env.NEXT_PUBLIC_APP_STORE_URL ?? '#';
 const PLAY_STORE_URL = process.env.NEXT_PUBLIC_PLAY_STORE_URL ?? '#';
@@ -37,13 +41,18 @@ export default function RecipeCTA({ recipeSlug, recipeTitle }: RecipeCTAProps = 
           className="store-pill"
           href={APP_STORE_URL}
           aria-label="Download on the App Store"
-          onClick={() =>
+          onClick={() => {
             trackAppStoreClick({
               recipe_slug: recipeSlug,
               recipe_title: recipeTitle,
               location: 'recipe_page',
-            })
-          }
+            });
+            trackCtaClicked({
+              cta_location: 'recipe_page_footer',
+              cta_label: 'App Store',
+              cta_destination: APP_STORE_URL,
+            });
+          }}
         >
           <span className="store-pill-top mono">DOWNLOAD ON THE</span>
           <span className="store-pill-bot">App Store</span>
@@ -53,13 +62,18 @@ export default function RecipeCTA({ recipeSlug, recipeTitle }: RecipeCTAProps = 
             className="store-pill"
             href={PLAY_STORE_URL}
             aria-label="Get it on Google Play"
-            onClick={() =>
+            onClick={() => {
               trackPlayStoreClick({
                 recipe_slug: recipeSlug,
                 recipe_title: recipeTitle,
                 location: 'recipe_page',
-              })
-            }
+              });
+              trackCtaClicked({
+                cta_location: 'recipe_page_footer',
+                cta_label: 'Google Play',
+                cta_destination: PLAY_STORE_URL,
+              });
+            }}
           >
             <span className="store-pill-top mono">GET IT ON</span>
             <span className="store-pill-bot">Google Play</span>
