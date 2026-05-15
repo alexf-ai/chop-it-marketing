@@ -7,5 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
     },
     sitemap: 'https://chop-it.com/sitemap.xml',
+    host: 'https://chop-it.com',
   };
 }
