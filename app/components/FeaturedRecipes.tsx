@@ -29,6 +29,32 @@ type LiveRecipe = {
   display_priority: number | null;
 };
 
+const FEATURED_TOTAL = 6;
+const MAX_VEG_FEATURED = 3;
+// Word-boundary match on common meat/fish proteins. Used to balance the
+// Featured grid so it doesn't read as veg-only when veg recipes happen to
+// outrank protein recipes by display_priority.
+const PROTEIN_TITLE_RE =
+  /\b(beef|steak|ribeye|brisket|chicken|poultry|pork|bacon|sausage|chorizo|ham|pancetta|prosciutto|lamb|mutton|duck|turkey|salmon|cod|tuna|bass|haddock|sardine|mackerel|trout|fish|prawn|shrimp|scallop|mussel|octopus|squid|crab|lobster)\b/i;
+
+function isProteinTitle(title: string): boolean {
+  return PROTEIN_TITLE_RE.test(title);
+}
+
+function balanceVegFeatured(recipes: LiveRecipe[]): LiveRecipe[] {
+  const protein = recipes.filter((r) => isProteinTitle(r.title));
+  const veg = recipes.filter((r) => !isProteinTitle(r.title));
+  // If we don't have enough protein options to balance, fall back to the
+  // raw priority order rather than show fewer than FEATURED_TOTAL.
+  if (protein.length < FEATURED_TOTAL - MAX_VEG_FEATURED) {
+    return recipes.slice(0, FEATURED_TOTAL);
+  }
+  const keepVeg = veg.slice(0, MAX_VEG_FEATURED);
+  const keepProtein = protein.slice(0, FEATURED_TOTAL - keepVeg.length);
+  const kept = new Set([...keepVeg, ...keepProtein].map((r) => r.id));
+  return recipes.filter((r) => kept.has(r.id)).slice(0, FEATURED_TOTAL);
+}
+
 async function getFeaturedRecipes(): Promise<LiveRecipe[] | null> {
   if (!supabase || !supabaseConfigured) {
     console.warn(
@@ -37,13 +63,15 @@ async function getFeaturedRecipes(): Promise<LiveRecipe[] | null> {
     return null;
   }
 
+  // Fetch more than we need so we have room to rebalance veg vs protein
+  // post-query (the recipes table has no diet/type column to filter on).
   const { data, error } = await supabase
     .from('recipes_published')
     .select('id, title, image_url, season, display_priority')
     .eq('season', 'summer')
     .not('image_url', 'is', null)
     .order('display_priority', { ascending: false })
-    .limit(6);
+    .limit(12);
 
   if (error) {
     console.warn('[FeaturedRecipes] query error, falling back to placeholders:', error.message);
@@ -53,7 +81,7 @@ async function getFeaturedRecipes(): Promise<LiveRecipe[] | null> {
     console.warn('[FeaturedRecipes] no published summer recipes with images yet — using placeholders');
     return null;
   }
-  return data as LiveRecipe[];
+  return balanceVegFeatured(data as LiveRecipe[]);
 }
 
 export default async function FeaturedRecipes() {

@@ -74,7 +74,7 @@ export default function PhoneMock({
 
         <div className="phone-meals-head">
           <span className="mono">THIS WEEK&rsquo;S MEALS</span>
-          <span className="phone-meals-more">5 of 7</span>
+          <span className="phone-meals-more">5 of 5</span>
         </div>
 
         <div className="phone-meals">
