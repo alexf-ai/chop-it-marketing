@@ -37,7 +37,7 @@
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); }
+html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); overscroll-behavior-x: none; }
 body {
   font-family: var(--ff-sans);
   font-size: 17px;
