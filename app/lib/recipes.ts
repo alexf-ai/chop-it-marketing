@@ -209,6 +209,16 @@ export async function listPublishedRecipes(
   return { items, total: count ?? items.length };
 }
 
+// URL-safe character set for tag/cuisine paths. Tags containing spaces or
+// other characters that encodeURIComponent translates into %NN sequences
+// break Next.js static export (it can't write a `.rsc` file with `%` in
+// the filename on case-sensitive macOS / Linux). The taxonomy in the DB
+// contains ~40% such values (e.g. "Modern British", "quick weeknight").
+// Excluding them from generateStaticParams + sitemap is the minimum patch
+// to unblock the build. A future PR can introduce a slugify/unslugify pair
+// to preserve those tags as `/recipes/tag/modern-british` URLs.
+const URL_SAFE_SLUG_RE = /^[A-Za-z0-9_-]+$/;
+
 // Distinct taxonomy values for static-param generation + the hub filter bar.
 // `core[0]` is the cuisine by team convention. Both this and getDistinctTags
 // scan the full tags_json column, so they MUST paginate — once the
@@ -228,7 +238,9 @@ export async function getDistinctCuisines(): Promise<string[]> {
   for (const r of rows) {
     const core = r.tags_json?.core;
     if (Array.isArray(core) && core.length > 0 && typeof core[0] === 'string') {
-      out.add(core[0]);
+      // Drop URL-unsafe cuisines (spaces, accents, etc.) so we don't try
+      // to pre-render /recipes/cuisine/<%-encoded%>/ — see URL_SAFE_SLUG_RE.
+      if (URL_SAFE_SLUG_RE.test(core[0])) out.add(core[0]);
     }
   }
   return Array.from(out).sort();
@@ -261,7 +273,8 @@ export async function getDistinctTags(): Promise<string[]> {
     const core = r.tags_json?.core;
     if (Array.isArray(core)) {
       for (const t of core) {
-        if (typeof t === 'string') out.add(t);
+        // Same URL-safety filter as getDistinctCuisines — see URL_SAFE_SLUG_RE.
+        if (typeof t === 'string' && URL_SAFE_SLUG_RE.test(t)) out.add(t);
       }
     }
   }
