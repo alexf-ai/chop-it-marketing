@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 
+import Breadcrumbs, { type Crumb } from '@/app/components/Breadcrumbs';
 import Footer from '@/app/components/Footer';
 import Nav from '@/app/components/Nav';
 import RecipeCTA from '@/app/components/RecipeCTA';
@@ -12,7 +13,12 @@ import {
   getPublishedRecipeSlugs,
   getSlugById,
 } from '@/app/lib/recipes';
-import { buildRecipeJsonLd, serializeJsonLd, SITE_ORIGIN } from '@/app/lib/recipeSchema';
+import {
+  buildBreadcrumbJsonLd,
+  buildRecipeJsonLd,
+  serializeJsonLd,
+  SITE_ORIGIN,
+} from '@/app/lib/recipeSchema';
 
 export const revalidate = 3600;
 
@@ -96,7 +102,30 @@ export default async function RecipePage({
       recipe.nutrition_carbs_g != null ||
       recipe.nutrition_fat_g != null);
 
-  const ld = buildRecipeJsonLd(recipe);
+  // SEO breadcrumb trail. The visible crumbs + BreadcrumbList JSON-LD share
+  // this same data so they never drift. Position 3 (cuisine) is conditional
+  // — some recipes have no cuisine tag, in which case we collapse to
+  // Home › Recipes › <title>.
+  const cuisine = recipe.tags_json?.core?.[0] ?? null;
+  const crumbs: Crumb[] = [
+    { name: 'Home', href: '/' },
+    { name: 'Recipes', href: '/recipes' },
+  ];
+  if (cuisine) {
+    crumbs.push({
+      name: cuisine,
+      href: `/recipes/cuisine/${encodeURIComponent(cuisine)}`,
+    });
+  }
+  crumbs.push({ name: recipe.title });
+
+  // H2 alt-text format: "{title} — {cuisine}, {season}" where available.
+  // Falls back to bare title when neither is present.
+  const altSuffix = [cuisine, recipe.season].filter((s): s is string => Boolean(s)).join(', ');
+  const heroAlt = altSuffix ? `${recipe.title} — ${altSuffix}` : recipe.title;
+
+  const recipeLd = buildRecipeJsonLd(recipe);
+  const breadcrumbLd = buildBreadcrumbJsonLd(crumbs);
 
   return (
     <>
@@ -105,24 +134,23 @@ export default async function RecipePage({
         recipe_id={recipe.id}
         recipe_slug={recipe.slug}
         recipe_title={recipe.title}
-        cuisine={recipe.tags_json?.core?.[0] ?? null}
+        cuisine={cuisine}
         season={recipe.season}
         cost_band={recipe.cost_band}
         has_nutrition={hasNutrition}
       />
       <article className="recipe-page">
-        <Link href="/recipes" className="recipe-back mono">
-          ← All recipes
-        </Link>
+        <Breadcrumbs crumbs={crumbs} />
 
         {recipe.image_url && (
           <div className="recipe-page-hero">
             <Image
               src={recipe.image_url}
-              alt={recipe.title}
+              alt={heroAlt}
               width={1200}
               height={1500}
               priority
+              fetchPriority="high"
               sizes="(max-width: 800px) 100vw, 800px"
             />
           </div>
@@ -247,7 +275,12 @@ export default async function RecipePage({
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: serializeJsonLd(ld) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(recipeLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbLd) }}
       />
 
       <Footer />

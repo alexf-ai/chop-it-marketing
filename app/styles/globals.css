@@ -1627,3 +1627,45 @@ button { font-family: inherit; }
   .cookie-banner-actions { justify-content: stretch; }
   .cookie-banner-actions .btn { flex: 1; }
 }
+
+/* ==========================================================================
+   Breadcrumbs (recipe detail page — replaces the old "← All recipes" back link)
+   ========================================================================== */
+.breadcrumbs {
+  margin-bottom: 24px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--muted-2);
+}
+.breadcrumbs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+}
+.breadcrumbs-item {
+  display: inline-flex;
+  align-items: center;
+}
+.breadcrumbs-link {
+  color: var(--muted-2);
+  transition: color 140ms ease;
+}
+.breadcrumbs-link:hover { color: var(--text); }
+.breadcrumbs-item [aria-current="page"] {
+  color: var(--text-2);
+}
+.breadcrumbs-sep {
+  margin: 0 8px;
+  color: var(--muted);
+}
+@media (max-width: 480px) {
+  /* On narrow viewports, hide everything before the last two crumbs to
+     keep the trail on one line. The final crumb (current page) is what
+     orients the user; the parent right above it gives the back link. */
+  .breadcrumbs-list .breadcrumbs-item:not(:nth-last-child(-n+2)) { display: none; }
+}

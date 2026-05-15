@@ -17,26 +17,49 @@ export const revalidate = 3600;
 
 const PER_PAGE = 24;
 
-export const metadata: Metadata = {
-  title: 'Recipes · Chop it',
-  description:
-    'Browse chef-approved recipes. Sorted by season, scored by diversity.',
-  alternates: { canonical: `${SITE_ORIGIN}/recipes` },
-  openGraph: {
-    title: 'Recipes · Chop it',
-    description:
-      'Browse chef-approved recipes. Sorted by season, scored by diversity.',
-    url: `${SITE_ORIGIN}/recipes`,
-    type: 'website',
-  },
-};
-
 type SearchParams = {
   page?: string;
   season?: string;
   cuisine?: string;
   cost?: string;
 };
+
+// H5 + faceted-nav SEO: anything beyond the canonical /recipes view should
+// be noindex,follow — pagination (?page=2+) and any filter narrowing
+// (?cuisine=…, ?season=…, ?cost=…). The canonical for those filtered views
+// is the dedicated taxonomy page (/recipes/cuisine/<x>) when one exists.
+function isCanonicalHubView(sp: SearchParams): boolean {
+  const page = Number.parseInt(sp.page ?? '1', 10) || 1;
+  if (page > 1) return false;
+  if (sp.season || sp.cuisine || sp.cost) return false;
+  return true;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}): Promise<Metadata> {
+  const sp = await searchParams;
+  const canonical = isCanonicalHubView(sp);
+  const base: Metadata = {
+    title: 'Recipes · Chop it',
+    description:
+      'Browse chef-approved recipes. Sorted by season, scored by diversity.',
+    alternates: { canonical: `${SITE_ORIGIN}/recipes` },
+    openGraph: {
+      title: 'Recipes · Chop it',
+      description:
+        'Browse chef-approved recipes. Sorted by season, scored by diversity.',
+      url: `${SITE_ORIGIN}/recipes`,
+      type: 'website',
+    },
+  };
+  if (!canonical) {
+    base.robots = { index: false, follow: true };
+  }
+  return base;
+}
 
 const ACCENT = '#E8547A';
 
