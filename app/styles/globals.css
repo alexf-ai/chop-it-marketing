@@ -970,9 +970,13 @@ button { font-family: inherit; }
   .hero-stats > div { display: flex; align-items: baseline; gap: 8px; }
   .hero-stats .hero-stat-v { display: inline-flex; align-items: baseline; }
 
-  /* Keep the three pillar pills (Plants / Fibre / Protein) on one line at
-     320px phone-mock width. */
-  .phone-pillars { gap: 2px; flex-wrap: nowrap; }
+  /* Phone-mock score card: at 320px phone width the 156px ring leaves
+     only ~64px for the right column, which mangles the band/coach text
+     and clips the pillars. Stack vertically on mobile so the ring sits
+     above full-width text + pillars. */
+  .phone-score-card { grid-template-columns: 1fr; gap: 12px; justify-items: center; }
+  .phone-score-side { text-align: center; width: 100%; }
+  .phone-pillars { gap: 4px; flex-wrap: nowrap; justify-content: center; }
   .phone-pillars .pill { font-size: 10px; padding: 2px 6px; }
 }
 
