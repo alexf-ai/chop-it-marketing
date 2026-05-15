@@ -1,3 +1,6 @@
+'use client';
+
+import posthog from 'posthog-js';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -25,10 +28,19 @@ export default function Nav({ accent }: NavProps) {
           <a href="#">Feasts</a>
         </div>
         <div className="nav-cta">
-          <a className="nav-link-tertiary" href="#">
+          <a
+            className="nav-link-tertiary"
+            href="#"
+            onClick={() => posthog.capture('nav_cta_clicked', { cta_type: 'sign_in' })}
+          >
             Sign in
           </a>
-          <a className="btn btn-primary" style={{ background: accent }} href="#">
+          <a
+            className="btn btn-primary"
+            style={{ background: accent }}
+            href="#"
+            onClick={() => posthog.capture('nav_cta_clicked', { cta_type: 'get_app' })}
+          >
             Get the app
           </a>
         </div>

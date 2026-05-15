@@ -1,5 +1,7 @@
 'use client';
 
+import posthog from 'posthog-js';
+
 // RecipeCTA — bottom-of-recipe call-to-action.
 //
 // Two store badges, App Store left, Google Play right. Google Play is
@@ -27,6 +29,7 @@ export default function RecipeCTA() {
           className="store-pill"
           href={APP_STORE_URL}
           aria-label="Download on the App Store"
+          onClick={() => posthog.capture('recipe_cta_clicked', { platform: 'ios' })}
         >
           <span className="store-pill-top mono">DOWNLOAD ON THE</span>
           <span className="store-pill-bot">App Store</span>
@@ -36,6 +39,7 @@ export default function RecipeCTA() {
             className="store-pill"
             href={PLAY_STORE_URL}
             aria-label="Get it on Google Play"
+            onClick={() => posthog.capture('recipe_cta_clicked', { platform: 'android' })}
           >
             <span className="store-pill-top mono">GET IT ON</span>
             <span className="store-pill-bot">Google Play</span>

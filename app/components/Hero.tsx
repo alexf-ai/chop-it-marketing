@@ -1,3 +1,7 @@
+'use client';
+
+import posthog from 'posthog-js';
+
 import PhoneMock, { type PhoneMeal } from './PhoneMock';
 
 type HeroProps = {
@@ -29,10 +33,19 @@ export default function Hero({ score, accent, phoneMeals }: HeroProps) {
             more plants, more fibre, less waste. Without giving up the lasagne on Friday.
           </p>
           <div className="hero-cta">
-            <a className="btn btn-primary" style={{ background: accent }} href="https://chopit.app">
+            <a
+              className="btn btn-primary"
+              style={{ background: accent }}
+              href="https://chopit.app"
+              onClick={() => posthog.capture('app_cta_clicked', { cta_destination: 'web_app', cta_location: 'hero' })}
+            >
               Try the web app
             </a>
-            <a className="hero-cta-link" href="#how">
+            <a
+              className="hero-cta-link"
+              href="#how"
+              onClick={() => posthog.capture('how_it_works_clicked', { cta_location: 'hero' })}
+            >
               See how it works →
             </a>
           </div>

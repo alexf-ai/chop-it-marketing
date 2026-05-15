@@ -1,5 +1,9 @@
+'use client';
+
 // Block 08 — Closing CTA. Replaces the old FinalCTA. Three CTAs in a row
 // (App Store / Google Play / web) plus a verified sustainability anchor line.
+
+import posthog from 'posthog-js';
 
 type DownloadCTAProps = { accent: string };
 
@@ -14,11 +18,21 @@ export default function DownloadCTA({ accent }: DownloadCTAProps) {
         </p>
         <div className="download-cta-row">
           {/* App Store / Google Play badges — placeholder hrefs until live URLs land. */}
-          <a className="store-pill" href="#" aria-label="Download on the App Store">
+          <a
+            className="store-pill"
+            href="#"
+            aria-label="Download on the App Store"
+            onClick={() => posthog.capture('app_cta_clicked', { cta_destination: 'app_store', cta_location: 'download_cta' })}
+          >
             <span className="store-pill-top mono">DOWNLOAD ON THE</span>
             <span className="store-pill-bot">App Store</span>
           </a>
-          <a className="store-pill" href="#" aria-label="Get it on Google Play">
+          <a
+            className="store-pill"
+            href="#"
+            aria-label="Get it on Google Play"
+            onClick={() => posthog.capture('app_cta_clicked', { cta_destination: 'play_store', cta_location: 'download_cta' })}
+          >
             <span className="store-pill-top mono">GET IT ON</span>
             <span className="store-pill-bot">Google Play</span>
           </a>
@@ -26,6 +40,7 @@ export default function DownloadCTA({ accent }: DownloadCTAProps) {
             className="btn btn-ghost btn-large"
             href="https://chopit.app"
             style={{ borderColor: accent }}
+            onClick={() => posthog.capture('app_cta_clicked', { cta_destination: 'web_app', cta_location: 'download_cta' })}
           >
             Try the web app
           </a>
