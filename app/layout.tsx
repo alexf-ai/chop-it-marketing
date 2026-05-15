@@ -41,6 +41,14 @@ export const metadata: Metadata = {
     description:
       'Chop it plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
   },
+  // Google Search Console — URL-prefix property verification.
+  // Property: https://chop-it.com
+  // Once GSC has crawled this tag and verified ownership, this entry can be
+  // left in place (no harm) or removed in a later cleanup pass — Google
+  // only re-checks if ownership is challenged.
+  verification: {
+    google: 'kqSyATyhUHmcDShKvUNWK-Ntj3n9qrdB8omXiM6tft0',
+  },
 };
 
 const ORGANIZATION_JSONLD = {
