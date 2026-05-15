@@ -96,18 +96,43 @@ export async function getRecipeById(id: string): Promise<Recipe | null> {
 
 // --- New slug-based helpers (SEO recipe pages).
 
+// Supabase's hosted PostgREST caps result rows at `db-max-rows` (1000 by
+// default on the Free / Pro tier). Once we crossed 1,000 published recipes
+// the sitemap and generateStaticParams were truncating silently. This
+// helper paginates the query with .range() so we always see the full set.
+const SUPABASE_PAGE_SIZE = 1000;
+
+async function fetchAllPaged<T>(
+  build: (
+    from: number,
+    to: number,
+  ) => PromiseLike<{ data: T[] | null; error: unknown }>,
+): Promise<T[]> {
+  const out: T[] = [];
+  for (let from = 0; ; from += SUPABASE_PAGE_SIZE) {
+    const { data, error } = await build(from, from + SUPABASE_PAGE_SIZE - 1);
+    if (error || !data) break;
+    out.push(...data);
+    if (data.length < SUPABASE_PAGE_SIZE) break;
+  }
+  return out;
+}
+
 export async function getPublishedRecipeSlugs(): Promise<
   { slug: string; updated_at: string }[]
 > {
   if (!supabase || !supabaseConfigured) return [];
-  const { data, error } = await supabase
-    .from('recipes_published')
-    .select('slug, updated_at')
-    .eq('seo_published', true)
-    .is('deleted_at', null)
-    .not('slug', 'is', null);
-  if (error || !data) return [];
-  return data
+  const rows = await fetchAllPaged<{ slug: string | null; updated_at: string }>(
+    (from, to) =>
+      supabase!
+        .from('recipes_published')
+        .select('slug, updated_at')
+        .eq('seo_published', true)
+        .is('deleted_at', null)
+        .not('slug', 'is', null)
+        .range(from, to),
+  );
+  return rows
     .filter((r): r is { slug: string; updated_at: string } => typeof r.slug === 'string')
     .map((r) => ({ slug: r.slug, updated_at: r.updated_at }));
 }
@@ -185,18 +210,23 @@ export async function listPublishedRecipes(
 }
 
 // Distinct taxonomy values for static-param generation + the hub filter bar.
-// `core[0]` is the cuisine by team convention.
+// `core[0]` is the cuisine by team convention. Both this and getDistinctTags
+// scan the full tags_json column, so they MUST paginate — once the
+// seo_published set crossed 1,000 rows the un-paginated version silently
+// dropped categories.
 export async function getDistinctCuisines(): Promise<string[]> {
   if (!supabase || !supabaseConfigured) return [];
-  const { data, error } = await supabase
-    .from('recipes_published')
-    .select('tags_json')
-    .eq('seo_published', true)
-    .is('deleted_at', null);
-  if (error || !data) return [];
+  const rows = await fetchAllPaged<{ tags_json: TagsJson }>((from, to) =>
+    supabase!
+      .from('recipes_published')
+      .select('tags_json')
+      .eq('seo_published', true)
+      .is('deleted_at', null)
+      .range(from, to),
+  );
   const out = new Set<string>();
-  for (const r of data) {
-    const core = (r.tags_json as TagsJson)?.core;
+  for (const r of rows) {
+    const core = r.tags_json?.core;
     if (Array.isArray(core) && core.length > 0 && typeof core[0] === 'string') {
       out.add(core[0]);
     }
@@ -218,15 +248,17 @@ export async function getDistinctSeasons(): Promise<string[]> {
 
 export async function getDistinctTags(): Promise<string[]> {
   if (!supabase || !supabaseConfigured) return [];
-  const { data, error } = await supabase
-    .from('recipes_published')
-    .select('tags_json')
-    .eq('seo_published', true)
-    .is('deleted_at', null);
-  if (error || !data) return [];
+  const rows = await fetchAllPaged<{ tags_json: TagsJson }>((from, to) =>
+    supabase!
+      .from('recipes_published')
+      .select('tags_json')
+      .eq('seo_published', true)
+      .is('deleted_at', null)
+      .range(from, to),
+  );
   const out = new Set<string>();
-  for (const r of data) {
-    const core = (r.tags_json as TagsJson)?.core;
+  for (const r of rows) {
+    const core = r.tags_json?.core;
     if (Array.isArray(core)) {
       for (const t of core) {
         if (typeof t === 'string') out.add(t);
