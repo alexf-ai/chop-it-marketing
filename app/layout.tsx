@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Instrument_Serif, JetBrains_Mono } from 'next/font/google';
 import './styles/globals.css';
 
+import CookieBanner from './components/CookieBanner';
+
 // Hybrid type system: Instrument Serif for display headings, JetBrains Mono for meta/numerals,
 // system-ui stack for body copy so we match the PWA visually (PWA is system-font-only under CSP).
 const instrumentSerif = Instrument_Serif({
@@ -20,35 +22,35 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Chop It — Weekly shop, sorted in minutes',
+  title: 'Chop it — Weekly shop, sorted in minutes',
   description:
-    'Chop It plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating — without giving up the meals you love.',
+    'Chop it plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating — without giving up the meals you love.',
   metadataBase: new URL('https://chop-it.com'),
   openGraph: {
-    title: 'Chop It — Weekly shop, sorted in minutes',
+    title: 'Chop it — Weekly shop, sorted in minutes',
     description:
-      'Chop It plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
+      'Chop it plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
     url: 'https://chop-it.com',
-    siteName: 'Chop It',
+    siteName: 'Chop it',
     locale: 'en_GB',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Chop It — Weekly shop, sorted in minutes',
+    title: 'Chop it — Weekly shop, sorted in minutes',
     description:
-      'Chop It plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
+      'Chop it plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
   },
 };
 
 const ORGANIZATION_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Chop It',
+  name: 'Chop it',
   url: 'https://chop-it.com',
   logo: 'https://chop-it.com/logo.webp',
   description:
-    'Chop It plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
+    'Chop it plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
   sameAs: ['https://chopit.app'],
 };
 
@@ -64,6 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
         />
         {children}
+        <CookieBanner />
       </body>
     </html>
   );

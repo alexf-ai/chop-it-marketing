@@ -1,6 +1,6 @@
 'use client';
 
-import posthog from 'posthog-js';
+import { trackNavCtaClick } from '@/lib/posthog-events';
 
 import PhoneMock, { type PhoneMeal } from './PhoneMock';
 
@@ -29,7 +29,7 @@ export default function Hero({ score, accent, phoneMeals }: HeroProps) {
             </span>
           </h1>
           <p className="hero-sub">
-            Chop It plans the week, writes the shop, and quietly nudges you toward more variety,
+            Chop it plans the week, writes the shop, and quietly nudges you toward more variety,
             more plants, more fibre, less waste. Without giving up the lasagne on Friday.
           </p>
           <div className="hero-cta">
@@ -37,14 +37,14 @@ export default function Hero({ score, accent, phoneMeals }: HeroProps) {
               className="btn btn-primary"
               style={{ background: accent }}
               href="https://chopit.app"
-              onClick={() => posthog.capture('app_cta_clicked', { cta_destination: 'web_app', cta_location: 'hero' })}
+              onClick={() => trackNavCtaClick({ destination: 'web_app', location: 'hero' })}
             >
               Try the web app
             </a>
             <a
               className="hero-cta-link"
               href="#how"
-              onClick={() => posthog.capture('how_it_works_clicked', { cta_location: 'hero' })}
+              onClick={() => trackNavCtaClick({ destination: 'see_how_it_works', location: 'hero' })}
             >
               See how it works →
             </a>

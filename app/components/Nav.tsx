@@ -1,8 +1,9 @@
 'use client';
 
-import posthog from 'posthog-js';
 import Image from 'next/image';
 import Link from 'next/link';
+
+import { trackNavCtaClick } from '@/lib/posthog-events';
 
 type NavProps = { accent: string };
 
@@ -19,7 +20,7 @@ export default function Nav({ accent }: NavProps) {
             className="wordmark-logo"
             priority
           />
-          Chop&nbsp;It
+          Chop&nbsp;it
         </Link>
         <div className="nav-links">
           <a href="#score">Diversity Score</a>
@@ -31,7 +32,7 @@ export default function Nav({ accent }: NavProps) {
           <a
             className="nav-link-tertiary"
             href="#"
-            onClick={() => posthog.capture('nav_cta_clicked', { cta_type: 'sign_in' })}
+            onClick={() => trackNavCtaClick({ destination: 'sign_in', location: 'nav' })}
           >
             Sign in
           </a>
@@ -39,7 +40,7 @@ export default function Nav({ accent }: NavProps) {
             className="btn btn-primary"
             style={{ background: accent }}
             href="#"
-            onClick={() => posthog.capture('nav_cta_clicked', { cta_type: 'get_app' })}
+            onClick={() => trackNavCtaClick({ destination: 'get_app', location: 'nav' })}
           >
             Get the app
           </a>
