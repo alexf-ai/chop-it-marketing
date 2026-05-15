@@ -72,3 +72,46 @@ export function trackRecipeView(props: RecipeViewProps): void {
 export function trackNavCtaClick(props: NavCtaProps): void {
   posthog.capture('nav_cta_click', props);
 }
+
+// Generic CTA tracking — fires alongside the typed helpers above so the
+// dashboard can pivot on a single `cta_clicked` event with a closed
+// `cta_location` enum (autocapture misses icon buttons + image links).
+//
+// Closed enum: extend this union when adding a new surface; ad-hoc string
+// values are rejected at compile time so dashboards don't accumulate
+// typo'd variants.
+export type CtaSurface =
+  | 'homepage_hero'
+  | 'homepage_secondary'
+  | 'header_nav'
+  | 'mobile_menu'
+  | 'footer'
+  | 'recipe_page_inline'
+  | 'recipe_page_footer';
+
+export type CtaClickedProps = {
+  cta_location: CtaSurface;
+  cta_label: string;
+  cta_destination: string;
+};
+
+export function trackCtaClicked(props: CtaClickedProps): void {
+  posthog.capture('cta_clicked', props);
+}
+
+// Outbound link tracking — fired automatically by the global click listener
+// in instrumentation-client.ts. Exposed here so any imperative call sites
+// (e.g. a programmatic window.location assignment) can fire the same event.
+export type OutboundDestination = 'app' | 'tiktok' | 'instagram' | 'x' | 'twitter';
+
+export function trackOutboundToApp(props: { from_url: string; to_url: string }): void {
+  posthog.capture('outbound_to_app', props);
+}
+
+export function trackOutboundToSocial(props: {
+  platform: OutboundDestination;
+  from_url: string;
+  to_url: string;
+}): void {
+  posthog.capture('outbound_to_social', props);
+}

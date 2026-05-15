@@ -5,6 +5,7 @@
 
 import {
   trackAppStoreClick,
+  trackCtaClicked,
   trackNavCtaClick,
   trackPlayStoreClick,
 } from '@/lib/posthog-events';
@@ -26,7 +27,14 @@ export default function DownloadCTA({ accent }: DownloadCTAProps) {
             className="store-pill"
             href="#"
             aria-label="Download on the App Store"
-            onClick={() => trackAppStoreClick({ location: 'download_cta' })}
+            onClick={() => {
+              trackAppStoreClick({ location: 'download_cta' });
+              trackCtaClicked({
+                cta_location: 'homepage_secondary',
+                cta_label: 'App Store',
+                cta_destination: '#',
+              });
+            }}
           >
             <span className="store-pill-top mono">DOWNLOAD ON THE</span>
             <span className="store-pill-bot">App Store</span>
@@ -35,7 +43,14 @@ export default function DownloadCTA({ accent }: DownloadCTAProps) {
             className="store-pill"
             href="#"
             aria-label="Get it on Google Play"
-            onClick={() => trackPlayStoreClick({ location: 'download_cta' })}
+            onClick={() => {
+              trackPlayStoreClick({ location: 'download_cta' });
+              trackCtaClicked({
+                cta_location: 'homepage_secondary',
+                cta_label: 'Google Play',
+                cta_destination: '#',
+              });
+            }}
           >
             <span className="store-pill-top mono">GET IT ON</span>
             <span className="store-pill-bot">Google Play</span>
@@ -44,7 +59,14 @@ export default function DownloadCTA({ accent }: DownloadCTAProps) {
             className="btn btn-ghost btn-large"
             href="https://chopit.app"
             style={{ borderColor: accent }}
-            onClick={() => trackNavCtaClick({ destination: 'web_app', location: 'download_cta' })}
+            onClick={() => {
+              trackNavCtaClick({ destination: 'web_app', location: 'download_cta' });
+              trackCtaClicked({
+                cta_location: 'homepage_secondary',
+                cta_label: 'Try the web app',
+                cta_destination: 'https://chopit.app',
+              });
+            }}
           >
             Try the web app
           </a>
