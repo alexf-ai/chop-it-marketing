@@ -98,13 +98,48 @@ async function verifyTurnstile(token: string, remoteIp: string | null): Promise<
   }
 }
 
+// HMAC-SHA256(email_normalized) — used in the unsubscribe link so a
+// third party can't unsubscribe someone else just by guessing their
+// email. Returns null when WAITLIST_UNSUBSCRIBE_SECRET is unset (env-
+// gated, like the rest of this function). The unsubscribe endpoint
+// fails closed in that case, so unsigned links won't trigger DB writes.
+async function signEmail(emailNormalized: string): Promise<string | null> {
+  const secret = Deno.env.get('WAITLIST_UNSUBSCRIBE_SECRET');
+  if (!secret) return null;
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    enc.encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign'],
+  );
+  const sig = await crypto.subtle.sign('HMAC', key, enc.encode(emailNormalized));
+  // base64url, no padding
+  return btoa(String.fromCharCode(...new Uint8Array(sig)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
 async function sendConfirmationEmail(email: string): Promise<void> {
   const key = Deno.env.get('RESEND_API_KEY');
   if (!key) {
     console.warn('[waitlist-submit] RESEND_API_KEY unset — skipping confirmation email');
     return;
   }
-  const unsubscribeUrl = `https://elirehiikubpbfyjzwky.supabase.co/functions/v1/waitlist-unsubscribe?email=${encodeURIComponent(email)}`;
+  const emailNormalized = email.toLowerCase();
+  const token = await signEmail(emailNormalized);
+  if (!token) {
+    // Sending a confirmation without a working unsubscribe link is a
+    // CAN-SPAM / GDPR liability. Bail rather than send an un-unsub-able
+    // email.
+    console.error(
+      '[waitlist-submit] WAITLIST_UNSUBSCRIBE_SECRET unset — refusing to send (no working unsubscribe link)',
+    );
+    return;
+  }
+  const unsubscribeUrl = `https://elirehiikubpbfyjzwky.supabase.co/functions/v1/waitlist-unsubscribe?email=${encodeURIComponent(emailNormalized)}&t=${token}`;
   const html = `<!DOCTYPE html>
 <html><body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 560px; margin: 40px auto; padding: 0 20px; color: #111;">
   <h1 style="font-size: 24px; margin: 0 0 16px;">You're in.</h1>
@@ -217,15 +252,11 @@ serve(async (req: Request) => {
       pickString(req.headers.get('x-vercel-ip-country'), 8),
   };
 
-  // Upsert: insert-on-conflict-do-nothing. We use the xmax trick to
-  // distinguish "newly inserted" from "already existed":
-  //   xmax = 0 → row was just inserted by this statement
-  //   xmax != 0 → conflict, existing row (DO NOTHING applies)
-  //
-  // The Supabase REST client can't read xmax directly, so we do two
-  // queries: one INSERT-IGNORE via upsert(), then a SELECT to know if
-  // the row's created_at matches "just now". That's brittle. Simpler:
-  // try INSERT, on conflict do a SELECT to confirm existence.
+  // Try INSERT. On unique-violation (23505), the row already exists —
+  // attempt to re-subscribe it (clear unsubscribed_at). If the UPDATE
+  // affects a row, treat the submission as "new" (fire confirmation
+  // email). If no row was affected, the existing record was already
+  // active → already_subscribed: true.
   const { error: insertErr } = await supabase
     .from('marketing_waitlist')
     .insert(row);
@@ -234,10 +265,28 @@ serve(async (req: Request) => {
   let isNew = false;
 
   if (insertErr) {
-    // 23505 = unique_violation — caught the duplicate.
-    // 'code' is on PostgrestError; the JS client surfaces it.
+    // 23505 = unique_violation. 'code' is on PostgrestError; the JS
+    // client surfaces it.
     if ((insertErr as { code?: string }).code === '23505') {
-      alreadySubscribed = true;
+      const emailNormalized = email.toLowerCase();
+      const { data: reactivated, error: updateErr } = await supabase
+        .from('marketing_waitlist')
+        .update({ unsubscribed_at: null })
+        .eq('email_normalized', emailNormalized)
+        .not('unsubscribed_at', 'is', null)
+        .select('id');
+      if (updateErr) {
+        console.error('[waitlist-submit] reactivate error', updateErr);
+        // Don't fail the whole request — the row exists, so this
+        // submission is "already subscribed" from the user's POV.
+        alreadySubscribed = true;
+      } else if (reactivated && reactivated.length > 0) {
+        // Previously unsubscribed, now re-subscribed → send the
+        // confirmation email like a brand-new signup.
+        isNew = true;
+      } else {
+        alreadySubscribed = true;
+      }
     } else {
       console.error('[waitlist-submit] insert error', insertErr);
       return jsonResponse(

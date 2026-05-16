@@ -74,9 +74,18 @@ supabase functions deploy waitlist-unsubscribe
 | `SUPABASE_URL` | always (auto-injected) | n/a |
 | `TURNSTILE_SECRET` | only when Turnstile is enabled | Cloudflare dashboard → Turnstile → your site |
 | `RESEND_API_KEY` | only when confirmation emails are enabled | resend.com → API keys |
+| `WAITLIST_UNSUBSCRIBE_SECRET` | required before enabling Resend | `openssl rand -hex 32` — set the **same value** on both `waitlist-submit` and `waitlist-unsubscribe` |
 
 If a secret is unset, the function skips that step and logs a warning.
 The signup still completes.
+
+`WAITLIST_UNSUBSCRIBE_SECRET` is used to HMAC the email address into the
+unsubscribe link so that a third party who guesses an address can't
+unsubscribe somebody else. The submit function refuses to send a
+confirmation email when this secret is missing (no working unsubscribe
+link = CAN-SPAM/GDPR liability), and the unsubscribe function refuses
+to mutate the DB when the secret is missing or the signature doesn't
+verify.
 
 ## Required Vercel env vars
 
