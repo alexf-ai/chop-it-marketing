@@ -38,10 +38,15 @@ function buildItemListJsonLd(payload: SharedMenuPayload): Record<string, unknown
     numberOfItems: payload.recipes.length,
     url: `${SITE_ORIGIN}/m/${code}`,
     itemListElement: payload.recipes.map((r, idx) => {
+      // Each Recipe must have a unique URL or Google's Carousel rich-result
+      // validator rejects the ItemList ("Identical property values given,
+      // but unique values are required"). The deep link still points at the
+      // menu — the recipe id becomes a fragment so the URL is technically
+      // unique per item without inventing a new in-app route.
       const recipe: Record<string, unknown> = {
         '@type': 'Recipe',
         name: r.title ?? 'Recipe',
-        url: `${APP_DEEP_LINK_BASE}/${code}`,
+        url: `${APP_DEEP_LINK_BASE}/${code}#recipe-${r.id}`,
       };
       if (r.image_url) recipe.image = r.image_url;
       if (r.cuisine) recipe.recipeCuisine = r.cuisine;
