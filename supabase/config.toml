@@ -1,0 +1,14 @@
+# Supabase project config (Edge Functions only — the rest of the project
+# is managed in the Supabase dashboard).
+#
+# Project ID `elirehiikubpbfyjzwky` is set when running
+# `supabase link --project-ref elirehiikubpbfyjzwky` rather than in this
+# file, so the same config works for local dev + prod.
+
+[functions.waitlist-submit]
+# Public marketing form: callers don't have a Supabase JWT.
+verify_jwt = false
+
+[functions.waitlist-unsubscribe]
+# Hit by browsers from the email "Unsubscribe" link — never has a JWT.
+verify_jwt = false

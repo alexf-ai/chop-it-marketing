@@ -3,6 +3,7 @@ import { Instrument_Serif, JetBrains_Mono } from 'next/font/google';
 import './styles/globals.css';
 
 import CookieBanner from './components/CookieBanner';
+import WaitlistStickyBar from './components/WaitlistStickyBar';
 
 // Hybrid type system: Instrument Serif for display headings, JetBrains Mono for meta/numerals,
 // system-ui stack for body copy so we match the PWA visually (PWA is system-font-only under CSP).
@@ -74,6 +75,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
         />
         {children}
+        <WaitlistStickyBar />
         <CookieBanner />
       </body>
     </html>

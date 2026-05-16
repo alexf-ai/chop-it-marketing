@@ -115,3 +115,64 @@ export function trackOutboundToSocial(props: {
 }): void {
   posthog.capture('outbound_to_social', props);
 }
+
+// Waitlist taxonomy — the v1 conversion funnel.
+//
+// `location` distinguishes the hero form from the sticky footer bar, so
+// the dashboard can pivot conversion rate by surface without needing
+// extra autocapture.
+
+export type WaitlistLocation = 'hero' | 'footer_sticky';
+
+export type WaitlistAttemptedProps = {
+  location: WaitlistLocation;
+  has_email: boolean;
+};
+
+export type WaitlistSucceededProps = {
+  location: WaitlistLocation;
+  already_subscribed: boolean;
+};
+
+export type WaitlistFailedProps = {
+  location: WaitlistLocation;
+  error_type:
+    | 'invalid_email'
+    | 'turnstile_failed'
+    | 'network_error'
+    | 'submission_failed'
+    | 'unknown';
+};
+
+export function trackWaitlistSubmitAttempted(props: WaitlistAttemptedProps): void {
+  posthog.capture('waitlist_submit_attempted', props);
+}
+
+export function trackWaitlistSubmitSucceeded(props: WaitlistSucceededProps): void {
+  posthog.capture('waitlist_submit_succeeded', props);
+}
+
+export function trackWaitlistSubmitFailed(props: WaitlistFailedProps): void {
+  posthog.capture('waitlist_submit_failed', props);
+}
+
+export function trackWaitlistStickyShown(): void {
+  posthog.capture('waitlist_sticky_shown');
+}
+
+export function trackWaitlistStickyDismissed(): void {
+  posthog.capture('waitlist_sticky_dismissed');
+}
+
+/**
+ * Sets the Person profile for an identified waitlist member. Called on
+ * successful submission. Combined with the `identified_only` person
+ * profile setting in instrumentation-client.ts, this is also what
+ * promotes the visitor from anonymous → person in PostHog.
+ */
+export function setWaitlistMemberPersonProperties(): void {
+  posthog.setPersonProperties({
+    waitlist_member: true,
+    waitlist_joined_at: new Date().toISOString(),
+  });
+}
