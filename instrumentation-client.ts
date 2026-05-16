@@ -20,9 +20,16 @@
 import posthog from 'posthog-js';
 
 posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN!, {
-  api_host: '/ingest',
+  // PostHog managed reverse proxy on a chop-it.com subdomain. Cloudflare
+  // proxies through to eu.i.posthog.com — no Next.js rewrites needed,
+  // and the request stays first-party (ad-blockers don't see a 3rd-party
+  // host). Was '/ingest' with Next.js rewrites before this change.
+  api_host: 'https://e.chop-it.com',
   ui_host: 'https://eu.posthog.com',
   defaults: '2026-01-30',
+  // Only materialise a Person profile when posthog.identify() is called.
+  // Cuts MAU billing for anonymous visitors and matches the spec.
+  person_profiles: 'identified_only',
   capture_exceptions: true,
   // Domains differ between chop-it.com and chopit.app, so we explicitly
   // disable subdomain-cookie sharing — identity passthrough rides on
