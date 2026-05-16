@@ -49,6 +49,14 @@ export const metadata: Metadata = {
   verification: {
     google: 'kqSyATyhUHmcDShKvUNWK-Ntj3n9qrdB8omXiM6tft0',
   },
+  icons: {
+    icon: [
+      { url: '/logo.webp', type: 'image/webp' },
+      { url: '/logo.png', type: 'image/png' },
+    ],
+    shortcut: '/logo.webp',
+    apple: '/logo.png',
+  },
 };
 
 const ORGANIZATION_JSONLD = {
