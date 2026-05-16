@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   description:
     'Chop it plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating — without giving up the meals you love.',
   metadataBase: new URL('https://chop-it.com'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     title: 'Chop it — Weekly shop, sorted in minutes',
     description:

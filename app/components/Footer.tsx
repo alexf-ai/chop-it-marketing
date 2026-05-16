@@ -40,8 +40,6 @@ export default function Footer() {
         <div className="footer-col">
           <div className="footer-col-h mono">SOCIAL</div>
           <a href="https://www.tiktok.com/@chop_it" target="_blank" rel="noopener noreferrer">TikTok · @chop_it</a>
-          <a href="#">Instagram · @chopit.app</a>
-          <a href="#">X · @chopit.app</a>
         </div>
       </div>
       <div className="footer-base">
