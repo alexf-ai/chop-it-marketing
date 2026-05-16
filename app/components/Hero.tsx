@@ -3,6 +3,8 @@
 import { trackCtaClicked, trackNavCtaClick } from '@/lib/posthog-events';
 
 import PhoneMock, { type PhoneMeal } from './PhoneMock';
+import WaitlistCounter from './WaitlistCounter';
+import WaitlistForm from './WaitlistForm';
 
 type HeroProps = {
   score: number;
@@ -32,6 +34,10 @@ export default function Hero({ score, accent, phoneMeals }: HeroProps) {
             Chop it plans the week, writes the shop, and quietly nudges you toward more variety,
             more plants, more fibre, less waste. Without giving up the lasagne on Friday.
           </p>
+          <div className="hero-waitlist">
+            <WaitlistForm location="hero" />
+            <WaitlistCounter />
+          </div>
           <div className="hero-cta">
             <a
               className="btn btn-primary"

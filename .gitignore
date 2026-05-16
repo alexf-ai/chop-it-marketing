@@ -43,3 +43,7 @@ yarn-error.log*
 next-env.d.ts
 .env*.local
 .env.local
+
+# Operational artifacts from one-off scripts (publish runs, audits, etc.)
+/scripts/output/
+/audit/
