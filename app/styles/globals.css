@@ -1879,3 +1879,123 @@ button { font-family: inherit; }
   }
   .waitlist-sticky-close { margin-top: 4px; }
 }
+
+/* ==========================================================================
+   Shared-menu /m/<code> page
+   ========================================================================== */
+.share-menu {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 48px 24px 96px;
+}
+.share-menu-head {
+  text-align: center;
+  margin-bottom: 48px;
+}
+.share-menu-eyebrow {
+  color: var(--muted-2);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  margin-bottom: 16px;
+}
+.share-menu-h {
+  font-family: var(--ff-display);
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 12px;
+  color: var(--text);
+}
+.share-menu-sub {
+  color: var(--muted);
+  font-size: 18px;
+  margin: 0 0 28px;
+}
+.share-menu-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+.share-menu-empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 64px 0;
+}
+.share-menu-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+.share-menu-card {
+  background: var(--card);
+  border: 1px solid var(--border-2);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 140ms ease, transform 140ms ease;
+}
+.share-menu-card:hover {
+  border-color: var(--text);
+  transform: translateY(-2px);
+}
+.share-menu-card-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  background: var(--card-2, #1a1a1a);
+}
+.share-menu-card-img-fallback {
+  /* Placeholder when a recipe has no image. */
+  background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
+}
+.share-menu-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.share-menu-card-title {
+  font-family: var(--ff-display);
+  font-size: 20px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.share-menu-card-meta {
+  color: var(--muted-2);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.share-menu-footer {
+  margin-top: 80px;
+  padding: 48px 32px;
+  border-top: 1px solid var(--border-2);
+  text-align: center;
+}
+.share-menu-footer-h {
+  font-family: var(--ff-display);
+  font-size: clamp(28px, 4vw, 44px);
+  margin: 0 0 12px;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.share-menu-footer-sub {
+  color: var(--muted);
+  max-width: 640px;
+  margin: 0 auto 24px;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+@media (max-width: 480px) {
+  .share-menu { padding: 32px 16px 64px; }
+  .share-menu-grid { grid-template-columns: 1fr; gap: 16px; }
+  .share-menu-footer { padding: 32px 16px; margin-top: 48px; }
+}
