@@ -36,7 +36,7 @@ export default function DownloadCTA({ accent }: DownloadCTAProps) {
               });
             }}
           >
-            <span className="store-pill-top mono">DOWNLOAD ON THE</span>
+            <span className="store-pill-top mono">COMING SOON</span>
             <span className="store-pill-bot">App Store</span>
           </a>
           <a
@@ -52,7 +52,7 @@ export default function DownloadCTA({ accent }: DownloadCTAProps) {
               });
             }}
           >
-            <span className="store-pill-top mono">GET IT ON</span>
+            <span className="store-pill-top mono">COMING SOON</span>
             <span className="store-pill-bot">Google Play</span>
           </a>
           <a
