@@ -54,7 +54,7 @@ export default function RecipeCTA({ recipeSlug, recipeTitle }: RecipeCTAProps = 
             });
           }}
         >
-          <span className="store-pill-top mono">DOWNLOAD ON THE</span>
+          <span className="store-pill-top mono">COMING SOON</span>
           <span className="store-pill-bot">App Store</span>
         </a>
         {ANDROID_LIVE && (
@@ -75,7 +75,7 @@ export default function RecipeCTA({ recipeSlug, recipeTitle }: RecipeCTAProps = 
               });
             }}
           >
-            <span className="store-pill-top mono">GET IT ON</span>
+            <span className="store-pill-top mono">COMING SOON</span>
             <span className="store-pill-bot">Google Play</span>
           </a>
         )}
