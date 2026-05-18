@@ -47,40 +47,35 @@ export async function generateMetadata({
   };
 }
 
+// Single CollectionPage JSON-LD with a nested ItemList as mainEntity, so
+// Google's GSC URL inspector picks the ItemList up as the page-level
+// listing wrapper. ListItems are flat (position + url + name) — they're
+// pointers to the recipe detail pages, which carry their own Recipe
+// schema. Previously this emitted two separate top-level blocks, which
+// GSC failed to associate as a listing.
 function buildCollectionJsonLd(
   slug: string,
   meta: { name: string; intro: string },
-  items: { slug: string; title: string; image_url: string | null }[],
-): Record<string, unknown>[] {
+  items: { slug: string; title: string }[],
+): Record<string, unknown> {
   const url = collectionUrl(slug);
-  const collectionPage: Record<string, unknown> = {
+  return {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${meta.name} recipes`,
     description: meta.intro,
     url,
-  };
-  const itemList: Record<string, unknown> = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    name: `${meta.name} recipes`,
-    numberOfItems: items.length,
-    url,
-    itemListElement: items.map((r, idx) => {
-      const recipe: Record<string, unknown> = {
-        '@type': 'Recipe',
-        name: r.title,
-        url: `${SITE_ORIGIN}/recipes/${r.slug}`,
-      };
-      if (r.image_url) recipe.image = r.image_url;
-      return {
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: items.length,
+      itemListElement: items.map((r, idx) => ({
         '@type': 'ListItem',
         position: idx + 1,
-        item: recipe,
-      };
-    }),
+        url: `${SITE_ORIGIN}/recipes/${r.slug}`,
+        name: r.title,
+      })),
+    },
   };
-  return [collectionPage, itemList];
 }
 
 export default async function CollectionPage({
@@ -106,14 +101,11 @@ export default async function CollectionPage({
         </div>
         <RecipeGrid items={items} />
       </section>
-      {jsonLd.map((ld, i) => (
-        <script
-          key={i}
-          type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: serializeJsonLd(ld) }}
-        />
-      ))}
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+      />
       <Footer />
     </>
   );

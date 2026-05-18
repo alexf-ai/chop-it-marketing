@@ -9,7 +9,7 @@ import WhatItDoes from './WhatItDoes';
 import PantrySection from './PantrySection';
 import ScoreExplainer from './ScoreExplainer';
 import HowItWorks from './HowItWorks';
-import type { PhoneMeal } from './PhoneMock';
+import type { DemoPantryRecipe, DemoRecipe } from '@/app/lib/homepageDemo';
 import Principles from './Principles';
 import DownloadCTA from './DownloadCTA';
 import Footer from './Footer';
@@ -28,10 +28,17 @@ type HomeProps = {
   featuredRecipes: ReactNode;
   browseThumbs: ReactNode;
   pantryShowcase: ReactNode;
-  phoneMeals?: PhoneMeal[];
+  demoRecipes: DemoRecipe[];
+  demoPantryRecipes: DemoPantryRecipe[];
 };
 
-export default function Home({ featuredRecipes, browseThumbs, pantryShowcase, phoneMeals }: HomeProps) {
+export default function Home({
+  featuredRecipes,
+  browseThumbs,
+  pantryShowcase,
+  demoRecipes,
+  demoPantryRecipes,
+}: HomeProps) {
   const [state, setState] = useState<TweakState>(TWEAK_DEFAULTS);
   const [tweaksOn, setTweaksOn] = useState(false);
 
@@ -63,7 +70,12 @@ export default function Home({ featuredRecipes, browseThumbs, pantryShowcase, ph
   return (
     <>
       <Nav accent={accent} />
-      <Hero score={state.score} accent={accent} phoneMeals={phoneMeals} />
+      <Hero
+        score={state.score}
+        accent={accent}
+        demoRecipes={demoRecipes}
+        demoPantryRecipes={demoPantryRecipes}
+      />
       <CostBlock />
       <div id="what">
         <WhatItDoes />

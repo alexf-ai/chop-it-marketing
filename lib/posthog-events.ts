@@ -164,6 +164,25 @@ export function trackWaitlistStickyDismissed(): void {
   posthog.capture('waitlist_sticky_dismissed');
 }
 
+// Interactive phone demo on the homepage. The three tabs simulate the
+// real app's This Week / Shop / Pantry surfaces; events here let us
+// measure tab engagement, which recipes converted to a detail click, and
+// whether the search bar produced a real /recipes?q= navigation.
+
+export type DemoTab = 'this_week' | 'shop' | 'pantry';
+
+export function trackDemoTabSwitched(props: { tab: DemoTab }): void {
+  posthog.capture('demo_tab_switched', props);
+}
+
+export function trackDemoRecipeClicked(props: { slug: string; tab: DemoTab }): void {
+  posthog.capture('demo_recipe_clicked', props);
+}
+
+export function trackDemoSearchSubmitted(props: { query_length: number }): void {
+  posthog.capture('demo_search_submitted', props);
+}
+
 /**
  * Sets the Person profile for an identified waitlist member. Called on
  * successful submission. Combined with the `identified_only` person
