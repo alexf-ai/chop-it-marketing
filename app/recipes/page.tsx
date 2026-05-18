@@ -102,29 +102,31 @@ export async function generateMetadata({
 
 const ACCENT = '#E8547A';
 
-function buildSearchItemListJsonLd(
+// SearchResultsPage with a nested ItemList. Google's GSC URL inspector
+// fails to detect a top-level ItemList on a search page — it expects the
+// SearchResultsPage wrapper that explicitly types the page intent. Flat
+// ListItems (url + name only, no nested Recipe item) so the schema is
+// unambiguous as a "listing pointer" rather than competing with the
+// per-recipe Recipe schema rendered on each detail page.
+function buildSearchResultsPageJsonLd(
   query: string,
-  items: { id: string; slug: string; title: string; image_url: string | null }[],
+  items: { slug: string; title: string }[],
 ): Record<string, unknown> {
   return {
     '@context': 'https://schema.org',
-    '@type': 'ItemList',
+    '@type': 'SearchResultsPage',
     name: `Recipes matching "${query}"`,
-    numberOfItems: items.length,
     url: searchUrl(query),
-    itemListElement: items.map((r, idx) => {
-      const recipe: Record<string, unknown> = {
-        '@type': 'Recipe',
-        name: r.title,
-        url: `${SITE_ORIGIN}/recipes/${r.slug}`,
-      };
-      if (r.image_url) recipe.image = r.image_url;
-      return {
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: items.length,
+      itemListElement: items.map((r, idx) => ({
         '@type': 'ListItem',
         position: idx + 1,
-        item: recipe,
-      };
-    }),
+        url: `${SITE_ORIGIN}/recipes/${r.slug}`,
+        name: r.title,
+      })),
+    },
   };
 }
 
@@ -178,7 +180,7 @@ export default async function RecipesHubPage({
   };
 
   const searchJsonLd =
-    searchMode && items.length > 0 ? buildSearchItemListJsonLd(q, items) : null;
+    searchMode && items.length > 0 ? buildSearchResultsPageJsonLd(q, items) : null;
 
   return (
     <>
