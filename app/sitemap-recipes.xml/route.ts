@@ -8,6 +8,7 @@
 // are excluded for the same reason generateStaticParams excludes them in
 // /recipes/{tag,cuisine}/[…]/page.tsx. Keep these two in lockstep.
 
+import { COLLECTION_SLUGS } from '../lib/collections';
 import { getRecipesSitemapData } from '../lib/recipes';
 import { SITE_ORIGIN } from '../lib/recipeSchema';
 
@@ -66,6 +67,15 @@ export async function GET() {
     entries.push(
       urlEntry(`/recipes/tag/${encodeURIComponent(tag)}`, new Date(ts).toISOString(), '0.5'),
     );
+  }
+
+  // Editorial collection pages. Higher priority (0.7) than individual
+  // recipes (0.6) — these are top-of-funnel landing pages. Lastmod is
+  // `now` because the curated segment membership comes from an offline
+  // pass, not a recipe row's updated_at; we accept that lastmod will
+  // refresh on every revalidate cycle.
+  for (const slug of [...COLLECTION_SLUGS].sort()) {
+    entries.push(urlEntry(`/recipes/collection/${slug}`, now, '0.7'));
   }
 
   const body =
