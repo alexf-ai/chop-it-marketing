@@ -209,6 +209,44 @@ export async function listPublishedRecipes(
   return { items, total: count ?? items.length };
 }
 
+// Recipes in a curated segment (tags_json._catalog.segments[]). Used by
+// the editorial /recipes/collection/<slug> landing pages. The catalog
+// segment slugs (bbq_szn, quick, batch, …) are produced by an offline
+// curation pass; this query just structurally matches the slug into the
+// jsonb array via @>. Top 60 by display_priority is plenty for v1 — no
+// pagination yet.
+export async function listCollectionRecipes(
+  segmentSlug: string,
+  opts: { limit?: number } = {},
+): Promise<RecipeListItem[]> {
+  if (!supabase || !supabaseConfigured) return [];
+  const limit = Math.max(1, Math.min(120, opts.limit ?? 60));
+  const { data, error } = await supabase
+    .from('recipes_published')
+    .select(LIST_COLUMNS)
+    .eq('seo_published', true)
+    .is('deleted_at', null)
+    .not('slug', 'is', null)
+    .contains('tags_json', { _catalog: { segments: [segmentSlug] } })
+    .order('display_priority', { ascending: false, nullsFirst: false })
+    .order('title', { ascending: true })
+    .limit(limit);
+  if (error || !data) return [];
+  return data.map((r) => {
+    const timings = r.timings_json as Timings | null;
+    return {
+      id: r.id as string,
+      slug: r.slug as string,
+      title: r.title as string,
+      image_url: (r.image_url as string | null) ?? null,
+      season: (r.season as string | null) ?? null,
+      cost_band: (r.cost_band as string | null) ?? null,
+      total_minutes: timings?.total_minutes ?? null,
+      updated_at: r.updated_at as string,
+    };
+  });
+}
+
 // Thin wrapper around the public.search_public_recipes RPC (title-only
 // trigram + ILIKE fuzzy search). The RPC returns total_count on every row;
 // we pull it from row[0] (or 0 for an empty result) and reshape the row
