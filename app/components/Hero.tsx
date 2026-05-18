@@ -30,8 +30,9 @@ export default function Hero({ score, demoRecipes, demoPantryRecipes }: HeroProp
           </h1>
           <p className="hero-sub">
             Chop it plans the week, writes the shop, and quietly nudges you toward more variety,
-            more plants, more fibre, less waste. Without giving up the lasagne on Friday.
+            more plants, more fibre, less waste. Without giving up the lasagne on Friday!
           </p>
+          <hr className="hero-separator" aria-hidden="true" />
         </div>
         <div className="hero-right">
           <PhoneSimulator
