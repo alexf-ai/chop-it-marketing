@@ -23,9 +23,13 @@ export default function Nav({ accent }: NavProps) {
           Chop&nbsp;it
         </Link>
         <div className="nav-links">
-          <a href="#score">Diversity Score</a>
-          <a href="#recipes">Recipes</a>
-          <a href="#how">How it works</a>
+          {/* Absolute paths so the nav works from any page, not just /.
+              Diversity Score + How it works are anchors on the homepage;
+              Recipes points at the hub. From a deep page the hash links
+              still land on / and then scroll to the section. */}
+          <Link href="/#score">Diversity Score</Link>
+          <Link href="/recipes">Recipes</Link>
+          <Link href="/#how">How it works</Link>
           <a href="#">Feasts</a>
         </div>
         <div className="nav-cta">

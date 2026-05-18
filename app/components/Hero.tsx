@@ -87,7 +87,6 @@ export default function Hero({ score, accent, demoRecipes, demoPantryRecipes }: 
           </div>
         </div>
         <div className="hero-right">
-          <DemoSearchBar />
           <PhoneSimulator
             initialRecipes={demoRecipes}
             pantryRecipes={demoPantryRecipes}
@@ -95,6 +94,13 @@ export default function Hero({ score, accent, demoRecipes, demoPantryRecipes }: 
             band={PHONE_DEMO_BAND}
           />
         </div>
+      </div>
+      {/* Search lives in its own full-width row below the hero grid so it
+          never competes for column width with the phone simulator. On
+          mobile this stacks cleanly under the phone; on desktop it spans
+          the hero centered. */}
+      <div className="hero-search-row">
+        <DemoSearchBar />
       </div>
     </header>
   );
