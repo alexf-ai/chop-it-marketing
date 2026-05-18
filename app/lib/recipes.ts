@@ -293,6 +293,72 @@ export async function getDistinctCostBands(): Promise<string[]> {
   return Array.from(new Set(data.map((r) => r.cost_band as string))).sort();
 }
 
+// One-shot fetch for the recipes sitemap. Returns the slug list plus per-
+// taxonomy "most recent updated_at" maps so /sitemap-recipes.xml can emit
+// <lastmod> for every recipe + tag/cuisine/season hub without N+1 queries
+// or a separate trip to the DB. Applies the same URL_SAFE_SLUG_RE filter as
+// getDistinctCuisines / getDistinctTags so the sitemap stays in sync with
+// what generateStaticParams actually pre-renders.
+export type RecipesSitemapData = {
+  recipes: { slug: string; updated_at: string }[];
+  cuisines: Map<string, string>;
+  tags: Map<string, string>;
+  seasons: Map<string, string>;
+};
+
+export async function getRecipesSitemapData(): Promise<RecipesSitemapData> {
+  if (!supabase || !supabaseConfigured) {
+    return { recipes: [], cuisines: new Map(), tags: new Map(), seasons: new Map() };
+  }
+  const rows = await fetchAllPaged<{
+    slug: string | null;
+    updated_at: string;
+    tags_json: TagsJson;
+    season: string | null;
+  }>((from, to) =>
+    supabase!
+      .from('recipes_published')
+      .select('slug, updated_at, tags_json, season')
+      .eq('seo_published', true)
+      .is('deleted_at', null)
+      .not('slug', 'is', null)
+      .range(from, to),
+  );
+
+  const recipes: { slug: string; updated_at: string }[] = [];
+  const cuisines = new Map<string, string>();
+  const tags = new Map<string, string>();
+  const seasons = new Map<string, string>();
+
+  const bump = (m: Map<string, string>, key: string, ts: string) => {
+    const prev = m.get(key);
+    if (!prev || ts > prev) m.set(key, ts);
+  };
+
+  for (const r of rows) {
+    if (typeof r.slug !== 'string') continue;
+    recipes.push({ slug: r.slug, updated_at: r.updated_at });
+
+    const core = r.tags_json?.core;
+    if (Array.isArray(core)) {
+      if (core.length > 0 && typeof core[0] === 'string' && URL_SAFE_SLUG_RE.test(core[0])) {
+        bump(cuisines, core[0], r.updated_at);
+      }
+      for (const t of core) {
+        if (typeof t === 'string' && URL_SAFE_SLUG_RE.test(t)) {
+          bump(tags, t, r.updated_at);
+        }
+      }
+    }
+
+    if (typeof r.season === 'string' && r.season.length > 0) {
+      bump(seasons, r.season, r.updated_at);
+    }
+  }
+
+  return { recipes, cuisines, tags, seasons };
+}
+
 export async function countPublishedRecipes(): Promise<number> {
   if (!supabase || !supabaseConfigured) return 0;
   const { count, error } = await supabase
