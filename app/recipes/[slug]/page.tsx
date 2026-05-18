@@ -7,12 +7,16 @@ import Breadcrumbs, { type Crumb } from '@/app/components/Breadcrumbs';
 import Footer from '@/app/components/Footer';
 import Nav from '@/app/components/Nav';
 import RecipeCTA from '@/app/components/RecipeCTA';
+import RecipeGrid from '@/app/components/RecipeGrid';
 import RecipeViewTracker from '@/app/components/RecipeViewTracker';
 import {
   getPublishedRecipeBySlug,
   getPublishedRecipeSlugs,
   getSlugById,
+  listCollectionRecipes,
+  listPublishedRecipes,
   URL_SAFE_SLUG_RE,
+  type RecipeListItem,
 } from '@/app/lib/recipes';
 import {
   buildBreadcrumbJsonLd,
@@ -20,6 +24,7 @@ import {
   serializeJsonLd,
   SITE_ORIGIN,
 } from '@/app/lib/recipeSchema';
+import { pickPrimarySegment, segmentTitle } from '@/app/lib/segments';
 
 export const revalidate = 3600;
 
@@ -104,26 +109,41 @@ export default async function RecipePage({
       recipe.nutrition_fat_g != null);
 
   // SEO breadcrumb trail. The visible crumbs + BreadcrumbList JSON-LD share
-  // this same data so they never drift. Position 3 (cuisine) is conditional
-  // — some recipes have no cuisine tag, in which case we collapse to
-  // Home › Recipes › <title>.
+  // this same data so they never drift. Position 3 (collection) is
+  // conditional — recipes with no catalog segment collapse to
+  // Home › Recipes › <title>. Cuisine is tracked separately for analytics
+  // (RecipeViewTracker) but no longer surfaced in the breadcrumb — the
+  // collection segment is a stronger editorial unit and lines up with the
+  // "More from <segment>" section at the foot of the page.
   const cuisine = recipe.tags_json?.core?.[0] ?? null;
+  const primarySegment = pickPrimarySegment(recipe.tags_json);
+  const primarySegmentName = primarySegment ? segmentTitle(primarySegment) : null;
   const crumbs: Crumb[] = [
     { name: 'Home', href: '/' },
     { name: 'Recipes', href: '/recipes' },
   ];
-  if (cuisine) {
-    // Only link cuisines whose value matches the same URL-safety filter
-    // generateStaticParams uses — otherwise the link would 404. Breadcrumbs
-    // renders crumbs without href as plain text.
+  if (primarySegment && primarySegmentName) {
     crumbs.push({
-      name: cuisine,
-      href: URL_SAFE_SLUG_RE.test(cuisine)
-        ? `/recipes/cuisine/${encodeURIComponent(cuisine)}`
-        : undefined,
+      name: primarySegmentName,
+      href: `/recipes/collection/${primarySegment}`,
     });
   }
   crumbs.push({ name: recipe.title });
+
+  // "More from <segment>" — fetch 5 then drop the current slug so we always
+  // land on 4 cards. If the recipe has no catalog segment, fall back to the
+  // top of the published library (display-priority-ordered, server-rendered
+  // so the bot sees the internal links).
+  let relatedRecipes: RecipeListItem[] = [];
+  let relatedHeading = 'More recipes';
+  if (primarySegment) {
+    const fetched = await listCollectionRecipes(primarySegment, { limit: 5 });
+    relatedRecipes = fetched.filter((r) => r.slug !== recipe.slug).slice(0, 4);
+    relatedHeading = `More from ${primarySegmentName}`;
+  } else {
+    const { items } = await listPublishedRecipes({ perPage: 5 });
+    relatedRecipes = items.filter((r) => r.slug !== recipe.slug).slice(0, 4);
+  }
 
   // H2 alt-text format: "{title} — {cuisine}, {season}" where available.
   // Falls back to bare title when neither is present.
@@ -146,6 +166,9 @@ export default async function RecipePage({
         has_nutrition={hasNutrition}
       />
       <article className="recipe-page">
+        <Link href="/recipes" className="recipe-back-link">
+          ← All recipes
+        </Link>
         <Breadcrumbs crumbs={crumbs} />
 
         {recipe.image_url && (
@@ -281,6 +304,23 @@ export default async function RecipePage({
                 </div>
               )}
             </div>
+          </section>
+        )}
+
+        {relatedRecipes.length > 0 && (
+          <section className="recipe-related">
+            <div className="recipe-related-head">
+              <h2 className="recipe-related-h">{relatedHeading}</h2>
+              {primarySegment && (
+                <Link
+                  href={`/recipes/collection/${primarySegment}`}
+                  className="recipe-related-more mono"
+                >
+                  See all →
+                </Link>
+              )}
+            </div>
+            <RecipeGrid items={relatedRecipes} />
           </section>
         )}
 
