@@ -47,21 +47,21 @@ export default function Nav({ accent }: NavProps) {
           >
             Sign in
           </a>
-          <a
+          <Link
             className="btn btn-primary"
             style={{ background: accent }}
-            href="#"
+            href="/#download"
             onClick={() => {
               trackNavCtaClick({ destination: 'get_app', location: 'nav' });
               trackCtaClicked({
                 cta_location: 'header_nav',
                 cta_label: 'Get the app',
-                cta_destination: '#',
+                cta_destination: '/#download',
               });
             }}
           >
             Get the app
-          </a>
+          </Link>
         </div>
       </div>
     </nav>
