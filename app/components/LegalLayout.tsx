@@ -21,9 +21,6 @@ export default function LegalLayout({ title, lastUpdated, children }: LegalLayou
           <div className="legal-sub mono">Last updated {lastUpdated}</div>
         </header>
         <div className="legal-body">{children}</div>
-        <div className="legal-note">
-          This policy will be expanded before public launch.
-        </div>
       </main>
       <Footer />
     </>

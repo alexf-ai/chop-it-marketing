@@ -32,7 +32,7 @@ export default function Footer() {
           <a href="#">Team</a>
           <a href="#">Press</a>
           <a href="#">Careers</a>
-          <a href="mailto:secretary@chop-it.com">Contact</a>
+          <a href="mailto:hello@chop-it.com">Contact</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
           <a href="/data-deletion">Data deletion</a>

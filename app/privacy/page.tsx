@@ -3,76 +3,208 @@ import type { Metadata } from 'next';
 import LegalLayout from '../components/LegalLayout';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Chop it',
-  description: 'How Chop it handles your data.',
+  title: 'Privacy Policy | Chop It',
+  description:
+    'How Chop It collects, uses, and protects your data under UK GDPR.',
   alternates: { canonical: 'https://chop-it.com/privacy' },
+  robots: { index: true, follow: true },
 };
 
 export default function PrivacyPage() {
   return (
-    <LegalLayout title="Privacy Policy" lastUpdated="24 April 2026">
+    <LegalLayout title="Privacy Policy" lastUpdated="18 May 2026">
       <p>
-        This is a placeholder policy. It will be replaced with a full policy
-        (drafted via Termly or similar) before public launch. It is published
-        now so the structure, routing, and footer links are in place.
+        Chop It AI Ltd (&ldquo;Chop It&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;)
+        operates the Chop It mobile app and chop-it.com website (the
+        &ldquo;Service&rdquo;). This policy explains what data we collect, why,
+        and your rights under UK GDPR and the Data Protection Act 2018.
+      </p>
+      <p>
+        <strong>Data Controller:</strong> Chop It AI Ltd, registered in England
+        and Wales.
+        <br />
+        <strong>Contact:</strong>{' '}
+        <a href="mailto:hello@chop-it.com">hello@chop-it.com</a>
       </p>
 
       <h2>What we collect</h2>
+
+      <h3>Account data</h3>
       <ul>
+        <li>Email address, account ID, sign-in method (Apple, Google, email)</li>
+        <li>Created when you sign up; used to authenticate you</li>
+      </ul>
+
+      <h3>Content you create</h3>
+      <ul>
+        <li>Recipes you save, import, or generate</li>
+        <li>Meal plans, shopping lists, pantry contents, dietary preferences</li>
+        <li>Photos you upload (e.g. pantry items, recipe imports)</li>
+      </ul>
+
+      <h3>Subscription and purchase data</h3>
+      <ul>
+        <li>Apple In-App Purchase transaction IDs (via RevenueCat)</li>
+        <li>Stripe customer ID and payment status (for web purchases only)</li>
         <li>
-          <strong>Email addresses</strong> &mdash; used to authenticate your
-          account and send transactional messages (password resets, receipts).
-        </li>
-        <li>
-          <strong>Recipe saves and preferences</strong> &mdash; the recipes you
-          save, tweak, or rate, so we can personalise your plan and shop.
-        </li>
-        <li>
-          <strong>Usage analytics</strong> &mdash; anonymised events about how
-          the app is used so we can find bugs and improve the product.
+          We never see or store your card number &mdash; payment is handled by
+          Apple or Stripe
         </li>
       </ul>
 
-      <h2>Where your data lives</h2>
-      <p>
-        Account data and recipe preferences are stored on{' '}
-        <a href="https://supabase.com" rel="noopener">Supabase</a>, our managed
-        Postgres provider. Data is hosted in the EU region.
-      </p>
+      <h3>Usage analytics</h3>
+      <ul>
+        <li>Anonymous events: which features you use, screen views, errors</li>
+        <li>Processed by PostHog (analytics) and Sentry (error reporting)</li>
+        <li>No personal identifiers attached unless you contact support</li>
+      </ul>
 
-      <h2>Your choices</h2>
-      <p>
-        You can request that we delete your account and associated data at any
-        time by emailing{' '}
-        <a href="mailto:secretary@chop-it.com">secretary@chop-it.com</a>. We
-        will confirm and complete the deletion within a reasonable period.
-      </p>
+      <h3>Device data (automatic)</h3>
+      <ul>
+        <li>IP address, device model, OS version, app version</li>
+        <li>Used for security, fraud prevention, and to fix bugs</li>
+      </ul>
 
-      <h2>Analytics</h2>
+      <h2>Why we collect it (legal bases)</h2>
+      <ul>
+        <li>
+          <strong>Contract performance</strong> &mdash; to provide the meal
+          planning, recipe storage, and subscription services you sign up for
+        </li>
+        <li>
+          <strong>Legitimate interests</strong> &mdash; to improve the app, fix
+          bugs, and prevent abuse
+        </li>
+        <li>
+          <strong>Consent</strong> &mdash; for optional features like marketing
+          email (where applicable)
+        </li>
+        <li>
+          <strong>Legal obligation</strong> &mdash; to keep records for tax and
+          accounting
+        </li>
+      </ul>
+
+      <h2>Who we share data with</h2>
       <p>
-        We use PostHog, a product analytics platform, to understand how
-        visitors interact with chop-it.com. PostHog records:
+        We use the following processors. Each one only sees the data necessary
+        to do its job:
       </p>
       <ul>
-        <li>Pages viewed and time spent</li>
-        <li>Buttons clicked (including app-store links)</li>
+        <li>Supabase (database and authentication) &mdash; EU/US</li>
+        <li>Apple App Store and RevenueCat (iOS purchases) &mdash; US</li>
+        <li>Stripe (web purchases) &mdash; UK/EU/US</li>
+        <li>Cloudflare Images (photo storage) &mdash; global CDN</li>
+        <li>PostHog (product analytics) &mdash; EU</li>
+        <li>Sentry (crash reporting) &mdash; EU/US</li>
         <li>
-          Anonymised device type, browser, and country (derived from IP)
+          Anthropic (AI features &mdash; recipe generation, meal suggestions)
+          &mdash; US
         </li>
-        <li>Referrer (where you arrived from)</li>
+        <li>
+          OpenAI (AI features &mdash; image generation, transcription) &mdash;
+          US
+        </li>
       </ul>
       <p>
-        Data is processed in the EU and retained per PostHog&rsquo;s default
-        retention policy. We do not record keystrokes, form input, or content
-        you paste into the page. You can decline analytics via the cookie
-        banner on first visit, or by enabling &lsquo;Do Not Track&rsquo; in
-        your browser.
+        We send only the minimum data required for each AI feature to function
+        (for example, a recipe title or ingredient list). We never sell your
+        personal data. We do not share it with advertisers.
+      </p>
+
+      <h2>How long we keep it</h2>
+      <ul>
+        <li>Account data: until you delete your account</li>
+        <li>
+          Content (recipes, meal plans): until you delete your account or the
+          individual item
+        </li>
+        <li>Analytics: up to 12 months, anonymised</li>
+        <li>Financial records: 6 years (UK statutory requirement)</li>
+        <li>Crash reports: 90 days</li>
+      </ul>
+
+      <h2>Your rights</h2>
+      <p>Under UK GDPR you have the right to:</p>
+      <ul>
+        <li>Access the data we hold about you</li>
+        <li>Correct inaccurate data</li>
+        <li>
+          Delete your account and associated data (available in-app: Settings
+          &rarr; Delete Account, or see{' '}
+          <a href="https://chop-it.com/data-deletion">
+            https://chop-it.com/data-deletion
+          </a>
+          )
+        </li>
+        <li>Export your data in a portable format</li>
+        <li>Object to processing or withdraw consent</li>
+        <li>
+          Complain to the Information Commissioner&rsquo;s Office (
+          <a href="https://ico.org.uk" rel="noopener">
+            ico.org.uk
+          </a>
+          )
+        </li>
+      </ul>
+      <p>
+        To exercise any of these rights, email{' '}
+        <a href="mailto:hello@chop-it.com">hello@chop-it.com</a>. We respond
+        within 30 days.
+      </p>
+
+      <h2 id="account-deletion">Account deletion</h2>
+      <p>
+        You can delete your account at any time from within the app: Settings
+        &rarr; Delete Account. This permanently removes your recipes, meal
+        plans, pantry, shopping lists, and account identifiers. Anonymous
+        analytics records may be retained but cannot be linked back to you.
+      </p>
+      <p>
+        For details on what is deleted and retained, see{' '}
+        <a href="https://chop-it.com/data-deletion">
+          https://chop-it.com/data-deletion
+        </a>
+        .
+      </p>
+
+      <h2>Children</h2>
+      <p>
+        Chop It is not directed at children under 13. We do not knowingly
+        collect data from children under 13. If you believe a child has
+        provided us with personal data, email{' '}
+        <a href="mailto:hello@chop-it.com">hello@chop-it.com</a> and we will
+        delete it.
+      </p>
+
+      <h2>International transfers</h2>
+      <p>
+        Some of our processors are based outside the UK and EU. We use Standard
+        Contractual Clauses or equivalent safeguards to ensure your data is
+        protected to UK GDPR standards regardless of where it is processed.
+      </p>
+
+      <h2>Changes to this policy</h2>
+      <p>
+        We may update this policy from time to time. Material changes will be
+        notified in-app or by email. The &ldquo;Last updated&rdquo; date at the
+        top of this page shows when it was last revised.
       </p>
 
       <h2>Contact</h2>
+      <ul>
+        <li>
+          Email: <a href="mailto:hello@chop-it.com">hello@chop-it.com</a>
+        </li>
+        <li>Company: Chop It AI Ltd, England and Wales</li>
+      </ul>
       <p>
-        Questions about this policy? Email{' '}
-        <a href="mailto:secretary@chop-it.com">secretary@chop-it.com</a>.
+        If you are not satisfied with our response, you can contact the UK
+        Information Commissioner&rsquo;s Office at{' '}
+        <a href="https://ico.org.uk" rel="noopener">
+          ico.org.uk
+        </a>
+        .
       </p>
     </LegalLayout>
   );

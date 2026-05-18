@@ -3,68 +3,56 @@ import type { Metadata } from 'next';
 import LegalLayout from '../components/LegalLayout';
 
 export const metadata: Metadata = {
-  title: 'Data Deletion | Chop It',
-  description: 'How to request deletion of your Chop It account and associated data.',
+  title: 'Account deletion | Chop It',
+  description: 'How to delete your Chop It account and associated data.',
   alternates: { canonical: 'https://chop-it.com/data-deletion' },
+  robots: { index: true, follow: true },
 };
 
 export default function DataDeletionPage() {
   return (
-    <LegalLayout title="Data Deletion" lastUpdated="15 May 2026">
-      <p>
-        You can delete your Chop It account and all associated data at any time.
-        We do not retain account data after deletion is processed.
-      </p>
-
-      <h2>Delete from inside the app</h2>
-      <ol>
+    <LegalLayout title="How to delete your account" lastUpdated="18 May 2026">
+      <h2>From within the app</h2>
+      <ul>
+        <li>Open Chop It &rarr; Settings &rarr; Delete Account &rarr; Confirm</li>
         <li>
-          Open Chop It at{' '}
-          <a href="https://chopit.app" rel="noopener">chopit.app</a> and sign in.
+          Your account, recipes, meal plans, pantry, shopping lists, and
+          personal identifiers are permanently removed.
         </li>
-        <li>
-          Go to <strong>Settings</strong> &rarr; <strong>Account</strong>.
-        </li>
-        <li>
-          Tap <strong>Delete account</strong> and confirm.
-        </li>
-      </ol>
-      <p>
-        Your account, saved recipes, preferences, and any third-party login
-        identifiers (including Facebook, Instagram, and Google) are removed
-        immediately. Anonymous usage analytics are retained in aggregate form
-        only and cannot be linked back to you.
-      </p>
-
-      <h2>Delete by email</h2>
-      <p>
-        If you cannot access the app, email{' '}
-        <a href="mailto:secretary@chop-it.com">secretary@chop-it.com</a>{' '}
-        from the address associated with your account and include the phrase
-        &ldquo;Delete my account&rdquo; in the subject line. We will confirm and
-        complete the deletion within 30 days, and typically within 72 hours.
-      </p>
+      </ul>
 
       <h2>What gets deleted</h2>
       <ul>
-        <li>Account email address and authentication identifiers</li>
-        <li>Saved recipes, meal plans, and shopping lists</li>
-        <li>Pantry data and dietary preferences</li>
-        <li>Third-party platform identifiers (Facebook, Instagram, Google)</li>
-        <li>Cached thumbnails and images we resolved on your behalf</li>
+        <li>Account email and sign-in credentials</li>
+        <li>Saved recipes</li>
+        <li>Meal plans and weekly menus</li>
+        <li>Pantry items</li>
+        <li>Shopping lists</li>
+        <li>Subscription history (anonymised for accounting)</li>
+        <li>Pantry photos</li>
+        <li>
+          Analytics events (anonymised, cannot be linked back to you)
+        </li>
       </ul>
 
-      <h2>What gets kept</h2>
+      <h2>What we retain</h2>
+      <ul>
+        <li>Financial records (6 years, UK statutory requirement)</li>
+        <li>
+          Anonymised usage analytics that cannot be linked back to you
+        </li>
+      </ul>
+
+      <h2>If you can&rsquo;t access the app</h2>
       <p>
-        Anonymised, aggregated usage events (page views, feature usage counts)
-        that contain no personal identifiers may be retained for product
-        analytics. These records cannot be re-associated with you.
+        Email <a href="mailto:hello@chop-it.com">hello@chop-it.com</a> from the
+        address linked to your account. We will verify and complete the
+        deletion within 30 days.
       </p>
 
-      <h2>Contact</h2>
+      <h2>Questions</h2>
       <p>
-        Questions about deletion? Email{' '}
-        <a href="mailto:secretary@chop-it.com">secretary@chop-it.com</a>.
+        See our <a href="/privacy">Privacy Policy</a>.
       </p>
     </LegalLayout>
   );
