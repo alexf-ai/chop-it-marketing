@@ -217,7 +217,7 @@ export async function listPublishedRecipes(
 // Excluding them from generateStaticParams + sitemap is the minimum patch
 // to unblock the build. A future PR can introduce a slugify/unslugify pair
 // to preserve those tags as `/recipes/tag/modern-british` URLs.
-const URL_SAFE_SLUG_RE = /^[A-Za-z0-9_-]+$/;
+export const URL_SAFE_SLUG_RE = /^[A-Za-z0-9_-]+$/;
 
 // Distinct taxonomy values for static-param generation + the hub filter bar.
 // `core[0]` is the cuisine by team convention. Both this and getDistinctTags

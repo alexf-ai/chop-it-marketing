@@ -12,6 +12,7 @@ import {
   getPublishedRecipeBySlug,
   getPublishedRecipeSlugs,
   getSlugById,
+  URL_SAFE_SLUG_RE,
 } from '@/app/lib/recipes';
 import {
   buildBreadcrumbJsonLd,
@@ -112,9 +113,14 @@ export default async function RecipePage({
     { name: 'Recipes', href: '/recipes' },
   ];
   if (cuisine) {
+    // Only link cuisines whose value matches the same URL-safety filter
+    // generateStaticParams uses — otherwise the link would 404. Breadcrumbs
+    // renders crumbs without href as plain text.
     crumbs.push({
       name: cuisine,
-      href: `/recipes/cuisine/${encodeURIComponent(cuisine)}`,
+      href: URL_SAFE_SLUG_RE.test(cuisine)
+        ? `/recipes/cuisine/${encodeURIComponent(cuisine)}`
+        : undefined,
     });
   }
   crumbs.push({ name: recipe.title });
@@ -194,15 +200,24 @@ export default async function RecipePage({
           )}
           {recipe.tags_json?.core && recipe.tags_json.core.length > 0 && (
             <div className="recipe-tags">
-              {recipe.tags_json.core.map((tag) => (
-                <Link
-                  key={tag}
-                  href={`/recipes/tag/${encodeURIComponent(tag)}`}
-                  className="tag mono"
-                >
-                  {tag}
-                </Link>
-              ))}
+              {recipe.tags_json.core.map((tag) =>
+                // Tags whose value isn't URL-safe are excluded from
+                // generateStaticParams in /recipes/tag/[tag], so linking to
+                // them would 404. Render those as a plain chip instead.
+                URL_SAFE_SLUG_RE.test(tag) ? (
+                  <Link
+                    key={tag}
+                    href={`/recipes/tag/${encodeURIComponent(tag)}`}
+                    className="tag mono"
+                  >
+                    {tag}
+                  </Link>
+                ) : (
+                  <span key={tag} className="tag mono">
+                    {tag}
+                  </span>
+                ),
+              )}
             </div>
           )}
         </header>
