@@ -2,18 +2,20 @@
 
 import { trackCtaClicked, trackNavCtaClick } from '@/lib/posthog-events';
 
-import PhoneMock, { type PhoneMeal } from './PhoneMock';
+import type { DemoPantryRecipe, DemoRecipe } from '@/app/lib/homepageDemo';
+import DemoSearchBar from './interactive-demo/DemoSearchBar';
+import PhoneSimulator from './interactive-demo/PhoneSimulator';
 
 type HeroProps = {
   score: number;
   accent: string;
-  phoneMeals?: PhoneMeal[];
+  demoRecipes: DemoRecipe[];
+  demoPantryRecipes: DemoPantryRecipe[];
 };
 
 const PHONE_DEMO_BAND = 'Good';
-const PHONE_DEMO_COACH = 'Strong on plants this week. Try a fish swap on Thursday for even more variety.';
 
-export default function Hero({ score, accent, phoneMeals }: HeroProps) {
+export default function Hero({ score, accent, demoRecipes, demoPantryRecipes }: HeroProps) {
   return (
     <header className="hero">
       <div className="hero-grid">
@@ -32,8 +34,6 @@ export default function Hero({ score, accent, phoneMeals }: HeroProps) {
             Chop it plans the week, writes the shop, and quietly nudges you toward more variety,
             more plants, more fibre, less waste. Without giving up the lasagne on Friday.
           </p>
-          {/* Waitlist signup hidden for now — components/edge functions/migration
-              remain in tree so this is a one-PR re-enable later. */}
           <div className="hero-cta">
             <a
               className="btn btn-primary"
@@ -87,11 +87,12 @@ export default function Hero({ score, accent, phoneMeals }: HeroProps) {
           </div>
         </div>
         <div className="hero-right">
-          <PhoneMock
+          <DemoSearchBar />
+          <PhoneSimulator
+            initialRecipes={demoRecipes}
+            pantryRecipes={demoPantryRecipes}
             score={score}
-            meals={phoneMeals}
             band={PHONE_DEMO_BAND}
-            coaching={PHONE_DEMO_COACH}
           />
         </div>
       </div>
