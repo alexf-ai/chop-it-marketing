@@ -168,7 +168,7 @@ export default async function RecipePage({
       />
       <article className="recipe-page">
         <BackLink href="/recipes" className="recipe-back-link">
-          ← All recipes
+          ← Back
         </BackLink>
         <Breadcrumbs crumbs={crumbs} />
 
