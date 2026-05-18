@@ -332,7 +332,15 @@ button { font-family: inherit; }
 /* ==========================================================================
    Interactive phone simulator (hero, replaces the old static PhoneMock)
    ========================================================================== */
-.demo-search { margin-bottom: 18px; }
+/* Full-width search row that sits below the hero grid. Centered, capped
+   width on desktop so the input doesn't sprawl; on mobile it goes full
+   width. Kept visually distinct from the phone above with extra top
+   margin so the two don't read as one cluster. */
+.hero-search-row {
+  max-width: 640px;
+  margin: 56px auto 0;
+}
+.demo-search { margin-bottom: 0; }
 .demo-search-h {
   font-family: var(--ff-display);
   font-weight: 600;
@@ -1935,10 +1943,13 @@ button { font-family: inherit; }
   color: var(--muted);
 }
 @media (max-width: 480px) {
-  /* On narrow viewports, hide everything before the last two crumbs to
-     keep the trail on one line. The final crumb (current page) is what
-     orients the user; the parent right above it gives the back link. */
-  .breadcrumbs-list .breadcrumbs-item:not(:nth-last-child(-n+2)) { display: none; }
+  /* Keep the trail compact on narrow viewports, BUT always show the
+     first crumb (Home) so visitors landing deep into a recipe always
+     have a clear way back to the homepage. Middle crumbs collapse;
+     last two crumbs (Recipes › <title> or similar) stay. */
+  .breadcrumbs-list .breadcrumbs-item:not(:first-child):not(:nth-last-child(-n+2)) {
+    display: none;
+  }
 }
 
 /* ==========================================================================
