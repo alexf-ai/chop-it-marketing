@@ -209,6 +209,59 @@ export async function listPublishedRecipes(
   return { items, total: count ?? items.length };
 }
 
+// Thin wrapper around the public.search_public_recipes RPC (title-only
+// trigram + ILIKE fuzzy search). The RPC returns total_count on every row;
+// we pull it from row[0] (or 0 for an empty result) and reshape the row
+// into a RecipeListItem so RecipeGrid can render search results without a
+// separate component. season / cost_band / updated_at aren't in the RPC
+// payload; null'd here — the grid only conditionally shows the cost dot,
+// and updated_at isn't rendered.
+export async function searchPublicRecipes(
+  query: string,
+  opts: { page?: number; perPage?: number } = {},
+): Promise<{ items: RecipeListItem[]; total: number }> {
+  if (!supabase || !supabaseConfigured) return { items: [], total: 0 };
+  const trimmed = query.trim();
+  if (!trimmed) return { items: [], total: 0 };
+
+  const page = Math.max(1, opts.page ?? 1);
+  const perPage = Math.max(1, Math.min(48, opts.perPage ?? 24));
+  const offset = (page - 1) * perPage;
+
+  const { data, error } = await supabase.rpc('search_public_recipes', {
+    p_query: trimmed,
+    p_limit: perPage,
+    p_offset: offset,
+  });
+  if (error || !Array.isArray(data) || data.length === 0) {
+    return { items: [], total: 0 };
+  }
+
+  type Row = {
+    id: string;
+    title: string;
+    slug: string;
+    image_url: string | null;
+    total_minutes: number | null;
+    servings: number | null;
+    plant_count: number | null;
+    match_score: number | null;
+    total_count: number | null;
+  };
+  const rows = data as Row[];
+  const items: RecipeListItem[] = rows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    title: r.title,
+    image_url: r.image_url ?? null,
+    season: null,
+    cost_band: null,
+    total_minutes: r.total_minutes ?? null,
+    updated_at: '',
+  }));
+  return { items, total: rows[0]?.total_count ?? items.length };
+}
+
 // URL-safe character set for tag/cuisine paths. Tags containing spaces or
 // other characters that encodeURIComponent translates into %NN sequences
 // break Next.js static export (it can't write a `.rsc` file with `%` in

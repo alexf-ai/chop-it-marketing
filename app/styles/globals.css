@@ -1492,6 +1492,53 @@ button { font-family: inherit; }
    ========================================================================== */
 .recipes-hub { padding-top: 48px; padding-bottom: 96px; }
 
+.recipe-search {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.recipe-search-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.recipe-search-input {
+  flex: 1 1 320px;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+}
+.recipe-search-input:focus {
+  outline: none;
+  border-color: var(--text);
+}
+.recipe-search-submit {
+  padding: 10px 18px;
+  border: 1px solid var(--text);
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.recipe-search-submit:hover { opacity: 0.9; }
+
 .recipe-filters {
   display: flex;
   flex-direction: column;
