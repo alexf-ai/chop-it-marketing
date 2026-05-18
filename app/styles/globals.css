@@ -1234,15 +1234,61 @@ button { font-family: inherit; }
   margin: 0 auto;
   padding: 32px 32px 96px;
 }
-.recipe-back {
-  display: inline-block;
+.recipe-back, .recipe-back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 0;
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--muted-2);
+  border-bottom: 1px solid transparent;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+.recipe-back:hover, .recipe-back-link:hover { color: var(--text); border-bottom-color: var(--border-2); }
+.recipe-back-link { margin: 0 0 8px; }
+.recipe-back-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* "More from <segment>" section at the foot of /recipes/[slug]. Internal
+   links here are critical for SEO — they unflatten the site graph from
+   Google's perspective and they cut bounce-back-to-Google on direct
+   landings. Server-rendered so the bot sees the anchors on first byte. */
+.recipe-related {
+  margin: 64px 0 48px;
+  padding-top: 48px;
+  border-top: 1px solid var(--border);
+}
+.recipe-related-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.recipe-related-h {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: clamp(24px, 3vw, 32px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--text);
+}
+.recipe-related-more {
   font-size: 12px;
   letter-spacing: 0.08em;
   color: var(--muted-2);
-  margin-bottom: 28px;
-  border-bottom: 1px solid transparent;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
-.recipe-back:hover { color: var(--text); border-bottom-color: var(--accent); }
+.recipe-related-more:hover { color: var(--text); }
 .recipe-page-hero {
   position: relative;
   border-radius: 20px;
