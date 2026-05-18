@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound, permanentRedirect } from 'next/navigation';
 
 import Breadcrumbs, { type Crumb } from '@/app/components/Breadcrumbs';
+import BackLink from '@/app/components/BackLink';
 import Footer from '@/app/components/Footer';
 import Nav from '@/app/components/Nav';
 import RecipeCTA from '@/app/components/RecipeCTA';
@@ -166,9 +167,9 @@ export default async function RecipePage({
         has_nutrition={hasNutrition}
       />
       <article className="recipe-page">
-        <Link href="/recipes" className="recipe-back-link">
-          ← All recipes
-        </Link>
+        <BackLink href="/recipes" className="recipe-back-link">
+          ← Back
+        </BackLink>
         <Breadcrumbs crumbs={crumbs} />
 
         {recipe.image_url && (
