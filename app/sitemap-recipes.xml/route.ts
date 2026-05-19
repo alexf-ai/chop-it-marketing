@@ -9,6 +9,7 @@
 // /recipes/{tag,cuisine}/[…]/page.tsx. Keep these two in lockstep.
 
 import { COLLECTION_SLUGS } from '../lib/collections';
+import { CUISINE_SLUGS } from '../lib/cuisines';
 import { getRecipesSitemapData } from '../lib/recipes';
 import { SITE_ORIGIN } from '../lib/recipeSchema';
 
@@ -26,7 +27,14 @@ function urlEntry(path: string, lastmod: string, priority: string): string {
 }
 
 export async function GET() {
-  const { recipes, cuisines, tags, seasons } = await getRecipesSitemapData();
+  // `cuisines` from getRecipesSitemapData() is the dynamic tags_json scan
+  // (~116 raw URL-safe values). After the cuisine route was curated down
+  // to 17 canonical slugs we stopped emitting the dynamic set here —
+  // anything outside the curated map now 404s, so listing it in the
+  // sitemap would invite GSC "Not found (404)" reports. The 17 curated
+  // slugs are written below from CUISINE_SLUGS. (The data fn still
+  // returns cuisines because it's also used elsewhere; ignored here.)
+  const { recipes, tags, seasons } = await getRecipesSitemapData();
   const now = new Date().toISOString();
   const entries: string[] = [];
 
@@ -45,14 +53,11 @@ export async function GET() {
   const sorted = (m: Map<string, string>) =>
     Array.from(m.entries()).sort(([a], [b]) => a.localeCompare(b));
 
-  for (const [cuisine, ts] of sorted(cuisines)) {
-    entries.push(
-      urlEntry(
-        `/recipes/cuisine/${encodeURIComponent(cuisine)}`,
-        new Date(ts).toISOString(),
-        '0.5',
-      ),
-    );
+  // Curated cuisine collection pages — 17 canonical slugs from
+  // app/lib/cuisines.ts. Same priority (0.7) as segment collections;
+  // these are top-of-funnel SEO landings, not raw taxonomy listings.
+  for (const slug of [...CUISINE_SLUGS].sort()) {
+    entries.push(urlEntry(`/recipes/cuisine/${slug}`, now, '0.7'));
   }
   for (const [season, ts] of sorted(seasons)) {
     entries.push(

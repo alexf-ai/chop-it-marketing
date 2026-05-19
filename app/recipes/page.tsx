@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Footer from '@/app/components/Footer';
 import Nav from '@/app/components/Nav';
 import RecipeGrid from '@/app/components/RecipeGrid';
+import { CUISINE_COUNTS, CUISINE_META, CUISINE_SLUGS } from '@/app/lib/cuisines';
 import {
   countPublishedRecipes,
   getDistinctCostBands,
@@ -320,6 +321,34 @@ export default async function RecipesHubPage({
               Reset
             </Link>
           </p>
+        )}
+
+        {/* Browse by cuisine — 17 curated cuisine landings. Sorted by
+            recipe count desc so the biggest cuisines lead. Only rendered
+            in browse mode (out of search results context). */}
+        {!searchMode && (
+          <section className="cuisine-browse" aria-labelledby="cuisine-browse-h">
+            <div className="cuisine-browse-head">
+              <div className="kicker mono">— BROWSE BY CUISINE</div>
+              <h2 id="cuisine-browse-h" className="cuisine-browse-h">
+                Browse by cuisine
+              </h2>
+            </div>
+            <ul className="cuisine-grid">
+              {[...CUISINE_SLUGS]
+                .sort((a, b) => (CUISINE_COUNTS[b] ?? 0) - (CUISINE_COUNTS[a] ?? 0))
+                .map((slug) => (
+                  <li key={slug} className="cuisine-card-li">
+                    <Link href={`/recipes/cuisine/${slug}`} className="cuisine-card">
+                      <span className="cuisine-card-name">{CUISINE_META[slug].name}</span>
+                      <span className="cuisine-card-count mono">
+                        {CUISINE_COUNTS[slug]}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+            </ul>
+          </section>
         )}
       </section>
       {searchJsonLd && (

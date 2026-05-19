@@ -247,6 +247,61 @@ export async function listCollectionRecipes(
   });
 }
 
+// Curated cuisine collection landing pages (/recipes/cuisine/[slug]).
+// Pages the search_public_recipes RPC until exhausted so the
+// CollectionPage JSON-LD's numberOfItems and the visible grid match
+// the true cuisine total — capping (e.g. 50) silently truncates the
+// big cuisines (British 255, Italian 109, …) and the schema would lie.
+//
+// Hard ceiling so a runaway cuisine can't trigger unbounded fetching
+// at build time. 1000 is well over the current largest cuisine (255).
+const CUISINE_RPC_PAGE = 100;
+const CUISINE_MAX_TOTAL = 1000;
+
+type CuisineRpcRow = {
+  id: string;
+  slug: string;
+  title: string;
+  image_url: string | null;
+  total_minutes: number | null;
+};
+
+export async function listCuisineRecipes(
+  cuisineSlug: string,
+): Promise<RecipeListItem[]> {
+  if (!supabase || !supabaseConfigured) return [];
+  const out: RecipeListItem[] = [];
+  for (let offset = 0; offset < CUISINE_MAX_TOTAL; offset += CUISINE_RPC_PAGE) {
+    const { data, error } = await supabase.rpc('search_public_recipes', {
+      p_cuisines: [cuisineSlug],
+      p_limit: CUISINE_RPC_PAGE,
+      p_offset: offset,
+    });
+    if (error) {
+      console.warn('[listCuisineRecipes] RPC error', error.message);
+      break;
+    }
+    if (!Array.isArray(data) || data.length === 0) break;
+    const rows = data as CuisineRpcRow[];
+    for (const r of rows) {
+      out.push({
+        id: r.id,
+        slug: r.slug,
+        title: r.title,
+        image_url: r.image_url ?? null,
+        // The RPC doesn't return season/cost_band/updated_at; null them
+        // so the RecipeGrid card just doesn't render those chips.
+        season: null,
+        cost_band: null,
+        total_minutes: r.total_minutes ?? null,
+        updated_at: new Date().toISOString(),
+      });
+    }
+    if (rows.length < CUISINE_RPC_PAGE) break;
+  }
+  return out;
+}
+
 // Thin wrapper around the public.search_public_recipes RPC (title-only
 // trigram + ILIKE fuzzy search). The RPC returns total_count on every row;
 // we pull it from row[0] (or 0 for an empty result) and reshape the row
