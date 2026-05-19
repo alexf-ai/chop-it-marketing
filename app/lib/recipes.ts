@@ -37,6 +37,7 @@ export type Recipe = {
   nutrition_carbs_g: number | null;
   nutrition_fat_g: number | null;
   nutrition_source: string | null;
+  published_at: string;
   updated_at: string;
 };
 
@@ -52,7 +53,7 @@ export type RecipeListItem = {
 };
 
 const RECIPE_COLUMNS =
-  'id, slug, title, hero_description, image_url, season, cost_band, display_priority, servings, ingredients_json, method_steps_json, timings_json, tags_json, nutrition_kcal, nutrition_protein_g, nutrition_fibre_g, nutrition_carbs_g, nutrition_fat_g, nutrition_source, updated_at';
+  'id, slug, title, hero_description, image_url, season, cost_band, display_priority, servings, ingredients_json, method_steps_json, timings_json, tags_json, nutrition_kcal, nutrition_protein_g, nutrition_fibre_g, nutrition_carbs_g, nutrition_fat_g, nutrition_source, published_at, updated_at';
 
 const LIST_COLUMNS =
   'id, slug, title, image_url, season, cost_band, display_priority, timings_json, updated_at';
