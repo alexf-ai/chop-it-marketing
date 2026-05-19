@@ -21,7 +21,6 @@ import { serializeJsonLd, SITE_ORIGIN } from '@/app/lib/recipeSchema';
 export const revalidate = 3600;
 
 const ACCENT = '#E8547A';
-const PER_PAGE = 50;
 
 export async function generateStaticParams() {
   return CUISINE_SLUGS.map((slug) => ({ slug }));
@@ -90,7 +89,10 @@ export default async function CuisineCollectionPage({
   const meta = CUISINE_META[slug];
   if (!meta) notFound();
 
-  const items = await listCuisineRecipes(slug, { limit: PER_PAGE });
+  // Full cuisine roster — listCuisineRecipes pages the RPC until
+  // exhausted so the CollectionPage JSON-LD reflects the true total
+  // (British's 255 recipes, Italian's 109, etc.).
+  const items = await listCuisineRecipes(slug);
   const jsonLd = buildCuisineJsonLd(slug, meta, items);
 
   return (

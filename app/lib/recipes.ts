@@ -248,46 +248,58 @@ export async function listCollectionRecipes(
 }
 
 // Curated cuisine collection landing pages (/recipes/cuisine/[slug]).
-// Calls the same search_public_recipes RPC the search uses, but with
-// the p_cuisines argument and no p_query. The backend resolves the
-// canonical cuisine slug to its underlying recipes — that mapping is
-// owned server-side so the marketing site doesn't have to model it.
-// Row shape matches the RPC's search return (no cost_band / season).
+// Pages the search_public_recipes RPC until exhausted so the
+// CollectionPage JSON-LD's numberOfItems and the visible grid match
+// the true cuisine total — capping (e.g. 50) silently truncates the
+// big cuisines (British 255, Italian 109, …) and the schema would lie.
+//
+// Hard ceiling so a runaway cuisine can't trigger unbounded fetching
+// at build time. 1000 is well over the current largest cuisine (255).
+const CUISINE_RPC_PAGE = 100;
+const CUISINE_MAX_TOTAL = 1000;
+
+type CuisineRpcRow = {
+  id: string;
+  slug: string;
+  title: string;
+  image_url: string | null;
+  total_minutes: number | null;
+};
+
 export async function listCuisineRecipes(
   cuisineSlug: string,
-  opts: { limit?: number } = {},
 ): Promise<RecipeListItem[]> {
   if (!supabase || !supabaseConfigured) return [];
-  const limit = Math.max(1, Math.min(120, opts.limit ?? 50));
-  const { data, error } = await supabase.rpc('search_public_recipes', {
-    p_cuisines: [cuisineSlug],
-    p_limit: limit,
-    p_offset: 0,
-  });
-  if (error || !Array.isArray(data)) {
-    if (error) console.warn('[listCuisineRecipes] RPC error', error.message);
-    return [];
+  const out: RecipeListItem[] = [];
+  for (let offset = 0; offset < CUISINE_MAX_TOTAL; offset += CUISINE_RPC_PAGE) {
+    const { data, error } = await supabase.rpc('search_public_recipes', {
+      p_cuisines: [cuisineSlug],
+      p_limit: CUISINE_RPC_PAGE,
+      p_offset: offset,
+    });
+    if (error) {
+      console.warn('[listCuisineRecipes] RPC error', error.message);
+      break;
+    }
+    if (!Array.isArray(data) || data.length === 0) break;
+    const rows = data as CuisineRpcRow[];
+    for (const r of rows) {
+      out.push({
+        id: r.id,
+        slug: r.slug,
+        title: r.title,
+        image_url: r.image_url ?? null,
+        // The RPC doesn't return season/cost_band/updated_at; null them
+        // so the RecipeGrid card just doesn't render those chips.
+        season: null,
+        cost_band: null,
+        total_minutes: r.total_minutes ?? null,
+        updated_at: new Date().toISOString(),
+      });
+    }
+    if (rows.length < CUISINE_RPC_PAGE) break;
   }
-  type Row = {
-    id: string;
-    slug: string;
-    title: string;
-    image_url: string | null;
-    total_minutes: number | null;
-  };
-  const rows = data as Row[];
-  return rows.map((r) => ({
-    id: r.id,
-    slug: r.slug,
-    title: r.title,
-    image_url: r.image_url ?? null,
-    // The RPC doesn't return season/cost_band/updated_at; null them so
-    // the RecipeGrid card just doesn't render those secondary chips.
-    season: null,
-    cost_band: null,
-    total_minutes: r.total_minutes ?? null,
-    updated_at: new Date().toISOString(),
-  }));
+  return out;
 }
 
 // Thin wrapper around the public.search_public_recipes RPC (title-only
