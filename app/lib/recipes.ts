@@ -247,6 +247,49 @@ export async function listCollectionRecipes(
   });
 }
 
+// Curated cuisine collection landing pages (/recipes/cuisine/[slug]).
+// Calls the same search_public_recipes RPC the search uses, but with
+// the p_cuisines argument and no p_query. The backend resolves the
+// canonical cuisine slug to its underlying recipes — that mapping is
+// owned server-side so the marketing site doesn't have to model it.
+// Row shape matches the RPC's search return (no cost_band / season).
+export async function listCuisineRecipes(
+  cuisineSlug: string,
+  opts: { limit?: number } = {},
+): Promise<RecipeListItem[]> {
+  if (!supabase || !supabaseConfigured) return [];
+  const limit = Math.max(1, Math.min(120, opts.limit ?? 50));
+  const { data, error } = await supabase.rpc('search_public_recipes', {
+    p_cuisines: [cuisineSlug],
+    p_limit: limit,
+    p_offset: 0,
+  });
+  if (error || !Array.isArray(data)) {
+    if (error) console.warn('[listCuisineRecipes] RPC error', error.message);
+    return [];
+  }
+  type Row = {
+    id: string;
+    slug: string;
+    title: string;
+    image_url: string | null;
+    total_minutes: number | null;
+  };
+  const rows = data as Row[];
+  return rows.map((r) => ({
+    id: r.id,
+    slug: r.slug,
+    title: r.title,
+    image_url: r.image_url ?? null,
+    // The RPC doesn't return season/cost_band/updated_at; null them so
+    // the RecipeGrid card just doesn't render those secondary chips.
+    season: null,
+    cost_band: null,
+    total_minutes: r.total_minutes ?? null,
+    updated_at: new Date().toISOString(),
+  }));
+}
+
 // Thin wrapper around the public.search_public_recipes RPC (title-only
 // trigram + ILIKE fuzzy search). The RPC returns total_count on every row;
 // we pull it from row[0] (or 0 for an empty result) and reshape the row
