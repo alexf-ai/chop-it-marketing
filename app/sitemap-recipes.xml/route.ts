@@ -1,12 +1,9 @@
-// Recipes sitemap: every /recipes/<slug> plus the /recipes/cuisine/<x>,
-// /recipes/season/<x>, /recipes/tag/<x> hubs. The hub <lastmod> values are
-// the most recent updated_at across recipes in that grouping (aggregated
-// once in getRecipesSitemapData so we don't N+1 the DB).
-//
-// URL-safety filter (URL_SAFE_SLUG_RE) is applied inside
-// getRecipesSitemapData — taxonomy values containing spaces / punctuation
-// are excluded for the same reason generateStaticParams excludes them in
-// /recipes/{tag,cuisine}/[…]/page.tsx. Keep these two in lockstep.
+// Recipes sitemap: every /recipes/<slug> plus the curated
+// /recipes/collection/<segment> (11) and /recipes/cuisine/<slug> (17)
+// landings. The free-text /recipes/tag/<x> and /recipes/season/<x>
+// routes were retired (they returned 410 in middleware.ts) — they
+// emitted ~700 unnormalised URLs that flooded crawl budget against the
+// 1,024 actual recipe slugs, so they're gone from the sitemap too.
 
 import { COLLECTION_SLUGS } from '../lib/collections';
 import { CUISINE_SLUGS } from '../lib/cuisines';
@@ -27,14 +24,7 @@ function urlEntry(path: string, lastmod: string, priority: string): string {
 }
 
 export async function GET() {
-  // `cuisines` from getRecipesSitemapData() is the dynamic tags_json scan
-  // (~116 raw URL-safe values). After the cuisine route was curated down
-  // to 17 canonical slugs we stopped emitting the dynamic set here —
-  // anything outside the curated map now 404s, so listing it in the
-  // sitemap would invite GSC "Not found (404)" reports. The 17 curated
-  // slugs are written below from CUISINE_SLUGS. (The data fn still
-  // returns cuisines because it's also used elsewhere; ignored here.)
-  const { recipes, tags, seasons } = await getRecipesSitemapData();
+  const { recipes } = await getRecipesSitemapData();
   const now = new Date().toISOString();
   const entries: string[] = [];
 
@@ -48,30 +38,11 @@ export async function GET() {
     );
   }
 
-  // Map iteration order is insertion-time; sort so the file is stable
-  // diff-to-diff (Search Console treats sitemap re-ordering as a change).
-  const sorted = (m: Map<string, string>) =>
-    Array.from(m.entries()).sort(([a], [b]) => a.localeCompare(b));
-
   // Curated cuisine collection pages — 17 canonical slugs from
   // app/lib/cuisines.ts. Same priority (0.7) as segment collections;
   // these are top-of-funnel SEO landings, not raw taxonomy listings.
   for (const slug of [...CUISINE_SLUGS].sort()) {
     entries.push(urlEntry(`/recipes/cuisine/${slug}`, now, '0.7'));
-  }
-  for (const [season, ts] of sorted(seasons)) {
-    entries.push(
-      urlEntry(
-        `/recipes/season/${encodeURIComponent(season)}`,
-        new Date(ts).toISOString(),
-        '0.5',
-      ),
-    );
-  }
-  for (const [tag, ts] of sorted(tags)) {
-    entries.push(
-      urlEntry(`/recipes/tag/${encodeURIComponent(tag)}`, new Date(ts).toISOString(), '0.5'),
-    );
   }
 
   // Editorial collection pages. Higher priority (0.7) than individual

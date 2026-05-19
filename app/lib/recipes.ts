@@ -392,40 +392,14 @@ export async function getDistinctCuisines(): Promise<string[]> {
   return Array.from(out).sort();
 }
 
-export async function getDistinctSeasons(): Promise<string[]> {
-  if (!supabase || !supabaseConfigured) return [];
-  const { data, error } = await supabase
-    .from('recipes_published')
-    .select('season')
-    .eq('seo_published', true)
-    .is('deleted_at', null)
-    .not('season', 'is', null);
-  if (error || !data) return [];
-  return Array.from(new Set(data.map((r) => r.season as string))).sort();
-}
-
-export async function getDistinctTags(): Promise<string[]> {
-  if (!supabase || !supabaseConfigured) return [];
-  const rows = await fetchAllPaged<{ tags_json: TagsJson }>((from, to) =>
-    supabase!
-      .from('recipes_published')
-      .select('tags_json')
-      .eq('seo_published', true)
-      .is('deleted_at', null)
-      .range(from, to),
-  );
-  const out = new Set<string>();
-  for (const r of rows) {
-    const core = r.tags_json?.core;
-    if (Array.isArray(core)) {
-      for (const t of core) {
-        // Same URL-safety filter as getDistinctCuisines — see URL_SAFE_SLUG_RE.
-        if (typeof t === 'string' && URL_SAFE_SLUG_RE.test(t)) out.add(t);
-      }
-    }
-  }
-  return Array.from(out).sort();
-}
+// Note: getDistinctSeasons() and getDistinctTags() were removed when the
+// free-text /recipes/season/[season] and /recipes/tag/[tag] routes were
+// retired (the 700-ish unnormalised values were flooding the sitemap and
+// throttling crawl). The curated taxonomies are app/lib/cuisines.ts and
+// app/lib/collections.ts. getDistinctCuisines() is kept solely for the
+// /recipes hub's cuisine-filter chip (?cuisine=... noindexed facet) —
+// it operates on the raw tags_json.core[] values, separate from the
+// curated /recipes/cuisine/[slug] landings.
 
 export async function getDistinctCostBands(): Promise<string[]> {
   if (!supabase || !supabaseConfigured) return [];
@@ -439,70 +413,33 @@ export async function getDistinctCostBands(): Promise<string[]> {
   return Array.from(new Set(data.map((r) => r.cost_band as string))).sort();
 }
 
-// One-shot fetch for the recipes sitemap. Returns the slug list plus per-
-// taxonomy "most recent updated_at" maps so /sitemap-recipes.xml can emit
-// <lastmod> for every recipe + tag/cuisine/season hub without N+1 queries
-// or a separate trip to the DB. Applies the same URL_SAFE_SLUG_RE filter as
-// getDistinctCuisines / getDistinctTags so the sitemap stays in sync with
-// what generateStaticParams actually pre-renders.
+// One-shot fetch for the recipes sitemap. Returns just the slug list now
+// — the tag/cuisine/season maps the previous shape carried are no longer
+// emitted because the free-text /recipes/tag and /recipes/season routes
+// were retired (curated taxonomies live in app/lib/collections.ts and
+// app/lib/cuisines.ts, with fixed lastmod = now).
 export type RecipesSitemapData = {
   recipes: { slug: string; updated_at: string }[];
-  cuisines: Map<string, string>;
-  tags: Map<string, string>;
-  seasons: Map<string, string>;
 };
 
 export async function getRecipesSitemapData(): Promise<RecipesSitemapData> {
-  if (!supabase || !supabaseConfigured) {
-    return { recipes: [], cuisines: new Map(), tags: new Map(), seasons: new Map() };
-  }
-  const rows = await fetchAllPaged<{
-    slug: string | null;
-    updated_at: string;
-    tags_json: TagsJson;
-    season: string | null;
-  }>((from, to) =>
-    supabase!
-      .from('recipes_published')
-      .select('slug, updated_at, tags_json, season')
-      .eq('seo_published', true)
-      .is('deleted_at', null)
-      .not('slug', 'is', null)
-      .range(from, to),
+  if (!supabase || !supabaseConfigured) return { recipes: [] };
+  const rows = await fetchAllPaged<{ slug: string | null; updated_at: string }>(
+    (from, to) =>
+      supabase!
+        .from('recipes_published')
+        .select('slug, updated_at')
+        .eq('seo_published', true)
+        .is('deleted_at', null)
+        .not('slug', 'is', null)
+        .range(from, to),
   );
-
   const recipes: { slug: string; updated_at: string }[] = [];
-  const cuisines = new Map<string, string>();
-  const tags = new Map<string, string>();
-  const seasons = new Map<string, string>();
-
-  const bump = (m: Map<string, string>, key: string, ts: string) => {
-    const prev = m.get(key);
-    if (!prev || ts > prev) m.set(key, ts);
-  };
-
   for (const r of rows) {
     if (typeof r.slug !== 'string') continue;
     recipes.push({ slug: r.slug, updated_at: r.updated_at });
-
-    const core = r.tags_json?.core;
-    if (Array.isArray(core)) {
-      if (core.length > 0 && typeof core[0] === 'string' && URL_SAFE_SLUG_RE.test(core[0])) {
-        bump(cuisines, core[0], r.updated_at);
-      }
-      for (const t of core) {
-        if (typeof t === 'string' && URL_SAFE_SLUG_RE.test(t)) {
-          bump(tags, t, r.updated_at);
-        }
-      }
-    }
-
-    if (typeof r.season === 'string' && r.season.length > 0) {
-      bump(seasons, r.season, r.updated_at);
-    }
   }
-
-  return { recipes, cuisines, tags, seasons };
+  return { recipes };
 }
 
 export async function countPublishedRecipes(): Promise<number> {

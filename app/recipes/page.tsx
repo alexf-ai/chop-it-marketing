@@ -9,7 +9,6 @@ import {
   countPublishedRecipes,
   getDistinctCostBands,
   getDistinctCuisines,
-  getDistinctSeasons,
   listPublishedRecipes,
   searchPublicRecipes,
 } from '@/app/lib/recipes';
@@ -151,12 +150,11 @@ export default async function RecipesHubPage({
   const cuisine = searchMode ? undefined : sp.cuisine || undefined;
   const costBand = searchMode ? undefined : sp.cost || undefined;
 
-  const [total, listResult, seasons, cuisines, costBands] = await Promise.all([
+  const [total, listResult, cuisines, costBands] = await Promise.all([
     countPublishedRecipes(),
     searchMode
       ? searchPublicRecipes(q, { page, perPage: PER_PAGE })
       : listPublishedRecipes({ page, perPage: PER_PAGE, season, cuisine, costBand }),
-    getDistinctSeasons(),
     getDistinctCuisines(),
     getDistinctCostBands(),
   ]);
@@ -224,24 +222,6 @@ export default async function RecipesHubPage({
 
         {!searchMode && (
           <nav className="recipe-filters mono" aria-label="Filter recipes">
-            <div className="filter-group">
-              <span className="filter-k">Season</span>
-              <Link
-                className={season ? 'filter-opt' : 'filter-opt on'}
-                href={buildHref({ season: undefined, page: undefined })}
-              >
-                All
-              </Link>
-              {seasons.map((s) => (
-                <Link
-                  key={s}
-                  className={season === s ? 'filter-opt on' : 'filter-opt'}
-                  href={buildHref({ season: s, page: undefined })}
-                >
-                  {s}
-                </Link>
-              ))}
-            </div>
             {cuisines.length > 0 && (
               <div className="filter-group">
                 <span className="filter-k">Cuisine</span>
