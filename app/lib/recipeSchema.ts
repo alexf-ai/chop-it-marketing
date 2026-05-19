@@ -13,8 +13,41 @@
 
 import { isoDuration, stripUndefined } from './iso';
 import type { Recipe } from './recipes';
+import { getRecipeSegments } from './segments';
 
 export const SITE_ORIGIN = 'https://chop-it.com';
+
+// Map curated catalog segments → Google-recognised recipeCategory values.
+// Schema.org accepts free strings but Google's Rich Results parser
+// special-cases a known list ("Dessert", "Main Course", "Appetizer",
+// "Side Dish", "Barbecue", "Breakfast", …). Anything off that list
+// degrades to a plain string and loses the category facet in SERPs.
+//
+// The mapping collapses our 11 segments into 2 valid buckets — most
+// segments are dinner-shaped (Main Course); "puds" maps to Dessert and
+// "bbq_szn" maps to Barbecue. The default below (Main Course) catches
+// the (defensive) case of a recipe with no segments.
+const SEGMENT_TO_CATEGORY: Record<string, string> = {
+  puds: 'Dessert',
+  bbq_szn: 'Barbecue',
+  batch: 'Main Course',
+  quick: 'Main Course',
+  comfort: 'Main Course',
+  tray_bake: 'Main Course',
+  healthy: 'Main Course',
+  fodmap: 'Main Course',
+  high_protein: 'Main Course',
+  one_pot: 'Main Course',
+  kid_friendly: 'Main Course',
+};
+
+const DEFAULT_RECIPE_CATEGORY = 'Main Course';
+
+function recipeCategoryFor(recipe: Recipe): string {
+  const segments = getRecipeSegments(recipe.tags_json);
+  const first = segments[0];
+  return (first && SEGMENT_TO_CATEGORY[first]) ?? DEFAULT_RECIPE_CATEGORY;
+}
 
 type NutritionInformation = {
   '@type': 'NutritionInformation';
@@ -112,10 +145,17 @@ export function buildRecipeJsonLd(recipe: Recipe): RecipeLd {
     // where `base` is the imagedelivery.net URL minus the trailing `/full`.
     image: recipe.image_url ? [recipe.image_url] : undefined,
     url,
+    // published_at is NOT NULL on every row in recipes_published — Google
+    // prefers both datePublished + dateModified for freshness signals.
+    datePublished: new Date(recipe.published_at).toISOString(),
     dateModified: recipe.updated_at,
     author: { '@type': 'Organization', name: 'Chop it', url: SITE_ORIGIN },
     recipeYield: recipe.servings != null ? `${recipe.servings} servings` : undefined,
-    recipeCategory: recipe.season ?? undefined,
+    // recipeCategory used to read recipe.season (only "summer" was ever
+    // published so it was almost always "summer", which isn't a Google-
+    // recognised category). Now derives from the curated catalog
+    // segment instead — see SEGMENT_TO_CATEGORY above.
+    recipeCategory: recipeCategoryFor(recipe),
     recipeCuisine: cuisine,
     keywords,
     prepTime: isoDuration(t?.prep_minutes),
