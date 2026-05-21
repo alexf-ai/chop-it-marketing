@@ -1608,18 +1608,18 @@ button { font-family: inherit; }
   gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 16px 0 8px;
+  margin: 16px auto 8px;
   width: 100%;
-  max-width: 480px;
 }
-/* With only the App Store pill rendered while Android isn't live, span
-   the full row width so the pill reads as the primary action rather
-   than floating as a small chip. Centers its eyebrow + label too. */
+/* While Android is gated the row carries only the App Store pill —
+   sized to content, centered via the parent flex, and outlined in
+   brand pink so it reads as the primary action. */
 .download-cta-row .store-pill {
-  width: 100%;
   align-items: center;
   text-align: center;
+  border-color: var(--accent);
 }
+.download-cta-row .store-pill:hover { border-color: var(--accent); filter: brightness(1.1); }
 .store-pill {
   display: inline-flex;
   flex-direction: column;
