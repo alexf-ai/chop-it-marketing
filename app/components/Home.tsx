@@ -91,7 +91,7 @@ export default function Home({
       <div id="recipes">{featuredRecipes}</div>
       <HowItWorks browseThumbs={browseThumbs} />
       <Principles />
-      <DownloadCTA accent={accent} />
+      <DownloadCTA />
       <Footer />
       {tweaksOn && <Tweaks state={state} setState={setState} onClose={() => setTweaksOn(false)} />}
     </>
