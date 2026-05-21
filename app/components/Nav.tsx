@@ -43,7 +43,7 @@ export default function Nav({ accent }: NavProps) {
             className="btn btn-primary"
             style={{ background: accent }}
             href={getAppHref}
-            rel={IOS_LIVE ? 'noopener' : undefined}
+            rel={IOS_LIVE ? 'noopener noreferrer' : undefined}
             onClick={() => {
               trackNavCtaClick({ destination: 'get_app', location: 'nav' });
               trackCtaClicked({

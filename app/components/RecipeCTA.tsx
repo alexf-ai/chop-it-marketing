@@ -38,6 +38,7 @@ export default function RecipeCTA({ recipeSlug, recipeTitle }: RecipeCTAProps = 
         <a
           className="store-pill"
           href={APP_STORE_URL}
+          rel={IOS_LIVE ? 'noopener noreferrer' : undefined}
           aria-label="Download on the App Store"
           onClick={() => {
             trackAppStoreClick({
@@ -59,6 +60,7 @@ export default function RecipeCTA({ recipeSlug, recipeTitle }: RecipeCTAProps = 
           <a
             className="store-pill"
             href={PLAY_STORE_URL}
+            rel="noopener noreferrer"
             aria-label="Get it on Google Play"
             onClick={() => {
               trackPlayStoreClick({
