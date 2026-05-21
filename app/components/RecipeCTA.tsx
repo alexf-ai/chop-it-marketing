@@ -5,21 +5,19 @@
 // Two store badges, App Store left, Google Play right. Google Play is
 // hidden until Android is actually live (NEXT_PUBLIC_ANDROID_LIVE === 'true'),
 // so we don't ship a dead pill the moment Android lands but before the
-// app store listing goes live.
+// app store listing goes live. App Store eyebrow flips between "COMING
+// SOON" and "DOWNLOAD ON THE" based on IOS_LIVE.
 //
 // Copy is deliberately native-only — SEO recipe pages exist to drive
 // install, not to advertise the browser surface. Other entry points on
 // the homepage already cover the web fallback.
 
+import { ANDROID_LIVE, APP_STORE_URL, IOS_LIVE, PLAY_STORE_URL } from '@/app/lib/app-stores';
 import {
   trackAppStoreClick,
   trackCtaClicked,
   trackPlayStoreClick,
 } from '@/lib/posthog-events';
-
-const APP_STORE_URL = process.env.NEXT_PUBLIC_APP_STORE_URL ?? '#';
-const PLAY_STORE_URL = process.env.NEXT_PUBLIC_PLAY_STORE_URL ?? '#';
-const ANDROID_LIVE = process.env.NEXT_PUBLIC_ANDROID_LIVE === 'true';
 
 type RecipeCTAProps = {
   // Passed by the recipe detail page so app_store_click / play_store_click
@@ -54,7 +52,7 @@ export default function RecipeCTA({ recipeSlug, recipeTitle }: RecipeCTAProps = 
             });
           }}
         >
-          <span className="store-pill-top mono">COMING SOON</span>
+          <span className="store-pill-top mono">{IOS_LIVE ? 'DOWNLOAD ON THE' : 'COMING SOON'}</span>
           <span className="store-pill-bot">App Store</span>
         </a>
         {ANDROID_LIVE && (
