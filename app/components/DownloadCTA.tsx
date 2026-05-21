@@ -27,6 +27,7 @@ export default function DownloadCTA() {
           <a
             className="store-pill"
             href={APP_STORE_URL}
+            rel={IOS_LIVE ? 'noopener noreferrer' : undefined}
             aria-label="Download on the App Store"
             onClick={() => {
               trackAppStoreClick({ location: 'download_cta' });
@@ -44,6 +45,7 @@ export default function DownloadCTA() {
             <a
               className="store-pill"
               href={PLAY_STORE_URL}
+              rel="noopener noreferrer"
               aria-label="Get it on Google Play"
               onClick={() => {
                 trackPlayStoreClick({ location: 'download_cta' });
