@@ -33,20 +33,6 @@ export default function Nav({ accent }: NavProps) {
           <a href="#">Feasts</a>
         </div>
         <div className="nav-cta">
-          <a
-            className="nav-link-tertiary"
-            href="#"
-            onClick={() => {
-              trackNavCtaClick({ destination: 'sign_in', location: 'nav' });
-              trackCtaClicked({
-                cta_location: 'header_nav',
-                cta_label: 'Sign in',
-                cta_destination: '#',
-              });
-            }}
-          >
-            Sign in
-          </a>
           <Link
             className="btn btn-primary"
             style={{ background: accent }}
