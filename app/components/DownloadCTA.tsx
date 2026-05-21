@@ -1,8 +1,12 @@
 'use client';
 
 // Block 08 — Closing CTA. Replaces the old FinalCTA. Three CTAs in a row
-// (App Store / Google Play / web) plus a verified sustainability anchor line.
+// (App Store / Google Play / web) plus a verified sustainability anchor
+// line. App Store eyebrow + href flip from "COMING SOON / #" to
+// "DOWNLOAD ON THE / <live url>" the moment IOS_LIVE is true (see
+// app/lib/app-stores.ts). Google Play stays gated until Android ships.
 
+import { ANDROID_LIVE, APP_STORE_URL, IOS_LIVE, PLAY_STORE_URL } from '@/app/lib/app-stores';
 import {
   trackAppStoreClick,
   trackCtaClicked,
@@ -22,37 +26,36 @@ export default function DownloadCTA({ accent }: DownloadCTAProps) {
           Free to try. Web, iPhone, and Android. Your weekly shop, sorted in minutes.
         </p>
         <div className="download-cta-row">
-          {/* App Store / Google Play badges — placeholder hrefs until live URLs land. */}
           <a
             className="store-pill"
-            href="#"
+            href={APP_STORE_URL}
             aria-label="Download on the App Store"
             onClick={() => {
               trackAppStoreClick({ location: 'download_cta' });
               trackCtaClicked({
                 cta_location: 'homepage_secondary',
                 cta_label: 'App Store',
-                cta_destination: '#',
+                cta_destination: APP_STORE_URL,
               });
             }}
           >
-            <span className="store-pill-top mono">COMING SOON</span>
+            <span className="store-pill-top mono">{IOS_LIVE ? 'DOWNLOAD ON THE' : 'COMING SOON'}</span>
             <span className="store-pill-bot">App Store</span>
           </a>
           <a
             className="store-pill"
-            href="#"
+            href={ANDROID_LIVE ? PLAY_STORE_URL : '#'}
             aria-label="Get it on Google Play"
             onClick={() => {
               trackPlayStoreClick({ location: 'download_cta' });
               trackCtaClicked({
                 cta_location: 'homepage_secondary',
                 cta_label: 'Google Play',
-                cta_destination: '#',
+                cta_destination: ANDROID_LIVE ? PLAY_STORE_URL : '#',
               });
             }}
           >
-            <span className="store-pill-top mono">COMING SOON</span>
+            <span className="store-pill-top mono">{ANDROID_LIVE ? 'GET IT ON' : 'COMING SOON'}</span>
             <span className="store-pill-bot">Google Play</span>
           </a>
           <a
