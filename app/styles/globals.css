@@ -1609,6 +1609,16 @@ button { font-family: inherit; }
   flex-wrap: wrap;
   justify-content: center;
   margin: 16px 0 8px;
+  width: 100%;
+  max-width: 480px;
+}
+/* With only the App Store pill rendered while Android isn't live, span
+   the full row width so the pill reads as the primary action rather
+   than floating as a small chip. Centers its eyebrow + label too. */
+.download-cta-row .store-pill {
+  width: 100%;
+  align-items: center;
+  text-align: center;
 }
 .store-pill {
   display: inline-flex;

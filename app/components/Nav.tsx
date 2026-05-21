@@ -3,11 +3,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { APP_STORE_URL, IOS_LIVE } from '@/app/lib/app-stores';
 import { trackCtaClicked, trackNavCtaClick } from '@/lib/posthog-events';
 
 type NavProps = { accent: string };
 
 export default function Nav({ accent }: NavProps) {
+  // While iOS is the only live install path, "Get the app" deep-links
+  // straight to the App Store listing instead of scrolling visitors to
+  // the closing CTA block on the homepage. Defensive: if IOS_LIVE ever
+  // flips false (URL yanked), revert to the in-page anchor.
+  const getAppHref = IOS_LIVE ? APP_STORE_URL : '/#download';
   return (
     <nav className="nav">
       <div className="nav-inner">
@@ -33,21 +39,22 @@ export default function Nav({ accent }: NavProps) {
           <a href="#">Feasts</a>
         </div>
         <div className="nav-cta">
-          <Link
+          <a
             className="btn btn-primary"
             style={{ background: accent }}
-            href="/#download"
+            href={getAppHref}
+            rel={IOS_LIVE ? 'noopener' : undefined}
             onClick={() => {
               trackNavCtaClick({ destination: 'get_app', location: 'nav' });
               trackCtaClicked({
                 cta_location: 'header_nav',
                 cta_label: 'Get the app',
-                cta_destination: '/#download',
+                cta_destination: getAppHref,
               });
             }}
           >
             Get the app
-          </Link>
+          </a>
         </div>
       </div>
     </nav>
