@@ -1,5 +1,7 @@
 'use client';
 
+import { m } from 'motion/react';
+
 import ScoreRing from './ScoreRing';
 import { bandFor, coachingFor } from '@/app/lib/score';
 
@@ -38,14 +40,25 @@ export default function ScoreExplainer({ score, setScore, accent }: ScoreExplain
     <section className="section score-x" id="score">
       <div className="score-x-grid">
         <div className="score-x-left">
-          <div className="kicker mono">— THE WEEKLY DIVERSITY SCORE</div>
-          <h2 className="h-editorial">
-            Your week, <em>scored.</em>
-          </h2>
-          <p className="lead">
-            A single number that reads your plan and tells you where the gaps are. Not a diet. Not homework.
-            Just a nudge toward more varied, plant-forward cooking — without giving up the lasagne.
-          </p>
+          {/* Heading + intro fade up on scroll. Ring, slider, band tags
+              and pillars below are deliberately NOT animated — they
+              already animate via their own slider state + the existing
+              ScoreRing stroke-dashoffset transition. */}
+          <m.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1] }}
+          >
+            <div className="kicker mono">— THE WEEKLY DIVERSITY SCORE</div>
+            <h2 className="h-editorial">
+              Your week, <em>scored.</em>
+            </h2>
+            <p className="lead">
+              A single number that reads your plan and tells you where the gaps are. Not a diet. Not homework.
+              Just a nudge toward more varied, plant-forward cooking — without giving up the lasagne.
+            </p>
+          </m.div>
 
           <div className="score-x-band-row">
             <div className="score-x-band-item">

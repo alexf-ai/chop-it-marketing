@@ -1,6 +1,9 @@
 import Image from 'next/image';
 
 import DishPlaceholder from './DishPlaceholder';
+import Reveal from './motion/Reveal';
+import StaggerGroup from './motion/StaggerGroup';
+import StaggerItem from './motion/StaggerItem';
 import { supabase, supabaseConfigured } from '@/app/lib/supabase';
 
 export const revalidate = 3600;
@@ -89,51 +92,59 @@ export default async function FeaturedRecipes() {
 
   return (
     <section className="section recipes">
-      <div className="section-head">
-        <div className="kicker mono">— FEATURED THIS WEEK</div>
-        <h2 className="h-editorial">
-          Cook tonight. <span className="muted">Or park it for Thursday.</span>
-        </h2>
-      </div>
-      <div className="recipes-grid">
+      <Reveal>
+        <div className="section-head">
+          <div className="kicker mono">— FEATURED THIS WEEK</div>
+          <h2 className="h-editorial">
+            Cook tonight. <span className="muted">Or park it for Thursday.</span>
+          </h2>
+        </div>
+      </Reveal>
+      {/* Tighter stagger (0.06) so 6 cards don't drag — the grid lands
+          in ~0.36s rather than ~0.48s at the default 0.08 cadence. */}
+      <StaggerGroup className="recipes-grid" stagger={0.06}>
         {recipes
           ? recipes.map((r) => (
-              <a key={r.id} className="recipe-card" href={`/recipes/${r.id}`}>
-                <div className="recipe-image">
-                  {r.image_url ? (
-                    <Image
-                      src={r.image_url}
-                      alt={r.title}
-                      width={600}
-                      height={750}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
-                    />
-                  ) : (
-                    <DishPlaceholder label={r.title} tone="warm" aspect="4 / 5" />
-                  )}
-                </div>
-                <div className="recipe-meta">
-                  <div className="recipe-name">{r.title}</div>
-                </div>
-              </a>
+              <StaggerItem key={r.id}>
+                <a className="recipe-card" href={`/recipes/${r.id}`}>
+                  <div className="recipe-image">
+                    {r.image_url ? (
+                      <Image
+                        src={r.image_url}
+                        alt={r.title}
+                        width={600}
+                        height={750}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <DishPlaceholder label={r.title} tone="warm" aspect="4 / 5" />
+                    )}
+                  </div>
+                  <div className="recipe-meta">
+                    <div className="recipe-name">{r.title}</div>
+                  </div>
+                </a>
+              </StaggerItem>
             ))
           : PLACEHOLDERS.map((r, i) => (
-              <a key={i} className="recipe-card" href="#">
-                <DishPlaceholder label={r.name} tone={r.tone} aspect="4 / 5" />
-                <div className="recipe-meta">
-                  <div className="recipe-tags">
-                    {r.tags.map((t) => (
-                      <span key={t} className="tag mono">
-                        {t}
-                      </span>
-                    ))}
-                    <span className="tag-time mono">{r.time}</span>
+              <StaggerItem key={i}>
+                <a className="recipe-card" href="#">
+                  <DishPlaceholder label={r.name} tone={r.tone} aspect="4 / 5" />
+                  <div className="recipe-meta">
+                    <div className="recipe-tags">
+                      {r.tags.map((t) => (
+                        <span key={t} className="tag mono">
+                          {t}
+                        </span>
+                      ))}
+                      <span className="tag-time mono">{r.time}</span>
+                    </div>
+                    <div className="recipe-name">{r.name}</div>
                   </div>
-                  <div className="recipe-name">{r.name}</div>
-                </div>
-              </a>
+                </a>
+              </StaggerItem>
             ))}
-      </div>
+      </StaggerGroup>
     </section>
   );
 }

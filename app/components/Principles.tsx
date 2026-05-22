@@ -2,6 +2,10 @@
 // Editorial principles do the same job ("we know what we're talking about")
 // without putting words in invented mouths.
 
+import Reveal from './motion/Reveal';
+import StaggerGroup from './motion/StaggerGroup';
+import StaggerItem from './motion/StaggerItem';
+
 type Principle = { title: string; body: string };
 
 const PRINCIPLES: Principle[] = [
@@ -25,18 +29,20 @@ const PRINCIPLES: Principle[] = [
 export default function Principles() {
   return (
     <section className="section principles">
-      <div className="section-head">
-        <div className="kicker mono">— OUR APPROACH</div>
-        <h2 className="h-editorial">Built on three ideas.</h2>
-      </div>
-      <div className="principles-grid">
+      <Reveal>
+        <div className="section-head">
+          <div className="kicker mono">— OUR APPROACH</div>
+          <h2 className="h-editorial">Built on three ideas.</h2>
+        </div>
+      </Reveal>
+      <StaggerGroup className="principles-grid" stagger={0.1}>
         {PRINCIPLES.map((p) => (
-          <div key={p.title} className="principle-card">
+          <StaggerItem key={p.title} className="principle-card">
             <h3 className="principle-title">{p.title}</h3>
             <p className="principle-body">{p.body}</p>
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGroup>
     </section>
   );
 }

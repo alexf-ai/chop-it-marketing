@@ -1,3 +1,10 @@
+// "Four things, done well." Server component; the Reveal +
+// StaggerGroup + StaggerItem wrappers it renders are client components.
+
+import Reveal from './motion/Reveal';
+import StaggerGroup from './motion/StaggerGroup';
+import StaggerItem from './motion/StaggerItem';
+
 type Item = { kicker: string; title: string; body: string; accent: string };
 
 const ITEMS: Item[] = [
@@ -30,24 +37,26 @@ const ITEMS: Item[] = [
 export default function WhatItDoes() {
   return (
     <section className="section what">
-      <div className="section-head">
-        <div className="kicker mono">— WHAT CHOP IT DOES</div>
-        <h2 className="h-editorial">
-          Four things, done well. <span className="muted">Nothing you don&rsquo;t need.</span>
-        </h2>
-      </div>
-      <div className="what-grid">
+      <Reveal>
+        <div className="section-head">
+          <div className="kicker mono">— WHAT CHOP IT DOES</div>
+          <h2 className="h-editorial">
+            Four things, done well. <span className="muted">Nothing you don&rsquo;t need.</span>
+          </h2>
+        </div>
+      </Reveal>
+      <StaggerGroup className="what-grid">
         {ITEMS.map((it, i) => (
-          <div key={i} className="what-card">
+          <StaggerItem key={i} className="what-card">
             <div className="what-kicker mono" style={{ color: it.accent }}>
               {it.kicker}
             </div>
             <div className="what-title">{it.title}</div>
             <div className="what-body">{it.body}</div>
             <div className="what-rule" style={{ background: it.accent }} />
-          </div>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerGroup>
     </section>
   );
 }

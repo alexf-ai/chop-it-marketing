@@ -1,6 +1,9 @@
 import type { ReactNode } from 'react';
 
 import DishPlaceholder from './DishPlaceholder';
+import Reveal from './motion/Reveal';
+import StaggerGroup from './motion/StaggerGroup';
+import StaggerItem from './motion/StaggerItem';
 
 type ShopItem = { n: string; q: string; got?: boolean; pantry?: boolean };
 
@@ -39,25 +42,30 @@ export default function HowItWorks({ browseThumbs }: HowItWorksProps = {}) {
 
   return (
     <section className="section how" id="how">
-      <div className="section-head">
-        <div className="kicker mono">— HOW IT WORKS</div>
-        <h2 className="h-editorial">
-          Three steps. <span className="muted">Weekly shop, sorted in minutes.</span>
-        </h2>
-      </div>
-      <div className="how-steps">
+      <Reveal>
+        <div className="section-head">
+          <div className="kicker mono">— HOW IT WORKS</div>
+          <h2 className="h-editorial">
+            Three steps. <span className="muted">Weekly shop, sorted in minutes.</span>
+          </h2>
+        </div>
+      </Reveal>
+      {/* Slower stagger (0.12) — three steps read sequentially, so a
+          longer cadence gives each step a moment before the next
+          arrives. */}
+      <StaggerGroup className="how-steps" stagger={0.12}>
         {/* Step 01 — Browse or generate */}
-        <div className="how-step">
+        <StaggerItem className="how-step">
           <div className="how-num mono">01</div>
           <div className="how-title">Browse or generate recipes</div>
           <div className="how-body">
             Pull from our library. Snap a cookbook. Or ask for fifty BBQ ideas and pick your favourites.
           </div>
           <div className="how-visual">{browseThumbs ?? fallbackThumbs}</div>
-        </div>
+        </StaggerItem>
 
         {/* Step 02 — One smart shop */}
-        <div className="how-step">
+        <StaggerItem className="how-step">
           <div className="how-num mono">02</div>
           <div className="how-title">One smart shop</div>
           <div className="how-body">
@@ -77,10 +85,10 @@ export default function HowItWorks({ browseThumbs }: HowItWorksProps = {}) {
               </div>
             ))}
           </div>
-        </div>
+        </StaggerItem>
 
         {/* Step 03 — Cook, score, repeat */}
-        <div className="how-step">
+        <StaggerItem className="how-step">
           <div className="how-num mono">03</div>
           <div className="how-title">Cook, score, repeat</div>
           <div className="how-body">
@@ -96,8 +104,8 @@ export default function HowItWorks({ browseThumbs }: HowItWorksProps = {}) {
               </div>
             ))}
           </div>
-        </div>
-      </div>
+        </StaggerItem>
+      </StaggerGroup>
     </section>
   );
 }

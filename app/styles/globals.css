@@ -563,6 +563,13 @@ button { font-family: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   .ring-wrap svg circle { transition: none !important; }
+  /* Disable the hero eyebrow pulse and the waitlist sticky-bar rise for
+     visitors who've opted in to reduced motion. Motion-driven animations
+     are handled globally via <MotionConfig reducedMotion="user"> in
+     app/components/MotionRoot.tsx; these two CSS keyframes need an
+     explicit override since they aren't routed through Motion. */
+  .hero-eyebrow .pulse { animation: none !important; }
+  .waitlist-sticky { animation: none !important; }
 }
 
 /* ---------- Score ring component ---------- */
