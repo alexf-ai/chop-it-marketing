@@ -1,11 +1,12 @@
 'use client';
 
 // Block 08 — Closing CTA. App Store pill is the primary action while
-// Android isn't live yet. The Google Play pill is gated on ANDROID_LIVE
-// (matches RecipeCTA) so it stays hidden until the listing ships. The
-// "Try the web app" outline button is removed for now — Alex wants the
-// single primary CTA route through iOS until Android lands; it can come
-// back as a third pill when the lineup is complete.
+// Android isn't live yet. The Google Play pill renders alongside in a
+// "COMING SOON" state so visitors see both platforms are coming — its
+// href/eyebrow flip to the live PLAY_STORE_URL when ANDROID_LIVE turns
+// true. The "Try the web app" outline button is removed for now — Alex
+// wants the single primary CTA route through iOS until Android lands;
+// it can come back as a third pill when the lineup is complete.
 
 import { m } from 'motion/react';
 
@@ -68,7 +69,7 @@ export default function DownloadCTA() {
             <span className="store-pill-top mono">{IOS_LIVE ? 'DOWNLOAD ON THE' : 'COMING SOON'}</span>
             <span className="store-pill-bot">App Store</span>
           </m.a>
-          {ANDROID_LIVE && (
+          {ANDROID_LIVE ? (
             <m.a
               className="store-pill"
               href={PLAY_STORE_URL}
@@ -87,6 +88,32 @@ export default function DownloadCTA() {
               }}
             >
               <span className="store-pill-top mono">GET IT ON</span>
+              <span className="store-pill-bot">Google Play</span>
+            </m.a>
+          ) : (
+            // ANDROID_LIVE is false — render the pill as a non-clickable
+            // "COMING SOON" placeholder so visitors still see Android is
+            // planned. href="#" stays inert; tracking captures intent
+            // ("how many tap Coming Soon Android?"). Falls through to the
+            // live URL automatically when ANDROID_LIVE flips.
+            <m.a
+              className="store-pill"
+              href="#"
+              aria-label="Google Play — coming soon"
+              whileHover={PILL_HOVER}
+              whileTap={PILL_TAP}
+              transition={PILL_SPRING}
+              onClick={(e) => {
+                e.preventDefault();
+                trackPlayStoreClick({ location: 'download_cta' });
+                trackCtaClicked({
+                  cta_location: 'homepage_secondary',
+                  cta_label: 'Google Play (coming soon)',
+                  cta_destination: '#',
+                });
+              }}
+            >
+              <span className="store-pill-top mono">COMING SOON</span>
               <span className="store-pill-bot">Google Play</span>
             </m.a>
           )}
