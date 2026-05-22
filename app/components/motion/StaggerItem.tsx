@@ -6,7 +6,7 @@
 // y: 20 (slightly less than Reveal's 24) so a stacked list feels
 // snappier as items pop in sequence.
 
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 export default function StaggerItem({
   children,
@@ -16,7 +16,7 @@ export default function StaggerItem({
   className?: string;
 }) {
   return (
-    <motion.div
+    <m.div
       className={className}
       variants={{
         hidden: { opacity: 0, y: 20 },
@@ -28,6 +28,6 @@ export default function StaggerItem({
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

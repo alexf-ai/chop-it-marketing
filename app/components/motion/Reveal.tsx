@@ -9,7 +9,7 @@
 // stroke-dashoffset transition uses; keeping all entrances on it gives
 // the page a single motion vocabulary.
 
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 type Props = {
   children: React.ReactNode;
@@ -28,7 +28,7 @@ export default function Reveal({
   className,
   amount = 0.2,
 }: Props) {
-  const MotionTag = as === 'section' ? motion.section : motion.div;
+  const MotionTag = as === 'section' ? m.section : m.div;
   return (
     <MotionTag
       className={className}

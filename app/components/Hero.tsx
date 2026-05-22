@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 import type { DemoPantryRecipe, DemoRecipe } from '@/app/lib/homepageDemo';
 import DemoSearchBar from './interactive-demo/DemoSearchBar';
@@ -30,7 +30,7 @@ export default function Hero({ score, demoRecipes, demoPantryRecipes }: HeroProp
             <span className="pulse" />
             <span className="mono">NEW · WEEKLY DIVERSITY SCORE</span>
           </div>
-          <motion.h1
+          <m.h1
             className="hero-h"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -40,8 +40,8 @@ export default function Hero({ score, demoRecipes, demoPantryRecipes }: HeroProp
             <span className="hero-h-line">
               <em>without giving up what you love.</em>
             </span>
-          </motion.h1>
-          <motion.p
+          </m.h1>
+          <m.p
             className="hero-sub"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -49,12 +49,12 @@ export default function Hero({ score, demoRecipes, demoPantryRecipes }: HeroProp
           >
             Chop it plans the week, writes the shop, and quietly nudges you toward more variety,
             more plants, more fibre, less waste. Without giving up the lasagne on Friday!
-          </motion.p>
+          </m.p>
           <hr className="hero-separator" aria-hidden="true" />
         </div>
         {/* Wrap the PhoneSimulator container, NOT the simulator internals
             — its own ScoreRing + tab animations stay untouched. */}
-        <motion.div
+        <m.div
           className="hero-right"
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -66,20 +66,20 @@ export default function Hero({ score, demoRecipes, demoPantryRecipes }: HeroProp
             score={score}
             band={PHONE_DEMO_BAND}
           />
-        </motion.div>
+        </m.div>
       </div>
       {/* Search lives in its own full-width row below the hero grid so it
           never competes for column width with the phone simulator. On
           mobile this stacks cleanly under the phone; on desktop it spans
           the hero centered. */}
-      <motion.div
+      <m.div
         className="hero-search-row"
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.35 }}
       >
         <DemoSearchBar />
-      </motion.div>
+      </m.div>
     </header>
   );
 }

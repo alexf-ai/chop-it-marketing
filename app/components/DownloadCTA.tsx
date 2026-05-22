@@ -7,7 +7,7 @@
 // single primary CTA route through iOS until Android lands; it can come
 // back as a third pill when the lineup is complete.
 
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 import { ANDROID_LIVE, APP_STORE_URL, IOS_LIVE, PLAY_STORE_URL } from '@/app/lib/app-stores';
 import {
@@ -35,7 +35,7 @@ export default function DownloadCTA() {
   return (
     <section className="section download-cta" id="download">
       <div className="download-cta-inner">
-        <motion.div
+        <m.div
           initial={COPY_INITIAL}
           whileInView={COPY_IN_VIEW}
           viewport={COPY_VIEWPORT}
@@ -46,9 +46,9 @@ export default function DownloadCTA() {
           <p className="download-cta-sub">
             Free to try. Web, iPhone, and Android. Your weekly shop, sorted in minutes.
           </p>
-        </motion.div>
+        </m.div>
         <div className="download-cta-row">
-          <motion.a
+          <m.a
             className="store-pill"
             href={APP_STORE_URL}
             rel={IOS_LIVE ? 'noopener noreferrer' : undefined}
@@ -67,9 +67,9 @@ export default function DownloadCTA() {
           >
             <span className="store-pill-top mono">{IOS_LIVE ? 'DOWNLOAD ON THE' : 'COMING SOON'}</span>
             <span className="store-pill-bot">App Store</span>
-          </motion.a>
+          </m.a>
           {ANDROID_LIVE && (
-            <motion.a
+            <m.a
               className="store-pill"
               href={PLAY_STORE_URL}
               rel="noopener noreferrer"
@@ -88,10 +88,10 @@ export default function DownloadCTA() {
             >
               <span className="store-pill-top mono">GET IT ON</span>
               <span className="store-pill-bot">Google Play</span>
-            </motion.a>
+            </m.a>
           )}
         </div>
-        <motion.p
+        <m.p
           className="download-cta-anchor"
           initial={COPY_INITIAL}
           whileInView={COPY_IN_VIEW}
@@ -100,7 +100,7 @@ export default function DownloadCTA() {
         >
           The average UK family wastes £1,000 of food a year — the carbon equivalent of driving from
           London to Glasgow and back. Chop it is the easiest way to stop being part of that number.
-        </motion.p>
+        </m.p>
       </div>
     </section>
   );

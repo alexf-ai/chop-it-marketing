@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 import ScoreRing from './ScoreRing';
 import { bandFor, coachingFor } from '@/app/lib/score';
@@ -44,7 +44,7 @@ export default function ScoreExplainer({ score, setScore, accent }: ScoreExplain
               and pillars below are deliberately NOT animated — they
               already animate via their own slider state + the existing
               ScoreRing stroke-dashoffset transition. */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -58,7 +58,7 @@ export default function ScoreExplainer({ score, setScore, accent }: ScoreExplain
               A single number that reads your plan and tells you where the gaps are. Not a diet. Not homework.
               Just a nudge toward more varied, plant-forward cooking — without giving up the lasagne.
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="score-x-band-row">
             <div className="score-x-band-item">

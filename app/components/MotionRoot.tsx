@@ -1,13 +1,17 @@
 'use client';
 
-// Client-only wrapper so app/layout.tsx (a server component) can mount
-// Motion's MotionConfig. reducedMotion="user" inherits the visitor's OS
-// "Reduce motion" preference — Motion-driven animations either run at
-// reduced fidelity or skip entirely, depending on each component's
-// reducedMotion handling.
+// LazyMotion with the `domAnimation` features bundle is roughly half
+// the size of the default motion import. `strict` enforces the `m`
+// component pattern — using `motion.*` anywhere downstream will throw
+// at runtime, which keeps future contributors honest about bundle
+// discipline.
 
-import { MotionConfig } from 'motion/react';
+import { LazyMotion, MotionConfig, domAnimation } from 'motion/react';
 
 export default function MotionRoot({ children }: { children: React.ReactNode }) {
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>;
+  return (
+    <LazyMotion features={domAnimation} strict>
+      <MotionConfig reducedMotion="user">{children}</MotionConfig>
+    </LazyMotion>
+  );
 }

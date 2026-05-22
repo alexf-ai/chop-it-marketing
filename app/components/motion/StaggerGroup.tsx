@@ -10,7 +10,7 @@
 // cards), 0.12 for a slower list (3 How-It-Works steps), default 0.08
 // elsewhere.
 
-import { motion } from 'motion/react';
+import { m } from 'motion/react';
 
 type Props = {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ export default function StaggerGroup({
   amount = 0.15,
 }: Props) {
   return (
-    <motion.div
+    <m.div
       className={className}
       initial="hidden"
       whileInView="show"
@@ -37,6 +37,6 @@ export default function StaggerGroup({
       }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
