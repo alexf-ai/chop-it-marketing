@@ -3,6 +3,7 @@ import { Instrument_Serif, JetBrains_Mono } from 'next/font/google';
 import './styles/globals.css';
 
 import CookieBanner from './components/CookieBanner';
+import MotionRoot from './components/MotionRoot';
 import NavTracker from './components/NavTracker';
 
 // Hybrid type system: Instrument Serif for display headings, JetBrains Mono for meta/numerals,
@@ -77,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
         />
-        {children}
+        <MotionRoot>{children}</MotionRoot>
         <NavTracker />
         {/* WaitlistStickyBar hidden for now alongside the hero form. */}
         <CookieBanner />

@@ -1,13 +1,17 @@
 // Standalone homepage block for the pantry showcase. Promoted out of
 // HowItWorks step 02 so the most demoable feature gets hero-adjacent
-// placement. The actual cards come from <PantryShowcase /> via slot.
+// placement. The actual cards come from <PantryShowcase /> via slot —
+// its internal horizontal-scroll behaviour stays untouched by the
+// Reveal wrapper here (Reveal only animates the section entrance).
 
 import type { ReactNode } from 'react';
 
+import Reveal from './motion/Reveal';
+
 export default function PantrySection({ pantryShowcase }: { pantryShowcase: ReactNode }) {
   return (
-    <section className="section pantry-block" id="pantry">
-      <div className="section-head">
+    <Reveal as="section" className="section pantry-block" amount={0.15}>
+      <div className="section-head" id="pantry">
         <div className="kicker mono">— THE PANTRY</div>
         <h2 className="h-editorial">What’s in your kitchen, what’s for dinner.</h2>
         <p className="lead">
@@ -19,6 +23,6 @@ export default function PantrySection({ pantryShowcase }: { pantryShowcase: Reac
       <div className="pantry-block-hint mono">
         Tap any ingredient in the app to see what you can cook with it tonight.
       </div>
-    </section>
+    </Reveal>
   );
 }

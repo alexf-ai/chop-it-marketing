@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.104.1",
+    "motion": "^12.40.0",
     "next": "^15.5.15",
     "posthog-js": "^1.373.5",
     "react": "18.3.1",
