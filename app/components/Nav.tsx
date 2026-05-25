@@ -36,7 +36,7 @@ export default function Nav({ accent }: NavProps) {
           <Link href="/#score">Diversity Score</Link>
           <Link href="/recipes">Recipes</Link>
           <Link href="/#how">How it works</Link>
-          <a href="#">Feasts</a>
+          <span className="soon-link" title="Coming soon">Feasts</span>
         </div>
         <div className="nav-cta">
           <a

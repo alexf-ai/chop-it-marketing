@@ -19,19 +19,19 @@ export default function Footer() {
         </div>
         <div className="footer-col">
           <div className="footer-col-h mono">PRODUCT</div>
-          <a href="#">This Week</a>
-          <a href="#">Shop</a>
-          <a href="#">Pantry</a>
-          <a href="#">Diversity Score</a>
-          <a href="#">
+          <span className="soon-link">This Week</span>
+          <span className="soon-link">Shop</span>
+          <span className="soon-link">Pantry</span>
+          <span className="soon-link">Diversity Score</span>
+          <span className="soon-link">
             Feasts <span className="tag-soon mono">Summer &rsquo;26</span>
-          </a>
+          </span>
         </div>
         <div className="footer-col">
           <div className="footer-col-h mono">COMPANY</div>
-          <a href="#">Team</a>
-          <a href="#">Press</a>
-          <a href="#">Careers</a>
+          <span className="soon-link">Team</span>
+          <span className="soon-link">Press</span>
+          <span className="soon-link">Careers</span>
           <a href="mailto:hello@chop-it.com">Contact</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>

@@ -11,12 +11,13 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import Breadcrumbs, { type Crumb } from '@/app/components/Breadcrumbs';
 import Footer from '@/app/components/Footer';
 import Nav from '@/app/components/Nav';
 import RecipeGrid from '@/app/components/RecipeGrid';
 import { CUISINE_META, CUISINE_SLUGS } from '@/app/lib/cuisines';
 import { listCuisineRecipes } from '@/app/lib/recipes';
-import { serializeJsonLd, SITE_ORIGIN } from '@/app/lib/recipeSchema';
+import { buildBreadcrumbJsonLd, serializeJsonLd, SITE_ORIGIN } from '@/app/lib/recipeSchema';
 
 export const revalidate = 3600;
 
@@ -95,10 +96,18 @@ export default async function CuisineCollectionPage({
   const items = await listCuisineRecipes(slug);
   const jsonLd = buildCuisineJsonLd(slug, meta, items);
 
+  const crumbs: Crumb[] = [
+    { name: 'Home', href: '/' },
+    { name: 'Recipes', href: '/recipes' },
+    { name: meta.name },
+  ];
+  const breadcrumbLd = buildBreadcrumbJsonLd(crumbs);
+
   return (
     <>
       <Nav accent={ACCENT} />
       <section className="section recipes-hub">
+        <Breadcrumbs crumbs={crumbs} />
         <div className="section-head">
           <div className="kicker mono">— CUISINE</div>
           <h1 className="h-editorial">{meta.name}</h1>
@@ -110,6 +119,11 @@ export default async function CuisineCollectionPage({
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbLd) }}
       />
       <Footer />
     </>

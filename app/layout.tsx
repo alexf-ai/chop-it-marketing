@@ -64,7 +64,26 @@ const ORGANIZATION_JSONLD = {
   logo: 'https://chop-it.com/logo.webp',
   description:
     'Chop it plans your week, writes the shop, and quietly coaches you toward more varied, plant-forward eating.',
-  sameAs: ['https://chopit.app'],
+  // Instagram + X handles are noted as inactive — add them here when they go live.
+  sameAs: ['https://chopit.app', 'https://www.tiktok.com/@chop_it'],
+};
+
+// WebSite + SearchAction — declares the on-site recipe search so Google can
+// surface a sitelinks search box on branded queries. The target maps to the
+// /recipes hub's ?q= search param.
+const WEBSITE_JSONLD = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Chop It',
+  url: 'https://chop-it.com',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://chop-it.com/recipes?q={search_term_string}',
+    },
+    'query-input': 'required name=search_term_string',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -77,6 +96,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(ORGANIZATION_JSONLD) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(WEBSITE_JSONLD) }}
         />
         <MotionRoot>{children}</MotionRoot>
         <NavTracker />
