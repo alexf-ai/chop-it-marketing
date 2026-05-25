@@ -16,7 +16,6 @@ import {
   getSlugById,
   listCollectionRecipes,
   listPublishedRecipes,
-  URL_SAFE_SLUG_RE,
   type RecipeListItem,
 } from '@/app/lib/recipes';
 import {
@@ -224,24 +223,15 @@ export default async function RecipePage({
           )}
           {recipe.tags_json?.core && recipe.tags_json.core.length > 0 && (
             <div className="recipe-tags">
-              {recipe.tags_json.core.map((tag) =>
-                // Tags whose value isn't URL-safe are excluded from
-                // generateStaticParams in /recipes/tag/[tag], so linking to
-                // them would 404. Render those as a plain chip instead.
-                URL_SAFE_SLUG_RE.test(tag) ? (
-                  <Link
-                    key={tag}
-                    href={`/recipes/tag/${encodeURIComponent(tag)}`}
-                    className="tag mono"
-                  >
-                    {tag}
-                  </Link>
-                ) : (
-                  <span key={tag} className="tag mono">
-                    {tag}
-                  </span>
-                ),
-              )}
+              {/* Tags are visual classification chips, not navigation. The
+                  old /recipes/tag/<tag> taxonomy was retired (now 410 Gone in
+                  middleware.ts), so these are plain spans — browse-by-tag is
+                  served by search instead. */}
+              {recipe.tags_json.core.map((tag) => (
+                <span key={tag} className="tag mono">
+                  {tag}
+                </span>
+              ))}
             </div>
           )}
         </header>

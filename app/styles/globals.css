@@ -1050,6 +1050,9 @@ button { font-family: inherit; }
 .footer-col-h { font-size: 10px; color: var(--muted-2); letter-spacing: 0.14em; margin-bottom: 6px; }
 .footer-col a { color: var(--text-2); font-size: 14px; }
 .footer-col a:hover { color: var(--text); }
+/* Non-clickable "coming soon" placeholders — match the nav/footer link look
+   but carry no destination (features not built yet). */
+.soon-link { color: var(--text-2); font-size: 14px; cursor: default; }
 .tag-soon {
   display: inline-block;
   margin-left: 6px;

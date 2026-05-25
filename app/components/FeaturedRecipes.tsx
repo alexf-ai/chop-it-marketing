@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import DishPlaceholder from './DishPlaceholder';
 import Reveal from './motion/Reveal';
@@ -26,6 +27,7 @@ const PLACEHOLDERS: Placeholder[] = [
 
 type LiveRecipe = {
   id: string;
+  slug: string;
   title: string;
   image_url: string | null;
   season: string | null;
@@ -70,9 +72,10 @@ async function getFeaturedRecipes(): Promise<LiveRecipe[] | null> {
   // post-query (the recipes table has no diet/type column to filter on).
   const { data, error } = await supabase
     .from('recipes_published')
-    .select('id, title, image_url, season, display_priority')
+    .select('id, slug, title, image_url, season, display_priority')
     .eq('season', 'summer')
     .not('image_url', 'is', null)
+    .not('slug', 'is', null)
     .order('display_priority', { ascending: false })
     .limit(12);
 
@@ -106,7 +109,7 @@ export default async function FeaturedRecipes() {
         {recipes
           ? recipes.map((r) => (
               <StaggerItem key={r.id}>
-                <a className="recipe-card" href={`/recipes/${r.id}`}>
+                <Link className="recipe-card" href={`/recipes/${r.slug}`}>
                   <div className="recipe-image">
                     {r.image_url ? (
                       <Image
@@ -123,7 +126,7 @@ export default async function FeaturedRecipes() {
                   <div className="recipe-meta">
                     <div className="recipe-name">{r.title}</div>
                   </div>
-                </a>
+                </Link>
               </StaggerItem>
             ))
           : PLACEHOLDERS.map((r, i) => (
