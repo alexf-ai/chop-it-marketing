@@ -211,6 +211,10 @@ function ThisWeekTab({
   score: number;
   band: string;
 }) {
+  // `recipes` is a required server-fetched prop (always an array in prod), but
+  // React Fast Refresh can re-render this client island with undefined props
+  // during dev HMR — the source of the captured TypeError. Bail rather than crash.
+  if (!recipes) return null;
   return (
     <>
       <div className="phone-score-card">
