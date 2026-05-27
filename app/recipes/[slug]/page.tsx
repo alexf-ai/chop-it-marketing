@@ -165,6 +165,7 @@ export default async function RecipePage({
         cost_band={recipe.cost_band}
         has_nutrition={hasNutrition}
       />
+      <main>
       <article className="recipe-page">
         <BackLink href="/recipes" className="recipe-back-link">
           ← Back
@@ -317,6 +318,7 @@ export default async function RecipePage({
 
         <RecipeCTA recipeSlug={recipe.slug} recipeTitle={recipe.title} />
       </article>
+      </main>
 
       <script
         type="application/ld+json"

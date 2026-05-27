@@ -70,6 +70,7 @@ export default function Home({
   return (
     <>
       <Nav accent={accent} />
+      <main>
       <Hero
         score={state.score}
         accent={accent}
@@ -92,6 +93,7 @@ export default function Home({
       <HowItWorks browseThumbs={browseThumbs} />
       <Principles />
       <DownloadCTA />
+      </main>
       <Footer />
       {tweaksOn && <Tweaks state={state} setState={setState} onClose={() => setTweaksOn(false)} />}
     </>

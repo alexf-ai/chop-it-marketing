@@ -243,7 +243,7 @@ function MenuView({
                 {r.image_url ? (
                   // Unoptimised on purpose — see file header.
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={r.image_url} alt="" loading="lazy" className="share-menu-card-img" />
+                  <img src={r.image_url} alt={r.title ?? ''} loading="lazy" className="share-menu-card-img" />
                 ) : (
                   <div className="share-menu-card-img share-menu-card-img-fallback" aria-hidden />
                 )}
@@ -314,7 +314,7 @@ function RecipeView({
         {payload.image_url ? (
           // Unoptimised on purpose — see file header.
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={payload.image_url} alt="" className="share-recipe-hero" />
+          <img src={payload.image_url} alt={payload.title} className="share-recipe-hero" />
         ) : null}
 
         <div className="share-recipe-body">
