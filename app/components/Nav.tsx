@@ -35,6 +35,7 @@ export default function Nav({ accent }: NavProps) {
               still land on / and then scroll to the section. */}
           <Link href="/#score">Diversity Score</Link>
           <Link href="/recipes">Recipes</Link>
+          <Link href="/blog">Blog</Link>
           <Link href="/#how">How it works</Link>
           <span className="soon-link" title="Coming soon">Feasts</span>
         </div>

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -32,6 +33,7 @@ export default function Footer() {
           <span className="soon-link">Team</span>
           <span className="soon-link">Press</span>
           <span className="soon-link">Careers</span>
+          <Link href="/blog">Blog</Link>
           <a href="mailto:hello@chop-it.com">Contact</a>
           <a href="/privacy">Privacy</a>
           <a href="/terms">Terms</a>
