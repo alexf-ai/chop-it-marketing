@@ -30,6 +30,14 @@ export type BlogPostMeta = {
 
 export const BLOG_POSTS: BlogPostMeta[] = [
   {
+    slug: 'how-to-eat-30-plants-a-week',
+    title: 'How to Eat 30 Plants a Week (and What Actually Counts)',
+    description:
+      "What the 30-plants-a-week gut-health rule actually means, exactly what counts (herbs, spices, nuts, coffee all do), and how to hit it without a spreadsheet.",
+    datePublished: '2026-05-31',
+    dateModified: '2026-05-31',
+  },
+  {
     slug: 'best-meal-planning-apps-uk-2026',
     title: 'Best Meal Planning Apps in the UK for 2026',
     description:
