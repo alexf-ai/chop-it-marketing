@@ -184,6 +184,7 @@ export default async function RecipesHubPage({
   return (
     <>
       <Nav accent={ACCENT} />
+      <main>
       <section className="section recipes-hub">
         <div className="section-head">
           <div className="kicker mono">— EVERY RECIPE</div>
@@ -331,6 +332,7 @@ export default async function RecipesHubPage({
           </section>
         )}
       </section>
+      </main>
       {searchJsonLd && (
         <script
           type="application/ld+json"

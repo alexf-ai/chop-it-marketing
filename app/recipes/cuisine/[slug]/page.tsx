@@ -106,6 +106,7 @@ export default async function CuisineCollectionPage({
   return (
     <>
       <Nav accent={ACCENT} />
+      <main>
       <section className="section recipes-hub">
         <Breadcrumbs crumbs={crumbs} />
         <div className="section-head">
@@ -115,6 +116,7 @@ export default async function CuisineCollectionPage({
         </div>
         <RecipeGrid items={items} />
       </section>
+      </main>
       <script
         type="application/ld+json"
         // eslint-disable-next-line react/no-danger
