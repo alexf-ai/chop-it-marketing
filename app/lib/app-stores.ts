@@ -21,3 +21,13 @@ export const PLAY_STORE_URL = process.env.NEXT_PUBLIC_PLAY_STORE_URL ?? '#';
 export const IOS_LIVE = APP_STORE_URL !== '#';
 
 export const ANDROID_LIVE = process.env.NEXT_PUBLIC_ANDROID_LIVE === 'true';
+
+// Custom ChatGPT GPT — opens our "Weekly Food Shop Planner" agent in
+// chatgpt.com. Treated as a third install/entry surface alongside the
+// native stores. Env-overridable so we can swap to a new GPT id without
+// a code change.
+export const CHATGPT_URL =
+  process.env.NEXT_PUBLIC_CHATGPT_URL ??
+  'https://chatgpt.com/g/g-69610d39455c8191b7afbc92fd09baae-weekly-food-shop-planner-chop-it';
+
+export const CHATGPT_LIVE = CHATGPT_URL !== '#';

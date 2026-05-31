@@ -1668,12 +1668,12 @@ button { font-family: inherit; }
   margin: 16px 0 0;
 }
 @media (max-width: 640px) {
-  /* No wrapper around the two store pills in DownloadCTA.tsx, so use a
-     2-column grid and span the web button across both columns. Keeps App
-     Store + Google Play side-by-side and the web button stacked below. */
+  /* Three pills (App Store, Google Play, ChatGPT) — stack them in a single
+     column on narrow screens so none ends up alone in a half-row. The btn
+     grid-column rule still applies harmlessly if a web button is added. */
   .download-cta-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 8px;
     width: 100%;
   }

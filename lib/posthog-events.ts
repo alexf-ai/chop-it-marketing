@@ -65,6 +65,12 @@ export function trackPlayStoreClick(props: StoreClickProps): void {
   posthog.capture('play_store_click', props);
 }
 
+// Custom ChatGPT GPT click — shape matches the native store clicks so the
+// three CTA surfaces sit in the same PostHog funnel.
+export function trackChatgptClick(props: StoreClickProps): void {
+  posthog.capture('chatgpt_click', props);
+}
+
 export function trackRecipeView(props: RecipeViewProps): void {
   posthog.capture('recipe_view', props);
 }

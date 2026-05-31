@@ -10,9 +10,17 @@
 
 import { m } from 'motion/react';
 
-import { ANDROID_LIVE, APP_STORE_URL, IOS_LIVE, PLAY_STORE_URL } from '@/app/lib/app-stores';
+import {
+  ANDROID_LIVE,
+  APP_STORE_URL,
+  CHATGPT_LIVE,
+  CHATGPT_URL,
+  IOS_LIVE,
+  PLAY_STORE_URL,
+} from '@/app/lib/app-stores';
 import {
   trackAppStoreClick,
+  trackChatgptClick,
   trackCtaClicked,
   trackPlayStoreClick,
 } from '@/lib/posthog-events';
@@ -115,6 +123,32 @@ export default function DownloadCTA() {
             >
               <span className="store-pill-top mono">COMING SOON</span>
               <span className="store-pill-bot">Google Play</span>
+            </m.a>
+          )}
+          {/* ChatGPT entry point — opens the "Weekly Food Shop Planner"
+              custom GPT. Third surface alongside the native stores; rendered
+              unconditionally while CHATGPT_LIVE is true. */}
+          {CHATGPT_LIVE && (
+            <m.a
+              className="store-pill"
+              href={CHATGPT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Try Chop It on ChatGPT"
+              whileHover={PILL_HOVER}
+              whileTap={PILL_TAP}
+              transition={PILL_SPRING}
+              onClick={() => {
+                trackChatgptClick({ location: 'download_cta' });
+                trackCtaClicked({
+                  cta_location: 'homepage_secondary',
+                  cta_label: 'ChatGPT',
+                  cta_destination: CHATGPT_URL,
+                });
+              }}
+            >
+              <span className="store-pill-top mono">TRY IT ON</span>
+              <span className="store-pill-bot">ChatGPT</span>
             </m.a>
           )}
         </div>
