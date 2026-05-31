@@ -45,7 +45,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-base">
-        <span className="mono">© 2026 Chop It Ltd · chop-it.com</span>
+        <span className="mono">© 2026 Chop It AI Ltd · chop-it.com</span>
         <span className="mono">Made for UK kitchens</span>
       </div>
     </footer>
