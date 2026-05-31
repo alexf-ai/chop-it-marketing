@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalLayout title="Privacy Policy" lastUpdated="18 May 2026">
+    <LegalLayout title="Privacy Policy" lastUpdated="31 May 2026">
       <p>
         Chop It AI Ltd (&ldquo;Chop It&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;)
         operates the Chop It mobile app and chop-it.com website (the
@@ -54,9 +54,15 @@ export default function PrivacyPage() {
 
       <h3>Usage analytics</h3>
       <ul>
-        <li>Anonymous events: which features you use, screen views, errors</li>
+        <li>
+          Pseudonymous events: which features you use, screen views, errors
+        </li>
         <li>Processed by PostHog (analytics) and Sentry (error reporting)</li>
-        <li>No personal identifiers attached unless you contact support</li>
+        <li>
+          Linked to a random analytics identifier, not your name or email. Your
+          IP address may be processed by these tools for security and
+          approximate location, and is not used to build a marketing profile.
+        </li>
       </ul>
 
       <h3>Device data (automatic)</h3>
@@ -112,6 +118,38 @@ export default function PrivacyPage() {
         personal data. We do not share it with advertisers.
       </p>
 
+      <h2>Using Chop It in ChatGPT and other AI assistants</h2>
+      <p>
+        You can use Chop It inside ChatGPT and similar AI assistants without a
+        Chop It account. When you do:
+      </p>
+      <ul>
+        <li>
+          We receive only the request you send (e.g. &ldquo;build me 5 dinners
+          under 30 minutes&rdquo;) and a temporary session identifier created
+          for that conversation. We do not receive your wider chat history.
+        </li>
+        <li>
+          We use it to search our recipe catalogue, build a draft meal plan,
+          and generate a consolidated shopping list, which we return to the
+          assistant to show you.
+        </li>
+        <li>
+          In this guest mode we do not create an account or store personal
+          identifiers. Temporary session data is discarded after a short
+          period.
+        </li>
+        <li>
+          Your conversation with the assistant is also governed by that
+          assistant provider&rsquo;s own privacy policy (for ChatGPT,
+          OpenAI&rsquo;s).
+        </li>
+      </ul>
+      <p>
+        If you later link a Chop It account, the account data terms above
+        apply.
+      </p>
+
       <h2>How long we keep it</h2>
       <ul>
         <li>Account data: until you delete your account</li>
@@ -119,7 +157,7 @@ export default function PrivacyPage() {
           Content (recipes, meal plans): until you delete your account or the
           individual item
         </li>
-        <li>Analytics: up to 12 months, anonymised</li>
+        <li>Analytics: up to 12 months, pseudonymised</li>
         <li>Financial records: 6 years (UK statutory requirement)</li>
         <li>Crash reports: 90 days</li>
       </ul>
