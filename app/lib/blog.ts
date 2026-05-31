@@ -30,6 +30,14 @@ export type BlogPostMeta = {
 
 export const BLOG_POSTS: BlogPostMeta[] = [
   {
+    slug: 'why-chatgpt-changes-home-cooking-and-grocery-shopping',
+    title: 'Why ChatGPT Is About to Change How Britain Cooks and Shops for Food',
+    description:
+      "Online grocery digitised delivery but not the decision of what to cook. Here's why conversational AI is the missing layer, and how it changes the weekly shop.",
+    datePublished: '2026-05-31',
+    dateModified: '2026-05-31',
+  },
+  {
     slug: 'how-to-eat-30-plants-a-week',
     title: 'How to Eat 30 Plants a Week (and What Actually Counts)',
     description:
