@@ -30,6 +30,30 @@ export type BlogPostMeta = {
 
 export const BLOG_POSTS: BlogPostMeta[] = [
   {
+    slug: 'how-to-meal-plan-for-the-week',
+    title: 'How to Meal Plan for the Week (A Simple System That Sticks)',
+    description:
+      'A meal-planning method that survives a real week: pick 4–5 dinners, write one merged shopping list, shop once. Plus how to keep the habit going.',
+    datePublished: '2026-06-16',
+    dateModified: '2026-06-16',
+  },
+  {
+    slug: 'how-to-reduce-food-waste-at-home',
+    title: 'How to Reduce Food Waste at Home (A Practical UK Guide)',
+    description:
+      'UK households bin about £14bn of food a year, mostly from shopping without a plan. The four habits that cut the most waste, and the money, at home.',
+    datePublished: '2026-06-16',
+    dateModified: '2026-06-16',
+  },
+  {
+    slug: 'how-much-fibre-do-you-need-a-day',
+    title: 'How Much Fibre Do You Need a Day? (And How to Actually Eat It)',
+    description:
+      'The UK target is 30g of fibre a day; most adults get about 20g and only ~9% hit it. The simple swaps that close the gap without counting grams.',
+    datePublished: '2026-06-16',
+    dateModified: '2026-06-16',
+  },
+  {
     slug: 'why-chatgpt-changes-home-cooking-and-grocery-shopping',
     title: 'Why ChatGPT Is About to Change How Britain Cooks and Shops for Food',
     description:
