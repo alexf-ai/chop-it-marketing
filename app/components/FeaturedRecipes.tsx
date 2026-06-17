@@ -79,12 +79,27 @@ async function getFeaturedRecipes(): Promise<LiveRecipe[] | null> {
     .order('display_priority', { ascending: false })
     .limit(12);
 
+  // Loud, structured failure logs — silent fallbacks have hidden RLS / env-var
+  // breakage in adjacent code paths before. Anything reaching the placeholder
+  // branch should be visible in Vercel logs with enough detail to diagnose.
   if (error) {
-    console.warn('[FeaturedRecipes] query error, falling back to placeholders:', error.message);
+    console.error('[FeaturedRecipes] Supabase query failed — falling back to placeholders.', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+      table: 'recipes_published',
+      filter: "season='summer', image_url IS NOT NULL",
+    });
     return null;
   }
   if (!data || data.length === 0) {
-    console.warn('[FeaturedRecipes] no published summer recipes with images yet — using placeholders');
+    console.error(
+      '[FeaturedRecipes] Query returned zero rows — falling back to placeholders. ' +
+        'Check (1) Vercel env vars NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_ANON_KEY, ' +
+        '(2) RLS policies on recipes_published, (3) anon role SELECT grant, ' +
+        "(4) whether any rows match season='summer' with image_url not null.",
+    );
     return null;
   }
   return balanceVegFeatured(data as LiveRecipe[]);
