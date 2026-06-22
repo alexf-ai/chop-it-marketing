@@ -18,6 +18,7 @@
 // multiple recipe sources (user_recipes, recipes_published, public
 // catalog). We tolerate both casings on read.
 
+import { resolveRecipeImageUrl } from './cloudflareImage';
 import { supabase, supabaseConfigured } from './supabase';
 
 export type SharedRecipeIngredient = {
@@ -155,7 +156,13 @@ export async function getSharedRecipe(code: string): Promise<SharedRecipePayload
     share_code: data.id,
     title,
     description: firstString(snapshot, ['description']),
-    image_url: firstString(snapshot, ['image_url', 'imageUrl']),
+    // The snapshot's image_url/imageUrl is frequently absent; fall back to a
+    // URL built from the Cloudflare id (snake_case or camelCase) or image_key.
+    image_url: resolveRecipeImageUrl({
+      image_url: firstString(snapshot, ['image_url', 'imageUrl']),
+      cloudflare_image_id: firstString(snapshot, ['cloudflareImageId', 'cloudflare_image_id']),
+      image_key: firstString(snapshot, ['image_key', 'imageKey']),
+    }),
     servings: firstNumber(snapshot, ['servings']),
     prep_minutes: firstNumber(snapshot, ['prepMinutes', 'prep_minutes', 'prepTime']),
     cook_minutes: firstNumber(snapshot, ['cookMinutes', 'cook_minutes', 'cookTime']),
