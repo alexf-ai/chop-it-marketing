@@ -2751,4 +2751,23 @@ button { font-family: inherit; }
   .salad-detail-cols { grid-template-columns: 1fr; gap: 24px; }
   .salad-card:has(.salad-card-detail:not([hidden])) .salad-card-img { aspect-ratio: 16 / 9; }
   .salad-card-detail { padding-left: 18px; padding-right: 18px; }
+
+  /* The cuisine filters wrap into many rows on a phone and swallow the whole
+     first screen. Collapse them into one horizontally-scrollable strip that
+     bleeds to the screen edges so it reads as swipeable, and the salads stay
+     near the top. */
+  .salad-controls { padding: 12px 0; margin-bottom: 20px; }
+  .salad-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 12px -18px 0;
+    padding: 2px 18px;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .salad-chips::-webkit-scrollbar { display: none; }
+  .salad-chip { flex: 0 0 auto; scroll-snap-align: start; }
+  .salad-count { margin-top: 10px; }
 }
