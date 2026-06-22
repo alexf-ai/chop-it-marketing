@@ -26,9 +26,24 @@ export type BlogPostMeta = {
   datePublished: string;
   /** ISO date (YYYY-MM-DD). */
   dateModified: string;
+  /**
+   * Set for interactive recipe-menu posts (e.g. "This week's dinners"). The
+   * post body is rendered from the shared menu with this code rather than a
+   * markdown file, so getPostBody() is never called for it.
+   */
+  menuShareCode?: string;
 };
 
 export const BLOG_POSTS: BlogPostMeta[] = [
+  {
+    slug: 'easy-summer-salads-this-weeks-dinners',
+    title: '49 Easy Summer Salads to Cook This Week',
+    description:
+      'A full week of easy summer salads you can actually make dinner — each with ingredients and method, plus a one-tap shopping list for the whole lot in Chop It.',
+    datePublished: '2026-06-22',
+    dateModified: '2026-06-22',
+    menuShareCode: 'MDSAP7JV',
+  },
   {
     slug: 'how-to-meal-plan-for-the-week',
     title: 'How to Meal Plan for the Week (A Simple System That Sticks)',
