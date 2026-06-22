@@ -57,13 +57,16 @@ function buildItemListJsonLd(payload: SharedMenuPayload): Record<string, unknown
     itemListElement: payload.recipes.map((r, idx) => {
       // Each Recipe must have a unique URL or Google's Carousel rich-result
       // validator rejects the ItemList ("Identical property values given,
-      // but unique values are required"). The deep link still points at the
-      // menu — the recipe id becomes a fragment so the URL is technically
-      // unique per item without inventing a new in-app route.
+      // but unique values are required"). Published recipes point at their
+      // on-site page (matching the visible tile link); the rest fall back to
+      // the menu deep link with the recipe id as a fragment so the URL is
+      // still unique per item without inventing a new in-app route.
       const recipe: Record<string, unknown> = {
         '@type': 'Recipe',
         name: r.title ?? 'Recipe',
-        url: `${APP_DEEP_LINK_BASE}/${code}#recipe-${r.id}`,
+        url: r.slug
+          ? `${SITE_ORIGIN}/recipes/${r.slug}`
+          : `${APP_DEEP_LINK_BASE}/${code}#recipe-${r.id}`,
       };
       if (r.image_url) recipe.image = r.image_url;
       if (r.cuisine) recipe.recipeCuisine = r.cuisine;
@@ -201,6 +204,39 @@ export default async function SharedPage({
   return <RecipeView payload={resolved.payload} deepLink={deepLink} />;
 }
 
+// Each menu tile links somewhere meaningful: published recipes that are
+// live on the marketing site go to their on-site /recipes/<slug> page;
+// everything else (user recipes, unpublished) deep-links into the app at the
+// recipe's anchor within the shared menu — mirroring the in-app /m/ page
+// where every card opens a recipe.
+function MenuCardLink({
+  recipe,
+  code,
+  children,
+}: {
+  recipe: SharedMenuPayload['recipes'][number];
+  code: string;
+  children: React.ReactNode;
+}) {
+  if (recipe.slug) {
+    return (
+      <Link href={`/recipes/${recipe.slug}`} className="share-menu-card-link">
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <a
+      href={`${APP_DEEP_LINK_BASE}/${code}#recipe-${recipe.id}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="share-menu-card-link"
+    >
+      {children}
+    </a>
+  );
+}
+
 function MenuView({
   payload,
   deepLink,
@@ -240,25 +276,27 @@ function MenuView({
           <ul className="share-menu-grid">
             {payload.recipes.map((r) => (
               <li key={r.id} className="share-menu-card">
-                {r.image_url ? (
-                  // Unoptimised on purpose — see file header.
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={r.image_url} alt={r.title ?? ''} loading="lazy" className="share-menu-card-img" />
-                ) : (
-                  <div className="share-menu-card-img share-menu-card-img-fallback" aria-hidden />
-                )}
-                <div className="share-menu-card-body">
-                  <div className="share-menu-card-title">{r.title ?? 'Recipe'}</div>
-                  <div className="share-menu-card-meta mono">
-                    {[
-                      r.cuisine,
-                      r.total_minutes ? `${r.total_minutes} min` : null,
-                      r.servings ? `Serves ${r.servings}` : null,
-                    ]
-                      .filter(Boolean)
-                      .join(' · ')}
+                <MenuCardLink recipe={r} code={payload.share_code}>
+                  {r.image_url ? (
+                    // Unoptimised on purpose — see file header.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={r.image_url} alt={r.title ?? ''} loading="lazy" className="share-menu-card-img" />
+                  ) : (
+                    <div className="share-menu-card-img share-menu-card-img-fallback" aria-hidden />
+                  )}
+                  <div className="share-menu-card-body">
+                    <div className="share-menu-card-title">{r.title ?? 'Recipe'}</div>
+                    <div className="share-menu-card-meta mono">
+                      {[
+                        r.cuisine,
+                        r.total_minutes ? `${r.total_minutes} min` : null,
+                        r.servings ? `Serves ${r.servings}` : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </div>
                   </div>
-                </div>
+                </MenuCardLink>
               </li>
             ))}
           </ul>
