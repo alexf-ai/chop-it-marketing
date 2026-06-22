@@ -2602,3 +2602,153 @@ button { font-family: inherit; }
   .blog-article-body { font-size: 16px; }
   .blog-card-link { padding: 22px 22px; }
 }
+
+/* ---------- Interactive salad post (This week's dinners) ---------- */
+.salad-page { max-width: 1120px; margin: 0 auto; padding: 16px 32px 96px; }
+.salad-article { color: var(--text-2); }
+
+.salad-hero { max-width: 760px; margin: 24px 0 8px; }
+.salad-hero-h {
+  font-family: var(--ff-display);
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  margin: 10px 0 18px;
+}
+.salad-hero-lead { font-size: 19px; line-height: 1.6; margin: 0 0 24px; }
+.salad-hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.salad-hero-meta { color: var(--muted-2); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.salad-intro { max-width: 760px; font-size: 17px; line-height: 1.7; }
+.salad-intro p { margin: 0 0 18px; }
+
+/* Controls */
+.salad-explorer { margin: 40px 0; }
+.salad-controls {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-2);
+  margin-bottom: 28px;
+}
+.salad-search {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border: 1px solid var(--border-2);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 15px;
+  padding: 12px 16px;
+}
+.salad-search::placeholder { color: var(--muted-2); }
+.salad-search:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.salad-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.salad-chip {
+  background: var(--card);
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  color: var(--text-2);
+  font-size: 13px;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: border-color 120ms ease, color 120ms ease, background 120ms ease;
+}
+.salad-chip:hover { border-color: var(--text); color: var(--text); }
+.salad-chip.is-active { background: var(--text); border-color: var(--text); color: var(--bg); }
+.salad-count { color: var(--muted-2); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; margin: 12px 0 0; }
+.salad-empty { color: var(--muted); padding: 32px 0; }
+
+/* Grid */
+.salad-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+.salad-card {
+  background: var(--card);
+  border: 1px solid var(--border-2);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: border-color 140ms ease, transform 140ms ease;
+}
+.salad-card:hover { border-color: var(--text); transform: translateY(-2px); }
+.salad-card:has(.salad-card-detail:not([hidden])) {
+  grid-column: 1 / -1;
+  transform: none;
+}
+.salad-card-trigger {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  position: relative;
+}
+.salad-card-trigger:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.salad-card-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  background: var(--card-2, #1a1a1a);
+}
+.salad-card:has(.salad-card-detail:not([hidden])) .salad-card-img { aspect-ratio: 21 / 9; }
+.salad-card-img-fallback { background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%); }
+.salad-card-num {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(13, 13, 13, 0.72);
+  color: var(--text);
+  font-size: 12px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+}
+.salad-card-body { display: flex; flex-direction: column; gap: 6px; padding: 16px; }
+.salad-card-title { font-family: var(--ff-display); font-size: 20px; line-height: 1.2; letter-spacing: -0.01em; color: var(--text); }
+.salad-card-meta { color: var(--muted-2); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+.salad-card-cue { color: var(--accent); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 2px; }
+
+/* Expanded detail */
+.salad-card-detail { padding: 4px 24px 28px; border-top: 1px solid var(--border-2); }
+.salad-detail-cols { display: grid; grid-template-columns: 1fr 1.4fr; gap: 36px; margin: 24px 0; }
+.salad-detail-h {
+  font-family: var(--ff-display);
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted-2);
+  margin: 0 0 14px;
+}
+.salad-ing-group { margin-bottom: 18px; }
+.salad-ing-group-title { color: var(--text); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+.salad-ing-list { list-style: none; margin: 0; padding: 0; }
+.salad-ing-list li { color: var(--text-2); font-size: 15px; line-height: 1.5; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.salad-method-list { margin: 0; padding-left: 22px; }
+.salad-method-list li { color: var(--text-2); font-size: 15px; line-height: 1.65; margin-bottom: 14px; }
+.salad-detail-cta { margin-top: 4px; }
+
+/* Outro */
+.salad-outro { max-width: 760px; margin: 56px 0 0; padding: 40px 0 0; border-top: 1px solid var(--border-2); }
+.salad-outro-h { font-family: var(--ff-display); font-size: 30px; line-height: 1.15; color: var(--text); margin: 0 0 14px; }
+.salad-outro p { font-size: 17px; line-height: 1.7; margin: 0 0 22px; }
+.salad-outro-cta { display: flex; flex-wrap: wrap; gap: 14px; }
+.salad-pin { color: var(--muted-2); font-size: 13px; letter-spacing: 0.04em; margin: 28px 0 0; }
+
+@media (max-width: 720px) {
+  .salad-page { padding: 12px 18px 64px; }
+  .salad-detail-cols { grid-template-columns: 1fr; gap: 24px; }
+  .salad-card:has(.salad-card-detail:not([hidden])) .salad-card-img { aspect-ratio: 16 / 9; }
+  .salad-card-detail { padding-left: 18px; padding-right: 18px; }
+}
